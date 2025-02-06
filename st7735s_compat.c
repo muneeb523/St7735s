@@ -6,21 +6,22 @@
 #include <stdint.h>
 #include <errno.h>
 #include <string.h>
-#include <stdexcept>
+
 #include <gpiod.h>
 #include <linux/spi/spidev.h>
 
 #include "st7735s_compat.h"
 
 int spi_fd;
+ struct gpiod_line_request *rst_request;
+    struct gpiod_line_request *dc_request;
+        unsigned int rst_line_offset =14;
 
 #define SPI_DEVICE "/dev/spidev1.0"
 #define SPI_DEFAULT_FREQ  8000000 // 8 MHz
 
 typedef struct {
     int spi_fd;
-    int rst_request;
-    int dc_request;
     unsigned int rst_line_offset;
     unsigned int dc_line_offset;
     uint32_t _freq;
@@ -40,7 +41,7 @@ ST7735 st7735;
         struct gpiod_line_config *line_cfg = gpiod_line_config_new();
 
         if (!req_cfg || !settings || !line_cfg)
-            throw std::runtime_error("Failed to allocate GPIO settings");
+           printf("Failed to allocate GPIO settings");
 
         gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
         gpiod_line_config_add_line_settings(line_cfg, &offset, 1, settings);
@@ -48,7 +49,7 @@ ST7735 st7735;
 
         struct gpiod_chip *chip = gpiod_chip_open(chip_path);
         if (!chip)
-            throw std::runtime_error("Failed to open GPIO chip");
+            printf("Failed to open GPIO chip");
 
         struct gpiod_line_request *request = gpiod_chip_request_lines(chip, req_cfg, line_cfg);
 
@@ -57,7 +58,7 @@ ST7735 st7735;
         gpiod_line_settings_free(settings);
 
         if (!request)
-            throw std::runtime_error("Failed to request GPIO line");
+           printf("Failed to request GPIO line");
 
         return request;
     }
@@ -68,8 +69,8 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
         freq = SPI_DEFAULT_FREQ;
     }
 
-    st7735.rst_request = requestOutputLine(chip_path, rst_offset, "RST");
-    st7735.dc_request = requestOutputLine(chip_path, dc_offset, "DC");
+    rst_request = requestOutputLine(chip_path, rst_offset, "RST");
+    dc_request = requestOutputLine(chip_path, dc_offset, "DC");
 
     // Open the SPI device
     st7735.spi_fd = open(SPI_DEVICE, O_RDWR);
@@ -110,14 +111,14 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
 
         if (!request || gpiod_line_request_set_value(request, line_offset, value) < 0)
         {
-            throw std::runtime_error("Failed to set GPIO line value");
+            printf("Failed to set GPIO line value");
         }
     }
 
 
   
 void SPI_Init(void) {
-    ST7735_Init("/dev/gpiochip5",13,14,8000000);
+    ST7735_Init("/dev/gpiochip5",14,13,8000000);
 
 	// Pin_Low(CS);
 }
