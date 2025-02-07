@@ -124,6 +124,7 @@ static uint8_t init_cmd[] = {
 };
 
 void initCommands(void) {
+
     uint8_t args;
 
     for(uint16_t i = 0; i < sizeof(init_cmd); i+=args+1) {
@@ -131,6 +132,8 @@ void initCommands(void) {
 
         SPI_Transmit(args, &init_cmd[i+1]);
     }
+    printf("outside commands\n");
+    
 }
 
 uint8_t backlight_pct;
@@ -194,6 +197,7 @@ void updateWindow(uint16_t x, uint16_t y) {
 }
 
 void ST7735S_Init(void) {
+    printf("init \n");
 
     SPI_Init();
 

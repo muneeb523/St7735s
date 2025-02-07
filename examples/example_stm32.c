@@ -14,6 +14,7 @@ void example(void)   {
 
         f = 1 - f;
         if (f) {
+            printf("Here at while\n");
             setColor(0,0,0);
             fillScreen();
         } else  {
@@ -58,4 +59,10 @@ void example(void)   {
         flushBuffer();
 
     }
+}
+
+int main()
+{
+    printf("start ");
+    example();
 }
