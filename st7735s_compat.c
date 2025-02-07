@@ -175,7 +175,7 @@ void SPI_send(uint16_t len, uint8_t *data) {
 
         // Perform the SPI transfer
         if (ioctl(spi_fd, SPI_IOC_MESSAGE(1), &tr) < 0) {
-            pritnf("failed spi");
+            printf("failed spi");
             return ;
         }
 

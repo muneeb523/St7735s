@@ -8,7 +8,7 @@ extern "C" {
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stddef.h>
-
+#include <stdio.h>
 #include "st7735s_compat.h"
 
 /* undef if low on mem */

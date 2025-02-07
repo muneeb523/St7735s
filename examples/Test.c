@@ -1,6 +1,7 @@
-﻿#include "st7735s.h"
-#include "fonts.h"
-#include "gfx.h"
+﻿#include "../st7735s.h"
+#include "../fonts.h"
+#include "../gfx.h"
+#include <stdio.h>
 
 void example(void)   {
 
