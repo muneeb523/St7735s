@@ -23,7 +23,7 @@ a portable library for the neat ST7735S 80x160 IPS 0.96" TFT-Display
 +---------------------+
 |   SPI Compat Layer  | st7735s_compat.c
 +---------------------+
-|        OS-API       | Arduino/STM32/...
+|        OS-API       |  Imx8mpevvk 
 +---------------------+
 ```
 
@@ -57,7 +57,6 @@ The chars of a font can be limited by defining a range i.e. '0-9'.
 
 ### Quick Steps
 
-Copy `st7735s_compat.h.default`  and `st7735s_compat.cpp.arduino` to your project dir and rename them to `.h` and `.cpp`. Edit those files and modify them for your needs. Link to ST7735S library.
 You'll need to insert also includes to your code
 ```
 #include "st7735s.h"
@@ -95,3 +94,13 @@ You'll need to insert also includes to your code
 
  Datasheet: (https://www.crystalfontz.com/controllers/Sitronix/ST7735S/320)
 
+After cloning the source repository, follow these steps to build the project:
+
+sh
+Copy
+Edit
+cd build
+cmake ..
+make
+
+The compiled executable file, corresponding to the source code, will be located in the build/bin directory.

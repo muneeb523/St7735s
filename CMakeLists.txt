@@ -7,8 +7,8 @@ project(ST7735S_Project)
 # Define the executable output
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-# Add executable for your example main file
-add_executable(example_exec Application_code/Test.c)
+# Add executable for your example main file (now C++)
+add_executable(example_exec Application_code/Test.cpp)
 
 # Add the source files for your project
 target_sources(example_exec PRIVATE
@@ -27,17 +27,15 @@ target_include_directories(example_exec PRIVATE
 # Link the gpiod library for GPIO functionality
 target_link_libraries(example_exec PRIVATE gpiod)
 
-# Optionally, if you need to link with other external libraries, you can add them like:
-# target_link_libraries(example_exec PRIVATE <external_libraries>)
-
-# Set compile options (if needed)
-# For example, to define certain preprocessor directives:
-# target_compile_definitions(example_exec PRIVATE YOUR_DEFINE_HERE)
-
-# Optionally set C standard, e.g. to force C99 or later
+# Set C and C++ standards
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 17)  # Ensure C++17 for Test.cpp
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-
-
+# Ensure C files are compiled with C compiler even in a C++ project
+set_source_files_properties(
+    gfx.c st7735s.c st7735s_compat.c fonts.c
+    PROPERTIES LANGUAGE C
+)
 
