@@ -8,7 +8,7 @@ project(ST7735S_Project)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 # Add executable for your example main file
-add_executable(example_exec examples/Test.c)
+add_executable(example_exec Application_code/Test.c)
 
 # Add the source files for your project
 target_sources(example_exec PRIVATE
