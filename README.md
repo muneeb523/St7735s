@@ -95,12 +95,13 @@ You'll need to insert also includes to your code
  Datasheet: (https://www.crystalfontz.com/controllers/Sitronix/ST7735S/320)
 
 After cloning the source repository, follow these steps to build the project:
-
-sh
-Copy
-Edit
+#make a build Directory 
+ mkdir build 
+#Navigate to  build directory 
 cd build
+#use cmake to build 
 cmake ..
+
 make
 
 The compiled executable file, corresponding to the source code, will be located in the build/bin directory.

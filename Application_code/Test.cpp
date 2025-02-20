@@ -5,6 +5,7 @@ extern "C" {
     #include "../st7735s.h"
     #include "../fonts.h"
     #include "../gfx.h"
+    #include "../image.h"
 }
 
 class DisplayExample {
@@ -15,51 +16,58 @@ public:
         
         uint8_t f = 0;
         while (true) {
-            f = 1 - f;
-            if (f) {
-                std::cout << "Here at while loop" << std::endl;
+            // f = 1 - f;
+            // if (f) {
+            //     std::cout << "Here at while loop" << std::endl;
                 setColor(0, 0, 0);
                 fillScreen();
-            } else {
-                uint8_t r = 0, g = 0, b = 0;
-                for (int y = 0; y < HEIGHT; y++) {
-                    for (int x = 0; x < WIDTH; x++) {
-                        setColor(r, g, b);
-                        setPixel(x, y);
-                        r = x % 32;
-                        g = (x + y) % 64;
-                        b = y % 32;
-                    }
-                }
-            }
+            // } else {
+            //     uint8_t r = 0, g = 0, b = 0;
+            //     for (int y = 0; y < HEIGHT; y++) {
+            //         for (int x = 0; x < WIDTH; x++) {
+            //             setColor(r, g, b);
+            //             setPixel(x, y);
+            //             r = x % 32;
+            //             g = (x + y) % 64;
+            //             b = y % 32;
+            //         }
+            //     }
+            // }
 
-            for (int i = 0; i < 32; i++) {
-                setColor(i, i, i);
-                drawLine(0, i, WIDTH - 1, i);
-            }
+            // for (int i = 0; i < 32; i++) {
+            //     setColor(i, i, i);
+            //     drawLine(0, i, WIDTH - 1, i);
+            // }
 
-            setColor(31, 63, 31);
-            setbgColor(0, 0, 0);
-            setFont(ter_u24b);
-            drawText(4, 33, "Hello World  !");
+            // setColor(31, 63, 31);
+            // setbgColor(0, 0, 0);
+            // setFont(ter_u24b);
+            // drawText(4, 33, "Hello World  !");
 
-            for (int i = 0; i < 64; i++) {
-                setColor(i / 2, 63 - i, i / 2);
-                drawLine(WIDTH - 1 - i, 0, WIDTH - 1 - i, HEIGHT - 1);
-            }
-            for (int i = 0; i < 64; i++) {
-                setColor(i / 2, i, i / 2);
-                drawLine(0, HEIGHT - 1 - i, WIDTH - 1, HEIGHT - 1 - i);
-            }
+            // for (int i = 0; i < 64; i++) {
+            //     setColor(i / 2, 63 - i, i / 2);
+            //     drawLine(WIDTH - 1 - i, 0, WIDTH - 1 - i, HEIGHT - 1);
+            // }
+            // for (int i = 0; i < 64; i++) {
+            //     setColor(i / 2, i, i / 2);
+            //     drawLine(0, HEIGHT - 1 - i, WIDTH - 1, HEIGHT - 1 - i);
+            // }
 
-            setColor(10, 20, 30);
-            drawCircle(80, 50, 30);
+            // setColor(10, 20, 30);
+            // drawCircle(80, 50, 30);
 
-            setColor(30, 10, 30);
-            drawCircle(40, 10, 90);
+            // setColor(30, 10, 30);
+            // drawCircle(40, 10, 90);
 
-            setColor(30, 0, 30);
-            drawLine(0, 0, WIDTH - 1, HEIGHT - 1);
+            // setColor(30, 0, 30);
+            // drawLine(0, 0, WIDTH - 1, HEIGHT - 1);
+            drawImage(10, 10, cam_on, 28, 28);
+            drawImage(10, 70, cam_off, 28, 28);
+
+
+
+
+
 
             flushBuffer();
         }

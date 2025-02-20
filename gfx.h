@@ -22,6 +22,8 @@ void setColorRaw(color565_t);
 void setbgColorRaw(color565_t);
 void setColor(uint8_t, uint8_t, uint8_t);
 void setTransparent(bool);
+// Function to draw an image from an RGB565 array
+void drawImage(uint16_t x, uint16_t y, const uint16_t *image_data, uint16_t width, uint16_t height)
 /* background color for fonts if !transparent */
 void setbgColor(uint8_t, uint8_t, uint8_t);
 void drawRect(uint16_t, uint16_t, uint16_t, uint16_t);
