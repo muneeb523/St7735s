@@ -422,7 +422,7 @@ void drawImage(uint16_t x, uint16_t y, const uint16_t *image_data, uint16_t widt
             uint16_t color = image_data[j * width + i];  // ✅ Read pixel color (RGB565)
 
             memcpy(&color_struct, &color, sizeof(color565_t));  // ✅ Convert uint16_t to color565_t
-            setColorRaw(color_struct);  // ✅ Set the correct color
+            setColorC(color_struct);  // ✅ Set the correct color
             
             setPixel(x + i, y + j);  // ✅ Draw pixel at the correct location
         }
