@@ -376,8 +376,12 @@ void drawText(uint16_t x, uint16_t y, const char *t) {
 void setColorC(color565_t c) {
     // color.u16 = __builtin_bswap16(c.u16);
     // color.u16 = (c.g << 6 | c.r) << 8 | (c.b << 3 | c.g >> 3);
-    color.u[0] = c.u[1];
-    color.u[1] = c.u[0];
+    color565_t swapped;
+    
+    swapped.u[0] = c.u[1];  // Swap high byte
+    swapped.u[1] = c.u[0];  // Swap low byte
+    
+    color = swapped;  // ✅ Store swapped color globally
 }
 
 void setbgColorC(color565_t c) {
@@ -413,7 +417,6 @@ void setbgColor24(uint32_t _color) {
     setbgColorC((color565_t){ .r = c->r*32/256, .g = c->g*64/256, .b = c->b*32/256 });
 }
 
-
 void drawImage(uint16_t x, uint16_t y, const uint16_t *image_data, uint16_t width, uint16_t height) {
     color565_t color_struct;  // Temporary storage for color conversion
 
@@ -421,10 +424,10 @@ void drawImage(uint16_t x, uint16_t y, const uint16_t *image_data, uint16_t widt
         for (uint16_t i = 0; i < width; i++) {
             uint16_t color = image_data[j * width + i];  // ✅ Read pixel color (RGB565)
 
-            memcpy(&color_struct, &color, sizeof(color565_t));  // ✅ Convert uint16_t to color565_t
-            setColorC(color_struct);  // ✅ Set the correct color
+            memcpy(&color_struct, &color, sizeof(color565_t));
+            setColorC(color_struct);  // ✅ Pass correct color to setColorC()
             
-            setPixel(x + i, y + j);  // ✅ Draw pixel at the correct location
+            setPixel(x + i, y + j);  // ✅ Draw pixel at correct position
         }
     }
 }
