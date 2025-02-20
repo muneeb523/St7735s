@@ -2,7 +2,7 @@
 #include "st7735s.h"
 #include "fonts.h"
 #include "gfx.h"
-
+#include "string.h"
 #ifndef abs
 #define abs(x) ( ((x)<0) ? -(x) : (x) )
 #endif
