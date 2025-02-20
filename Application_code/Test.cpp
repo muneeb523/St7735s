@@ -22,8 +22,7 @@ class DisplayExample {
 public:
     void run() {
         ST7735S_Init();
-        setOrientation(R180);
-
+        setOrientation(R90);  // Set display orientation for landscape mode
         while (true) {
             drawUI();  // Refresh UI
             waitForButtonPress(); // Wait for a button press to change mode
@@ -41,58 +40,73 @@ public:
             {270, 360}  // TORCH
         };
 
+        int centerX = 80;  // Adjusted for landscape mode
+        int centerY = 40;
+        int radius = 30;   // Reduced radius for better fitting
+
         // Draw pie wedges dynamically
         for (int i = 0; i < 4; i++) {
             if (i == current_mode) {
                 setColor(31, 31, 0);  // Active mode: Bright Yellow (RGB565)
-                drawPie(80, 40, 30, angles[i][0], angles[i][1]);  // Bigger wedge
+                drawPie(centerX, centerY, radius, angles[i][0], angles[i][1]);
             } else {
                 setColor(10, 10, 10);  // Inactive mode: Dark gray
-                drawPie(80, 40, 20, angles[i][0], angles[i][1]);  // Smaller wedge
+                drawPie(centerX, centerY, radius - 5, angles[i][0], angles[i][1]);
             }
         }
 
-        // Adjust icon positions to be inside the wedges
-        int iconX = 70, iconY = 30; // Default position
+        // Adjusted icon positions for landscape mode
+        struct IconPosition {
+            int x, y;
+        };
 
+        IconPosition positions[4] = {
+            {120, 20}, // CAMERA
+            {40, 20},  // SOUND
+            {40, 50},  // CALL
+            {120, 50}  // TORCH
+        };
+
+        // Draw correct icon for the current mode
         switch (current_mode) {
             case CAMERA:
-                drawImage(iconX, iconY, cam_on, 28, 28);
+                drawImage(positions[0].x, positions[0].y, cam_on, 20, 20);
                 break;
             case SOUND:
-                drawImage(iconX, iconY, cam_off, 28, 28);
+                drawImage(positions[1].x, positions[1].y, cam_off, 20, 20);
                 break;
             case CALL:
-                drawImage(iconX, iconY, mic, 28, 28);
+                drawImage(positions[2].x, positions[2].y, mic, 20, 20);
                 break;
             case TORCH:
-                drawImage(iconX, iconY, cam_off, 28, 28);
+                drawImage(positions[3].x, positions[3].y,cam_on, 20, 20);
                 break;
         }
+
+        // Draw battery and signal icons at the top
+        drawImage(5, 5, battery_icon, 16, 8);
+        drawImage(140, 5, signal_icon, 12, 8);
 
         flushBuffer();  // Update display
     }
 
     void waitForButtonPress() {
-        while (!isButtonPressed()) {} // Wait until button press is detected
-        updateMode(); // Change mode when pressed
+        while (!isButtonPressed()) {}
+        updateMode();
     }
 
     bool isButtonPressed() {
-        // Mock function - Replace with actual button read logic
+        // Placeholder for real button press logic (use GPIO input if applicable)
         static int counter = 0;
         counter++;
-        return (counter % 2000000 == 0); // Simulate button press
+        return (counter % 1000000 == 0); // Simulated press for testing
     }
 
-    // Change mode when button is pressed
     void updateMode() {
-        current_mode = static_cast<Mode>((current_mode + 1) % 4);  // Cycle modes
-      //  drawUI();  // Refresh screen after mode change
+        current_mode = static_cast<Mode>((current_mode + 1) % 4); // Cycle modes
     }
 };
 
-// Main function
 int main() {
     std::cout << "Start" << std::endl;
     DisplayExample display;
