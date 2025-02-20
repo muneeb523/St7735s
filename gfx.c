@@ -415,11 +415,16 @@ void setbgColor24(uint32_t _color) {
 
 
 void drawImage(uint16_t x, uint16_t y, const uint16_t *image_data, uint16_t width, uint16_t height) {
+    color565_t color_struct;  // Temporary storage for color conversion
+
     for (uint16_t j = 0; j < height; j++) {
         for (uint16_t i = 0; i < width; i++) {
-            uint16_t color = image_data[j * width + i];  // Read pixel color (RGB565)
-            setColorRaw(color);  // ✅ Set the color before drawing the pixel
-            setPixel(x + i, y + j);  // ✅ Now draw the pixel
+            uint16_t color = image_data[j * width + i];  // ✅ Read pixel color (RGB565)
+
+            memcpy(&color_struct, &color, sizeof(color565_t));  // ✅ Convert uint16_t to color565_t
+            setColorRaw(color_struct);  // ✅ Set the correct color
+            
+            setPixel(x + i, y + j);  // ✅ Draw pixel at the correct location
         }
     }
 }
