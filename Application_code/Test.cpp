@@ -64,7 +64,7 @@ public:
         };
 
         IconPosition positions[4] = {
-            {120, 20}, // CAMERA
+            {100, 10}, // CAMERA
             {40, 20},  // SOUND
             {40, 50},  // CALL
             {120, 50}  // TORCH
@@ -73,7 +73,7 @@ public:
         // Draw correct icon for the current mode
         switch (current_mode) {
             case CAMERA:
-                drawImage(positions[0].x, positions[0].y, cam_on, 27, 27);
+                drawImage(positions[0].x, positions[0].y, cam_on, 28, 28);
                 break;
             case SOUND:
                 drawImage(positions[1].x, positions[1].y, cam_on, 27, 27);
@@ -87,7 +87,7 @@ public:
         }
 
         // // Draw battery and signal icons at the top
-        // drawImage(110, 5, battery_icon, 27, 27);
+        drawImage(20, 5, battery_good, 24, 24);
         // drawImage(140, 5, signal_icon, 27, 27);
 
         flushBuffer();  // Update display
