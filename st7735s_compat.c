@@ -82,7 +82,7 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
     // Set the SPI mode to SPI_MODE_0
     uint8_t mode = SPI_MODE_0;
     if (ioctl(st7735.spi_fd, SPI_IOC_WR_MODE, &mode) < 0) {
-        perror("Failed to set SPI mode");
+        perror(" SPI mode");
         close(st7735.spi_fd);
         exit(1);
     }

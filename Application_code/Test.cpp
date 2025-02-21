@@ -22,7 +22,7 @@ class DisplayExample {
 public:
     void run() {
         ST7735S_Init();
-        setOrientation(R90);  // Set display orientation for landscape mode
+        setOrientation(R180);  // Set display orientation for landscape mode
         while (true) {
             drawUI();  // Refresh UI
             waitForButtonPress(); // Wait for a button press to change mode
