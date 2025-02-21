@@ -17,7 +17,7 @@ enum Mode {
 };
 
 Mode current_mode = CAMERA;  // Start with Camera mode
-
+int previous_mode = -1;  
 class DisplayExample {
 public:
     void run() {
@@ -39,55 +39,63 @@ public:
             {180, 270}, // CALL
             {270, 360}  // TORCH
         };
-
+        
         int centerX = 80;  // Adjusted for landscape mode
         int centerY = 40;
-        int radius = 30;   // Reduced radius for better fitting
-
-        // Draw pie wedges dynamically
+        int radius = 35;   // Reduced radius for better fitting
+        int boundaryRadius = radius + 2; // Slightly larger for boundary effect
+        
+        // Draw boundary for each wedge
+        for (int i = 0; i < 4; i++) {
+            setColor(15, 15, 15);  // Darker boundary color
+            drawPie(centerX, centerY, boundaryRadius, angles[i][0], angles[i][1]);
+        }
+        
+        // Draw pie wedges dynamically with distinct separation
         for (int i = 0; i < 4; i++) {
             if (i == current_mode) {
                 setColor(31, 31, 0);  // Active mode: Bright Yellow (RGB565)
                 drawPie(centerX, centerY, radius, angles[i][0], angles[i][1]);
             } else {
                 setColor(10, 10, 10);  // Inactive mode: Dark gray
-                drawPie(centerX, centerY, radius - 5, angles[i][0], angles[i][1]);
+                drawPie(centerX, centerY, radius - 3, angles[i][0], angles[i][1]);
             }
         }
-
+        
         // Adjusted icon positions for landscape mode
         struct IconPosition {
             int x, y;
         };
-
+        
         IconPosition positions[4] = {
             {120, 20}, // CAMERA
             {40, 20},  // SOUND
             {40, 50},  // CALL
             {120, 50}  // TORCH
         };
-
+        
         // Draw correct icon for the current mode
         switch (current_mode) {
             case CAMERA:
-                drawImage(positions[0].x, positions[0].y, cam_on, 20, 20);
+                drawImage(positions[0].x, positions[0].y, cam_on, 27, 27);
                 break;
             case SOUND:
-                drawImage(positions[1].x, positions[1].y, cam_off, 20, 20);
+                drawImage(positions[1].x, positions[1].y, cam_off, 27, 27);
                 break;
             case CALL:
-                drawImage(positions[2].x, positions[2].y, mic, 20, 20);
+                drawImage(positions[2].x, positions[2].y, mic, 27, 27);
                 break;
             case TORCH:
-                drawImage(positions[3].x, positions[3].y,cam_on, 20, 20);
+                drawImage(positions[3].x, positions[3].y, cam_on, 27, 27);
                 break;
         }
-
+        
         // Draw battery and signal icons at the top
-        drawImage(5, 5, battery_icon, 16, 8);
+        drawImage(20, 5, battery_icon, 16, 8);
         drawImage(140, 5, signal_icon, 12, 8);
-
+        
         flushBuffer();  // Update display
+        
     }
 
     void waitForButtonPress() {

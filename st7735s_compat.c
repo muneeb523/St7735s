@@ -18,7 +18,7 @@ int spi_fd;
         unsigned int rst_line_offset =14;
 
 #define SPI_DEVICE "/dev/spidev1.0"
-#define SPI_DEFAULT_FREQ  8000000 // 8 MHz
+#define SPI_DEFAULT_FREQ  15000000 // 8 MHz
 
 typedef struct {
     int spi_fd;
