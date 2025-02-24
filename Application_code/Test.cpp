@@ -8,6 +8,7 @@ extern "C"
 #include "../gfx.h"
 #include "../image.h"
 }
+
 // Define modes
 enum Mode
 {
@@ -17,8 +18,9 @@ enum Mode
     TORCH
 };
 
-Mode current_mode = SOUND; // Start with Camera mode
+Mode current_mode = CAMERA; // Start with Camera mode
 int previous_mode = -1;
+
 class DisplayExample
 {
 public:
@@ -26,18 +28,16 @@ public:
     {
         ST7735S_Init();
         setOrientation(R90); // Set display orientation for landscape mode
-        int i = 1;
-        while (i)
+
+        while (true)
         {
             drawUI(); // Refresh UI
-            i = 0;
-              //waitForButtonPress(); // Wait for a button press to change mode
+            waitForButtonPress(); // Wait for a button press to change mode
         }
     }
 
     void drawUI()
     {
-
         fillScreen(); // Clear screen
 
         drawImage(5, 12, battery_good, 24, 24);
@@ -55,14 +55,12 @@ public:
         int centerX = 40; // Adjusted for landscape mode
         int centerY = 80;
         int radius = 32; // Reduced radius for better fitting
-
-        // Draw pie wedges dynamically
         int gapAngle = 10; // Define a small gap between slices
 
         for (int i = 0; i < 4; i++)
         {
-            int startAngle = angles[i][0] + gapAngle / 2; // Add half gap at start
-            int endAngle = angles[i][1] - gapAngle / 2;   // Subtract half gap at end
+            int startAngle = angles[i][0] + gapAngle / 2;
+            int endAngle = angles[i][1] - gapAngle / 2;
 
             if (i == current_mode)
             {
@@ -72,11 +70,11 @@ public:
             else
             {
                 setColor(10, 10, 10); // Inactive mode: Dark gray
-                drawPie(centerX, centerY, radius - 5, startAngle, endAngle);
+                drawPie(centerX, centerY, radius - 2, startAngle, endAngle);
             }
+            flushBuffer();
         }
 
-        flushBuffer();
         // Adjusted icon positions for landscape mode
         struct IconPosition
         {
@@ -85,29 +83,58 @@ public:
 
         IconPosition positions[4] = {
             {25, 130}, // CAMERA
-            {25, 130},  // SOUND
-            {40, 50},  // CALL
-            {120, 50}  // TORCH
+            {25, 130}, // SOUND
+            {25, 130}, // CALL
+            {25, 130}  // TORCH
         };
 
         // Draw correct icon for the current mode
         switch (current_mode)
         {
         case CAMERA:
-            drawImage(positions[0].x, positions[0].y, cam_on, 28, 28);
+            animateCameraIcon(positions[0].x, positions[0].y);
             break;
         case SOUND:
             drawImage(positions[1].x, positions[1].y, mic, 16, 16);
             break;
         case CALL:
-            drawImage(positions[2].x, positions[2].y, mic, 27, 27);
+            drawImage(positions[2].x, positions[2].y, mic, 16, 16);
             break;
         case TORCH:
-            drawImage(positions[3].x, positions[3].y, cam_on, 27, 27);
+            drawImage(positions[3].x, positions[3].y, cam_on_28_28, 28, 28);
             break;
         }
 
         flushBuffer(); // Update display
+    }
+
+    void animateCameraIcon(int x, int y)
+    {
+        // Transition sizes for smooth effect
+        struct ImageSize
+        {
+            const uint16_t *image;
+            int size;
+        };
+
+        ImageSize sizes[] = {
+            {cam_on_24_24, 24},
+            {cam_on_28_28, 28},
+            {cam_on_32_32, 32}};
+
+        int numSizes = sizeof(sizes) / sizeof(sizes[0]);
+
+        for (int i = 0; i < numSizes; i++)
+        {
+            // Instead of clearImage, we overwrite with a background rectangle
+            setColor(0, 0, 0); // Black background
+            filledRect(x, y, sizes[i].size, sizes[i].size);
+
+            // Draw the next image
+            drawImage(x, y, sizes[i].image, sizes[i].size, sizes[i].size);
+            flushBuffer();
+         //   delay(50); // Small delay for smooth transition
+        }
     }
 
     void waitForButtonPress()
@@ -120,7 +147,6 @@ public:
 
     bool isButtonPressed()
     {
-        // Placeholder for real button press logic (use GPIO input if applicable)
         static int counter = 0;
         counter++;
         return (counter % 1000000 == 0); // Simulated press for testing
