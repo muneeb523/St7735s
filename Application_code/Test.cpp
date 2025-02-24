@@ -1,6 +1,5 @@
 ﻿#include <iostream>
 
-// Ensure C functions can be used in C++
 extern "C"
 {
 #include "../st7735s.h"
@@ -9,7 +8,6 @@ extern "C"
 #include "../image.h"
 }
 
-// Define modes
 enum Mode
 {
     CAMERA,
@@ -18,8 +16,7 @@ enum Mode
     TORCH
 };
 
-Mode current_mode = CAMERA; // Start with Camera mode
-int previous_mode = -1;
+Mode current_mode = CAMERA;
 
 class DisplayExample
 {
@@ -27,113 +24,71 @@ public:
     void run()
     {
         ST7735S_Init();
-        setOrientation(R90); // Set display orientation for landscape mode
+        setOrientation(R90);
 
         while (true)
         {
-            drawUI(); // Refresh UI
-            waitForButtonPress(); // Wait for a button press to change mode
+            drawUI();
+            waitForButtonPress();
         }
     }
 
     void drawUI()
     {
-        fillScreen(); // Clear screen
+        fillScreen();
+        setColor(0, 0, 0);
 
         drawImage(5, 12, battery_good, 24, 24);
         drawImage(55, 15, signal, 20, 18);
         flushBuffer();
 
-        // Define pie wedge angles
-        float angles[4][2] = {
-            {0, 90},    // CAMERA
-            {90, 180},  // SOUND
-            {180, 270}, // CALL
-            {270, 360}  // TORCH
-        };
-
-        int centerX = 40; // Adjusted for landscape mode
-        int centerY = 80;
-        int radius = 32; // Reduced radius for better fitting
-        int gapAngle = 10; // Define a small gap between slices
-
-        for (int i = 0; i < 4; i++)
-        {
-            int startAngle = angles[i][0] + gapAngle / 2;
-            int endAngle = angles[i][1] - gapAngle / 2;
-
-            if (i == current_mode)
-            {
-                setColor(31, 31, 0); // Active mode: Bright Yellow
-                drawPie(centerX, centerY, radius, startAngle, endAngle);
-            }
-            else
-            {
-                setColor(10, 10, 10); // Inactive mode: Dark gray
-                drawPie(centerX, centerY, radius - 2, startAngle, endAngle);
-            }
-            flushBuffer();
-        }
-
-        // Adjusted icon positions for landscape mode
         struct IconPosition
         {
             int x, y;
         };
 
         IconPosition positions[4] = {
-            {25, 130}, // CAMERA
+            {50, 60},  // CAMERA
             {25, 130}, // SOUND
-            {25, 130}, // CALL
-            {25, 130}  // TORCH
+            {80, 130}, // CALL
+            {50, 180}  // TORCH
         };
 
-        // Draw correct icon for the current mode
-        switch (current_mode)
-        {
-        case CAMERA:
-            animateCameraIcon(positions[0].x, positions[0].y);
-            break;
-        case SOUND:
-            drawImage(positions[1].x, positions[1].y, mic, 16, 16);
-            break;
-        case CALL:
-            drawImage(positions[2].x, positions[2].y, mic, 16, 16);
-            break;
-        case TORCH:
-            drawImage(positions[3].x, positions[3].y, cam_on_28_28, 28, 28);
-            break;
-        }
-
-        flushBuffer(); // Update display
-    }
-
-    void animateCameraIcon(int x, int y)
-    {
-        // Transition sizes for smooth effect
         struct ImageSize
         {
-            const uint16_t *image;
-            int size;
+            const uint16_t *image_16;
+            const uint16_t *image_24;
+            const uint16_t *image_28;
+            const uint16_t *image_32;
         };
 
-        ImageSize sizes[] = {
-            {cam_on_24_24, 24},
-            {cam_on_28_28, 28},
-            {cam_on_32_32, 32}};
+        ImageSize imageSets[4] = {
+            {cam_on_16_16, cam_on_24_24, cam_on_28_28, cam_on_32_32},
+            {mic_16_16, mic_24_24, mic_28_28, mic_32_32},
+            {cam_on_16_16, cam_on_24_24, cam_on_28_28, cam_on_32_32},
+            {mic_16_16, mic_24_24, mic_28_28, mic_32_32}};
 
-        int numSizes = sizeof(sizes) / sizeof(sizes[0]);
+        for (int i = 0; i < 4; i++)
+        {
+            if (i == current_mode)
+                animateIcon(imageSets[i], positions[i].x, positions[i].y);
+            else
+                drawImage(positions[i].x, positions[i].y, imageSets[i].image_16, 16, 16);
+        }
+        flushBuffer();
+    }
+
+    void animateIcon(ImageSize &images, int x, int y)
+    {
+        const uint16_t *sizes[] = {images.image_16, images.image_24, images.image_28, images.image_32};
+        int dimension[] = {16, 24, 28, 32};
+        int numSizes = sizeof(dimension) / sizeof(dimension[0]);
 
         for (int i = 0; i < numSizes; i++)
         {
-            // Instead of clearImage, we overwrite with a background rectangle
-            setColor(0, 0, 0); // Black background
-            filledRect(x, y, sizes[i].size, sizes[i].size);
-
-            // Draw the next image
-            drawImage(x, y, sizes[i].image, sizes[i].size, sizes[i].size);
+            drawImage(x, y, sizes[i], dimension[i], dimension[i]);
             flushBuffer();
-         //   delay(50); // Small delay for smooth transition
+            _Delay(5);
         }
     }
 
@@ -149,12 +104,12 @@ public:
     {
         static int counter = 0;
         counter++;
-        return (counter % 1000000 == 0); // Simulated press for testing
+        return (counter % 1000000 == 0);
     }
 
     void updateMode()
     {
-        current_mode = static_cast<Mode>((current_mode + 1) % 4); // Cycle modes
+        current_mode = static_cast<Mode>((current_mode + 1) % 4);
     }
 };
 
