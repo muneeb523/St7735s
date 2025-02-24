@@ -44,7 +44,7 @@ public:
 
     void drawUI()
     {
-        setColor(2, 2, 2);
+        setColor(0, 0, 0);
         fillScreen();
 
         drawImage(5, 12, battery_good, 24, 24);
@@ -64,14 +64,14 @@ public:
 
         ImageSize imageSets[4] = {
             {video_16_16, video_32_32},
-            {sound_16_16, sound_16_16},
+            {sound_16_16, sound_32_32},
             {flash_16_16, flash_32_32},
             {voip_16_16, voip_32_32}};
 
         for (int i = 0; i < 4; i++)
         {
             bool isSelected = (i == current_mode || i == next_mode);
-            int iconSize = isSelected ? 32 : 24;
+            int iconSize = isSelected ? 32 : 16;
             int offset = isSelected ? -4 : 0;
 
             drawImage(positions[i].x + offset, positions[i].y + offset, 
