@@ -44,7 +44,7 @@ public:
 
     void drawUI()
     {
-        setColor(0, 0, 0);
+        setColor(2, 2, 2);
         fillScreen();
 
         drawImage(5, 12, battery_good, 24, 24);
@@ -56,7 +56,7 @@ public:
         };
 
         IconPosition positions[4] = {
-            {45, 60},  // CAMERA
+            {48, 60},  // CAMERA
             {10, 60},  // SOUND
             {45, 95},  // CALL
             {10, 95}   // TORCH
