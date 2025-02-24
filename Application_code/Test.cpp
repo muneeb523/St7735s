@@ -63,10 +63,10 @@ public:
         };
 
         ImageSize imageSets[4] = {
-            {cam_on_24_24, cam_on_32_32},
-            {mic_24_24, mic_32_32},
-            {cam_on_24_24, sound_32_32},
-            {mic_24_24, mic_32_32}};
+            {video_16_16, video_32_32},
+            {sound_16_16, sound_16_16},
+            {flash_16_16, flash_32_32},
+            {voip_16_16, voip_32_32}};
 
         for (int i = 0; i < 4; i++)
         {
