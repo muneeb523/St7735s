@@ -15,12 +15,14 @@ enum Mode
     CALL,
     TORCH
 };
+
 struct ImageSize
 {
     const uint16_t *image_24;
     const uint16_t *image_32;
 };
-int i=0;
+
+int i = 0;
 Mode current_mode = CAMERA;
 
 class DisplayExample
@@ -30,7 +32,8 @@ public:
     {
         ST7735S_Init();
         setOrientation(R90);
-
+        fillScreen();
+        flushBuffer();
         while (true)
         {
             drawUI();
@@ -40,12 +43,11 @@ public:
 
     void drawUI()
     {
+        setColor(2, 2, 2);
         fillScreen();
-        setColor(0, 0, 0);
 
         drawImage(5, 12, battery_good, 24, 24);
         drawImage(55, 15, signal, 20, 18);
-        flushBuffer();
 
         struct IconPosition
         {
@@ -55,25 +57,35 @@ public:
         IconPosition positions[4] = {
             {45, 60},  // CAMERA
             {10, 60},  // SOUND
-            {45, 100}, // CALL
-            {10, 100}  // TORCH
+            {45, 95}, // CALL
+            {10, 95}  // TORCH
         };
 
         ImageSize imageSets[4] = {
-            {cam_on_24_24, cam_on_32_32},
-            {mic_24_24, mic_32_32},
-            {cam_on_24_24, cam_on_32_32},
-            {mic_24_24, mic_32_32}};
+            {cam_on_16_16, cam_on_32_32},
+            {mic_16_16, mic_32_32},
+            {cam_on_16_16, cam_on_32_32},
+            {mic_16_16, mic_32_32}};
 
         for (int i = 0; i < 4; i++)
         {
-            if (i == current_mode){
-                drawImage(positions[i].x, positions[i].y, imageSets[i].image_32, 32, 32);
+            int iconSize = (i == current_mode) ? 32 : 24; // Determine the size
+            int offset = (i == current_mode) ? -4 : 0;    // Center adjustment for bigger icons
+
+            // **Highlight the selected icon background**
+            if (i == current_mode)
+            {
+               // setColor(100, 100, 255); // Highlight color (light blue)
+                //filledRect(positions[i].x - 4, positions[i].y - 4, 36, 36);
             }
-            else{
-                drawImage(positions[i].x, positions[i].y, imageSets[i].image_24, 24, 24);
-            }
+
+            // **Draw icon centered at its position**
+            drawImage(positions[i].x + offset, positions[i].y + offset, 
+                      (i == current_mode) ? imageSets[i].image_32 : imageSets[i].image_24, 
+                      iconSize, iconSize);
         }
+
+
         flushBuffer();
     }
 
@@ -95,20 +107,22 @@ public:
 
     void updateMode()
     {
-        if(i==1){
-        current_mode =SOUND;
+        if (i == 1)
+        {
+            current_mode = SOUND;
         }
-        else if(i==2){
-            current_mode =CALL;
-
+        else if (i == 2)
+        {
+            current_mode = CALL;
         }
-        else if(i==3){
-            current_mode =TORCH;
-
+        else if (i == 3)
+        {
+            current_mode = TORCH;
         }
-        else if(i==4){
-            current_mode =CAMERA;
-            i=0;
+        else if (i == 4)
+        {
+            current_mode = CAMERA;
+            i = 0;
         }
         i++;
     }
