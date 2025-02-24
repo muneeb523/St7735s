@@ -24,6 +24,7 @@ struct ImageSize
 
 int i = 0;
 Mode current_mode = CAMERA;
+Mode next_mode = SOUND;
 
 class DisplayExample
 {
@@ -57,34 +58,26 @@ public:
         IconPosition positions[4] = {
             {45, 60},  // CAMERA
             {10, 60},  // SOUND
-            {45, 95}, // CALL
-            {10, 95}  // TORCH
+            {45, 95},  // CALL
+            {10, 95}   // TORCH
         };
 
         ImageSize imageSets[4] = {
-            {cam_on_16_16, cam_on_32_32},
-            {mic_16_16, mic_32_32},
-            {cam_on_16_16, cam_on_32_32},
-            {mic_16_16, mic_32_32}};
+            {cam_on_24_24, cam_on_32_32},
+            {mic_24_24, mic_32_32},
+            {cam_on_24_24, sound_32_32},
+            {mic_24_24, mic_32_32}};
 
         for (int i = 0; i < 4; i++)
         {
-            int iconSize = (i == current_mode) ? 32 : 24; // Determine the size
-            int offset = (i == current_mode) ? -4 : 0;    // Center adjustment for bigger icons
+            bool isSelected = (i == current_mode || i == next_mode);
+            int iconSize = isSelected ? 32 : 24;
+            int offset = isSelected ? -4 : 0;
 
-            // **Highlight the selected icon background**
-            if (i == current_mode)
-            {
-               // setColor(100, 100, 255); // Highlight color (light blue)
-                //filledRect(positions[i].x - 4, positions[i].y - 4, 36, 36);
-            }
-
-            // **Draw icon centered at its position**
             drawImage(positions[i].x + offset, positions[i].y + offset, 
-                      (i == current_mode) ? imageSets[i].image_32 : imageSets[i].image_24, 
+                      isSelected ? imageSets[i].image_32 : imageSets[i].image_24, 
                       iconSize, iconSize);
         }
-
 
         flushBuffer();
     }
@@ -107,22 +100,26 @@ public:
 
     void updateMode()
     {
-        if (i == 1)
+        if (i == 0)
+        {
+            current_mode = CAMERA;
+            next_mode = SOUND;
+        }
+        else if (i == 1)
         {
             current_mode = SOUND;
+            next_mode = CALL;
         }
         else if (i == 2)
         {
             current_mode = CALL;
+            next_mode = TORCH;
         }
         else if (i == 3)
         {
             current_mode = TORCH;
-        }
-        else if (i == 4)
-        {
-            current_mode = CAMERA;
-            i = 0;
+            next_mode = CAMERA;
+            i = -1;
         }
         i++;
     }
