@@ -15,7 +15,12 @@ enum Mode
     CALL,
     TORCH
 };
-
+struct ImageSize
+{
+    const uint16_t *image_24;
+    const uint16_t *image_32;
+};
+int i=0;
 Mode current_mode = CAMERA;
 
 class DisplayExample
@@ -48,48 +53,28 @@ public:
         };
 
         IconPosition positions[4] = {
-            {50, 60},  // CAMERA
-            {25, 130}, // SOUND
-            {80, 130}, // CALL
-            {50, 180}  // TORCH
-        };
-
-        struct ImageSize
-        {
-            const uint16_t *image_16;
-            const uint16_t *image_24;
-            const uint16_t *image_28;
-            const uint16_t *image_32;
+            {45, 60},  // CAMERA
+            {10, 60},  // SOUND
+            {45, 100}, // CALL
+            {10, 100}  // TORCH
         };
 
         ImageSize imageSets[4] = {
-            {cam_on_16_16, cam_on_24_24, cam_on_28_28, cam_on_32_32},
-            {mic_16_16, mic_24_24, mic_28_28, mic_32_32},
-            {cam_on_16_16, cam_on_24_24, cam_on_28_28, cam_on_32_32},
-            {mic_16_16, mic_24_24, mic_28_28, mic_32_32}};
+            {cam_on_24_24, cam_on_32_32},
+            {mic_24_24, mic_32_32},
+            {cam_on_24_24, cam_on_32_32},
+            {mic_24_24, mic_32_32}};
 
         for (int i = 0; i < 4; i++)
         {
-            if (i == current_mode)
-                animateIcon(imageSets[i], positions[i].x, positions[i].y);
-            else
-                drawImage(positions[i].x, positions[i].y, imageSets[i].image_16, 16, 16);
+            if (i == current_mode){
+                drawImage(positions[i].x, positions[i].y, imageSets[i].image_32, 32, 32);
+            }
+            else{
+                drawImage(positions[i].x, positions[i].y, imageSets[i].image_24, 24, 24);
+            }
         }
         flushBuffer();
-    }
-
-    void animateIcon(ImageSize &images, int x, int y)
-    {
-        const uint16_t *sizes[] = {images.image_16, images.image_24, images.image_28, images.image_32};
-        int dimension[] = {16, 24, 28, 32};
-        int numSizes = sizeof(dimension) / sizeof(dimension[0]);
-
-        for (int i = 0; i < numSizes; i++)
-        {
-            drawImage(x, y, sizes[i], dimension[i], dimension[i]);
-            flushBuffer();
-            _Delay(5);
-        }
     }
 
     void waitForButtonPress()
@@ -98,6 +83,7 @@ public:
         {
         }
         updateMode();
+        _Delay(5000);
     }
 
     bool isButtonPressed()
@@ -109,7 +95,22 @@ public:
 
     void updateMode()
     {
-        current_mode = static_cast<Mode>((current_mode + 1) % 4);
+        if(i==1){
+        current_mode =SOUND;
+        }
+        else if(i==2){
+            current_mode =CALL;
+
+        }
+        else if(i==3){
+            current_mode =TORCH;
+
+        }
+        else if(i==4){
+            current_mode =CAMERA;
+            i=0;
+        }
+        i++;
     }
 };
 
