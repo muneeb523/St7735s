@@ -54,14 +54,14 @@ public:
         };
 
         // Draw the complete mode image at a fixed position
-        drawImage(0, 50, modeImages[i].image, modeImages[i].width, modeImages[i].height);
+        drawImage(0, 60, modeImages[i].image, modeImages[i].width, modeImages[i].height);
         flushBuffer();
     }
 
     void waitForButtonPress() {
         while (!isButtonPressed()) {}
         updateMode();
-        _Delay(200);
+        _Delay(5000);
     }
 
     bool isButtonPressed() {
