@@ -40,8 +40,8 @@ public:
         fillScreen();
 
         // Battery and Signal icons
-        drawImage(5, 12, battery_good, 24, 24);
-        drawImage(55, 15, signal, 20, 18);
+        drawImage(5, 12, battery_level2, 24, 24);
+        drawImage(55, 15, signal_level2, 20, 18);
 
         // Modes with their respective image names & sizes
         ImageSize modeImages[6] = {
