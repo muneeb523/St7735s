@@ -45,16 +45,16 @@ public:
 
         // Modes with their respective image names & sizes
         ImageSize modeImages[6] = {
-            {Mode1, 54, 60},
-            {Mode2, 60, 54},
-            {Mode3, 57, 57},
-            {Mode4, 57, 57},
-            {Mode5, 56, 57},
-            {Mode6, 57, 57}
+            {Mode1, 80, 60},
+            {Mode2, 80, 60},
+            {Mode3, 80, 60},
+            {Mode4, 80, 60},
+            {Mode5, 80, 60},
+            {Mode6, 80, 60}
         };
 
         // Draw the complete mode image at a fixed position
-        drawImage(20, 50, modeImages[i].image, modeImages[i].width, modeImages[i].height);
+        drawImage(0, 50, modeImages[i].image, modeImages[i].width, modeImages[i].height);
         flushBuffer();
     }
 
