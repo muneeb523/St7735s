@@ -26,26 +26,27 @@ class DisplayExample {
 public:
     void run() {
         ST7735S_Init();
-        setOrientation(R90);
+        setOrientation(R180);
         fillScreen();
         flushBuffer();
-        while (true) {
+        while (i=0) {
             drawUI();
             waitForButtonPress();
         }
+        i=1;
     }
 
     void drawUI() {
-        setColor(0, 0, 0); // Black background
+        // setColor(0, 0, 0); // Black background
         fillScreen();
 
         // Battery and Signal icons
-        drawImage(5, 12, battery_level2, 24, 24);
-        drawImage(55, 15, signal_level2, 20, 18);
+        // drawImage(5, 12, battery_level2, 24, 24);
+        // drawImage(55, 15, signal_level3, 20, 18);
 
         // Modes with their respective image names & sizes
         ImageSize modeImages[6] = {
-            {Mode1, 80, 60},
+            {Whole, 160, 80},
             {Mode2, 80, 60},
             {Mode3, 80, 60},
             {Mode4, 80, 60},
@@ -54,7 +55,7 @@ public:
         };
 
         // Draw the complete mode image at a fixed position
-        drawImage(0, 60, modeImages[i].image, modeImages[i].width, modeImages[i].height);
+        drawImage(0, 0, modeImages[i].image, modeImages[i].width, modeImages[i].height);
         flushBuffer();
     }
 
