@@ -42,7 +42,6 @@ public:
         while (true)
         {
             drawUI();
-        
             waitForButtonPress();
         }
     
