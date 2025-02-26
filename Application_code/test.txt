@@ -66,9 +66,8 @@ public:
             {Mode5, 80, 60},
             {Mode6, 80, 60}};
 
-        // Draw the complete mode image at a fixed position
-          drawImage(0, 0, modeImages[i].image, modeImages[i].width, modeImages[i].height);
-        //drawImage(0, 0, Whole, 160, 80);
+        //< Draw the complete mode image at a fixed position
+          drawImage(0, 43, modeImages[i].image, modeImages[i].width, modeImages[i].height);
         flushBuffer();
     }
 
