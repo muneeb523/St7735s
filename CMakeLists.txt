@@ -15,17 +15,22 @@ target_sources(example_exec PRIVATE
     gfx.c                  # Graphics source file
     st7735s.c              # ST7735S driver source file
     st7735s_compat.c       # ST7735S compatibility source file
-    fonts.c                # Font handling source file (inside utils/fonts)
+    fonts.c                # Font handling source file
 )
 
 # Include directories for header files
 target_include_directories(example_exec PRIVATE
-    utils                  # For fonts headers in utils
-    utils/fonts            # For gfx, st7735s, st7735s_compat headers in the main directory
+    utils                  # For fonts headers
+    utils/fonts            # For gfx, st7735s, st7735s_compat headers
 )
 
-# Link the gpiod library for GPIO functionality
-target_link_libraries(example_exec PRIVATE gpiod)
+# Link necessary libraries
+target_link_libraries(example_exec PRIVATE 
+    gpiod    # GPIO control library
+    pthread  # Threading support
+    rt       # Real-time clock support (needed for clock_gettime)
+    m        # Math functions
+)
 
 # Set C and C++ standards
 set(CMAKE_C_STANDARD 99)
@@ -39,3 +44,5 @@ set_source_files_properties(
     PROPERTIES LANGUAGE C
 )
 
+# Print final linking status
+message(STATUS "Linking libraries: gpiod, pthread, rt, m")
