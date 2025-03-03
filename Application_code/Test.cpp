@@ -62,11 +62,11 @@ public:
     void drawUI()
     {
         setColor(0, 0, 0); // Black background
-        fillScreen();
+  
 
         // Battery and Signal icons
-        drawImage(5, 12, battery_level2, 16, 16);
-        drawImage(55, 15, signal_level1, 19, 16);
+        drawImage(5, 7, battery_level2, 16, 16);
+        drawImage(55, 7, signal_level1, 19, 16);
 
         // Modes with their respective image names & sizes
         ImageSize modeImages[6] = {
@@ -80,11 +80,13 @@ public:
         // Draw mode image at fixed position
         drawImage(0, 60, modeImages[i].image, modeImages[i].width, modeImages[i].height);
 
+        
         // Display NTP Time in "HH:MM" format
         setColor(31, 63, 31); // Green text
         setbgColor(0, 0, 0);  // Black background
         setFont(ter_u12b);    // Smallest readable font
-        drawText(30, 25, currentTime.c_str());
+        //printf("Displayed Time on Screen: %s\n", currentTime.c_str());
+        drawText(25, 35, currentTime.c_str());
 
         flushBuffer();
     }
