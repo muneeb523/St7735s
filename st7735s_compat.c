@@ -118,7 +118,8 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
 
   
 void SPI_Init(void) {
-    ST7735_Init("/dev/gpiochip5",14,13,8000000);
+
+    ST7735_Init("/dev/gpiochip3",1,4,8000000);
 
 	// Pin_Low(CS);
 }
@@ -131,23 +132,23 @@ void Pin_CS_High(void) {
 
 void Pin_RES_High(void) {
 
-    setLineValue(14, GPIOD_LINE_VALUE_ACTIVE);
+    setLineValue(1, GPIOD_LINE_VALUE_ACTIVE);
 
 }
 
 void Pin_RES_Low(void) {
 
-  setLineValue(14, GPIOD_LINE_VALUE_INACTIVE);
+  setLineValue(1, GPIOD_LINE_VALUE_INACTIVE);
 }
 
 void Pin_DC_High(void) {
 
-    setLineValue(13, GPIOD_LINE_VALUE_ACTIVE);
+    setLineValue(4, GPIOD_LINE_VALUE_ACTIVE);
 }
 
 void Pin_DC_Low(void) {
 
-   setLineValue(13, GPIOD_LINE_VALUE_INACTIVE); // Command mode
+   setLineValue(4, GPIOD_LINE_VALUE_INACTIVE); // Command mode
 
 }
 
