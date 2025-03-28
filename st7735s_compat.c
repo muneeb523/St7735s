@@ -269,7 +269,7 @@ void _Delay(uint32_t d) {
 
 }
 
-void Button_Init(){
+int  Button_Init(){
 
     static const char *const chip_path = "/dev/gpiochip3";
 	static const unsigned int line_offset = 2;
