@@ -2,6 +2,7 @@
 #define __st7735s_compat_h__
 
 #include <inttypes.h>
+#include <gpiod.h>
 
 /* this may differ from the default 80x160 */
 #define defWIDTH   160
@@ -30,6 +31,7 @@ void SPI_TransmitCmd(uint16_t len, uint8_t *data);
 void SPI_TransmitData(uint16_t len, uint8_t *data);
 void SPI_Transmit(uint16_t len, uint8_t *data);
 void _Delay(uint32_t d);
+void Button_Init();
 
 #ifdef __cplusplus
 } // extern "C"
