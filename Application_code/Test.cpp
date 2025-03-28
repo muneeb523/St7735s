@@ -47,6 +47,7 @@ ImageSize modeImages[7] = {
 
 std::atomic<int> currentMode(0);
 std::atomic<bool> modeConfirmed(false);
+std::atomic<bool> buttonPressed(false);
 std::chrono::time_point<std::chrono::steady_clock> lastPressTime;
 
 // GPIO Configuration
