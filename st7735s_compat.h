@@ -31,7 +31,7 @@ void SPI_TransmitCmd(uint16_t len, uint8_t *data);
 void SPI_TransmitData(uint16_t len, uint8_t *data);
 void SPI_Transmit(uint16_t len, uint8_t *data);
 void _Delay(uint32_t d);
-void Button_Init();
+int  Button_Init();
 
 #ifdef __cplusplus
 } // extern "C"
