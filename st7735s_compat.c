@@ -278,8 +278,8 @@ void Button_Init(){
 	enum gpiod_line_value value;
 	int ret;
 
-    request = request_input_line(chip_path, line_offset, "get-line-value");
-	if (!request) {
+    btn_request = request_input_line(chip_path, line_offset, "get-line-value");
+	if (!btn_request) {
 		fprintf(stderr, "failed to request line: %s\n",
 			strerror(errno));
 		return EXIT_FAILURE;

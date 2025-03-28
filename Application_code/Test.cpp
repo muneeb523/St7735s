@@ -9,6 +9,7 @@
 #include <atomic>
 
 extern "C" {
+
 #include <gpiod.h>
 #include "../st7735s.h"
 #include "../fonts.h"
@@ -52,10 +53,13 @@ std::chrono::time_point<std::chrono::steady_clock> lastPressTime;
 const char *const CHIP_PATH = "/dev/gpiochip3";
 const unsigned int LINE_OFFSET = 2;
 struct gpiod_line_request *button_request;
+std::string currentTime = "00:00"; // Default Time
+
 
 class DisplayExample {
 public:
     void run() {
+
         Button_Init();
         ST7735S_Init();
         setOrientation(R90);
