@@ -15,7 +15,7 @@
 int spi_fd;
  struct gpiod_line_request *rst_request;
     struct gpiod_line_request *dc_request;
-        unsigned int rst_line_offset =14;
+        unsigned int rst_line_offset =1;
 
 #define SPI_DEVICE "/dev/spidev1.0"
 #define SPI_DEFAULT_FREQ  15000000 // 8 MHz
@@ -158,19 +158,35 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
 
 }
 
-    void setLineValue(unsigned int line_offset, enum gpiod_line_value value)
-    {
-        struct gpiod_line_request *request = (line_offset == rst_line_offset) ? rst_request : dc_request;
+void setLineValue(unsigned int line_offset, enum gpiod_line_value value)
+{
+    // Determine if the line is related to the RST (reset) or DC (data/command) pin
+    // The request pointer will be assigned to either rst_request or dc_request depending on the line_offset.
+    struct gpiod_line_request *request = (line_offset == rst_line_offset) ? rst_request : dc_request;
 
-        // std::cout << "line_offset: " << line_offset
-        //           << ", rst_line_offset: " << rst_line_offset
-        //           << ", dc_offset: " << dc_line_offset << std::endl;
+    // Uncomment this section to debug and print the line values being set
+    // std::cout << "line_offset: " << line_offset
+    //           << ", rst_line_offset: " << rst_line_offset
+    //           << ", dc_offset: " << dc_line_offset << std::endl;
 
-        if (!request || gpiod_line_request_set_value(request, line_offset, value) < 0)
-        {
-            printf("Failed to set GPIO line value");
-        }
+    // Check if the request is valid
+    if (!request) {
+        printf("Error: Request for line %u is NULL\n", line_offset);  // Debugging message when request is NULL
+        return;  // Early return as no valid request is available
     }
+
+    // Attempt to set the GPIO line value (active/inactive) using gpiod_line_request_set_value
+    // If the function returns a negative value, it indicates failure.
+    if (gpiod_line_request_set_value(request, line_offset, value) < 0) {
+        // Print an error message if setting the value fails
+        printf("Failed to set GPIO line value for line_offset: %u\n", line_offset);
+        perror("Error in setting line value");
+        return;  // Return to prevent further execution if the setting fails
+    }
+
+    // If the line value is successfully set, no further action is needed.
+    printf("Successfully set GPIO line value for line_offset: %u\n", line_offset);  // Optional debugging message
+}
 
 
   

@@ -152,11 +152,14 @@ public:
         while (true) {
             std::string timeStr = getNTPTime();
             if (!timeStr.empty()) {
-                currentTime = timeStr;
+                currentTime = timeStr; // Update time from NTP server
+            } else {
+                currentTime = "00:00"; // Default time if NTP request fails
             }
-            std::this_thread::sleep_for(std::chrono::minutes(1));
+            std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
         }
     }
+    
 
     std::string getNTPTime() {
         const char *ntpServer = "pool.ntp.org";
