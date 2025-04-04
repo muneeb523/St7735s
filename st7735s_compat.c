@@ -290,7 +290,6 @@ int  Button_Init(){
     static const char *const chip_path = "/dev/gpiochip3";
 	static const unsigned int line_offset = 2;
 
-	struct gpiod_line_request *btn_request;
 	enum gpiod_line_value value;
 	int ret;
 

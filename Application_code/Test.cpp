@@ -53,7 +53,6 @@ std::chrono::time_point<std::chrono::steady_clock> lastPressTime;
 // GPIO Configuration
 const char *const CHIP_PATH = "/dev/gpiochip3";
 const unsigned int LINE_OFFSET = 2;
-struct gpiod_line_request *button_request;
 std::string currentTime = "00:00"; // Default Time
 
 
@@ -121,7 +120,7 @@ public:
     {
         while (true)
         {
-            enum gpiod_line_value value = gpiod_line_request_get_value(button_request, LINE_OFFSET);
+            enum gpiod_line_value value = gpiod_line_request_get_value(btn_request, LINE_OFFSET);
             auto now = std::chrono::steady_clock::now();
     
             if (value == GPIOD_LINE_VALUE_INACTIVE)

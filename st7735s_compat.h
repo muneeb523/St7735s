@@ -17,7 +17,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+extern struct gpiod_line_request *btn_request;
 void SPI_Init(void);
 void Pin_CS_Low(void);
 void Pin_CS_High(void);
