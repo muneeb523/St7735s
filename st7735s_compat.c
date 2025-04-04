@@ -292,7 +292,7 @@ int  Button_Init(){
 
 	enum gpiod_line_value value;
 	int ret;
-    struct gpiod_line_request *btn_request
+    struct gpiod_line_request *btn_request;
     btn_request = request_input_line(chip_path, line_offset, "get-line-value");
 	if (!btn_request) {
 		fprintf(stderr, "failed to request line: %s\n",
