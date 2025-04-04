@@ -17,7 +17,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Declare btn_request as an external variable so it can be shared between C and C++ code
 extern struct gpiod_line_request *btn_request;
+
+// Function declarations for SPI communication and GPIO pin control
 void SPI_Init(void);
 void Pin_CS_Low(void);
 void Pin_CS_High(void);
@@ -31,9 +35,10 @@ void SPI_TransmitCmd(uint16_t len, uint8_t *data);
 void SPI_TransmitData(uint16_t len, uint8_t *data);
 void SPI_Transmit(uint16_t len, uint8_t *data);
 void _Delay(uint32_t d);
-int  Button_Init();
+int Button_Init(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
-#endif
+
+#endif /* __st7735s_compat_h__ */
