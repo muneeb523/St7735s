@@ -32,6 +32,7 @@ typedef struct {
 } TestGpioReq;
 
 TestGpioReq testGpioReq;
+
 enum Mode {
     STREAM,
     BUZZER,
@@ -110,6 +111,7 @@ public:
             }
         }
     }
+
     void processMode()
     {
         int mode = currentMode.load();
@@ -248,7 +250,7 @@ public:
 
     void lightOff() {
         printf("lightOff\r\n");
-        setLineValue(testGpioReq.flash_req, GPIO_LINE_FLASH, GPIOD_LINE_VALUE_INACTIVE);
+        setLineValues(testGpioReq.flash_req, GPIO_LINE_FLASH, GPIOD_LINE_VALUE_INACTIVE);
     }
 
     void videoOff() {
@@ -273,7 +275,7 @@ public:
 
     void lightOn() {
         printf("lightOn\r\n");
-        setLineValue(testGpioReq.flash_req, GPIO_LINE_FLASH, GPIOD_LINE_VALUE_ACTIVE);
+        setLineValues(testGpioReq.flash_req, GPIO_LINE_FLASH, GPIOD_LINE_VALUE_ACTIVE);
     }
 
     void videoOn() {
@@ -292,17 +294,17 @@ public:
     {
         while(buzzerRunning)
         {
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValues(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValues(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
             std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValues(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValues(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
             std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValues(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValues(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
             std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValues(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValues(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
             std::this_thread::sleep_for(std::chrono::microseconds(125));
         }
     }

@@ -23,7 +23,7 @@ extern struct gpiod_line_request *btn_request;
 
 // Function declarations for SPI communication and GPIO pin control
 struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int offset, const char *consumer);
-void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value);
+void setLineValues(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value);
 
 void SPI_Init(void);
 void Pin_CS_Low(void);

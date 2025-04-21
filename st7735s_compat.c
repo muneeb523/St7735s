@@ -157,7 +157,7 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
    
 
 }
-void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value)
+void setLineValues(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value)
 {
     // std::cout << "line_offset: " << line_offset
     //           << ", rst_line_offset: " << rst_line_offset
