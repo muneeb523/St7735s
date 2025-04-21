@@ -32,6 +32,12 @@ typedef struct {
 } TestGpioReq;
 
 TestGpioReq testGpioReq;
+enum Mode {
+    STREAM,
+    BUZZER,
+    VoIP,
+    FLASHLIGHT
+};
 
 
 int mode, nmode = 1;
@@ -45,12 +51,6 @@ char videoTime[6] = "00:00"; // Default Time
 
 int buzzerRunning = 0;
 
-enum Mode {
-    STREAM,
-    BUZZER,
-    VoIP,
-    FLASHLIGHT
-};
 
 struct ImageSize {
     const uint16_t *image;
@@ -77,7 +77,6 @@ std::chrono::time_point<std::chrono::steady_clock> lastPressTime;
 // GPIO Configuration
 const char *const CHIP_PATH = "/dev/gpiochip3";
 const unsigned int LINE_OFFSET = 2;
-std::string currentTime = "00:00"; // Default Time
 
 
 class DisplayExample {
