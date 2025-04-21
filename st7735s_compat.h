@@ -22,6 +22,9 @@ extern "C" {
 extern struct gpiod_line_request *btn_request;
 
 // Function declarations for SPI communication and GPIO pin control
+struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int offset, const char *consumer);
+void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value);
+
 void SPI_Init(void);
 void Pin_CS_Low(void);
 void Pin_CS_High(void);
@@ -35,6 +38,7 @@ void SPI_TransmitCmd(uint16_t len, uint8_t *data);
 void SPI_TransmitData(uint16_t len, uint8_t *data);
 void SPI_Transmit(uint16_t len, uint8_t *data);
 void _Delay(uint32_t d);
+void Delay_us(int microseconds)
 int Button_Init(void);
 
 #ifdef __cplusplus

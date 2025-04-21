@@ -21,6 +21,30 @@ extern "C" {
 
 #define NTP_TIMESTAMP_DELTA 2208988800ULL
 
+#define GPIO_DEVICE4 "/dev/gpiochip3"
+#define GPIO_LINE_BA 18
+#define GPIO_LINE_BB 3
+#define GPIO_LINE_FLASH 7
+typedef struct {
+    struct gpiod_line_request *ba_req;
+    struct gpiod_line_request *bb_req;
+    struct gpiod_line_request *flash_req;
+} TestGpioReq;
+
+TestGpioReq testGpioReq;
+
+
+int mode, nmode = 1;
+time_t mode_change_time = 1;
+Mode current_mode = STREAM;
+std::string currentTime = "00:00"; // Default Time
+
+int videoRunning = 0;
+time_t videoStart = 0;
+char videoTime[6] = "00:00"; // Default Time
+
+int buzzerRunning = 0;
+
 enum Mode {
     STREAM,
     BUZZER,
@@ -60,11 +84,13 @@ class DisplayExample {
 public:
     void run() {
 
-        Button_Init();
+        
         ST7735S_Init();
         setOrientation(R90);
         fillScreen();
         flushBuffer();
+        Button_Init();
+        initPeripherals();
 
         // Start threads
         std::thread buttonThread(&DisplayExample::buttonPressDetection, this);
@@ -77,7 +103,7 @@ public:
         while (true) {
 
             if (modeConfirmed.load()) {
-                drawSelectedMode();
+                processMode();
                 modeConfirmed.store(false);
             } 
             else {
@@ -85,15 +111,57 @@ public:
             }
         }
     }
+    void processMode()
+    {
+        int mode = currentMode.load();
 
-    void drawSelectedMode() {
-        setColor(0, 0, 0);
-        fillScreen();
-        setFont(ter_u12b);
-        drawText(20, 40, "Mode Selected");
-        flushBuffer();
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        if(mode == 0) {
+            alarmOff();
+            lightOff();
+            videoOff();
+            voipOff();
+        } else if(mode == 1) {
+            alarmOff();
+            lightOff();
+            videoOn();
+            voipOn();
+        } else if(mode == 2) {
+            alarmOn();
+            lightOn();
+            videoOff();
+            voipOff();
+        } else if(mode == 3) {
+            alarmOff();
+            lightOn();
+            videoOff();
+            voipOn();
+        } else if(mode == 4) {
+            alarmOff();
+            lightOn();
+            videoOn();
+            voipOff();
+        } else if(mode == 5) {
+            alarmOn();
+            lightOff();
+            videoOn();
+            voipOff();
+        } else if(mode == 6) {
+            alarmOn();
+            lightOff();
+            videoOff();
+            voipOn();
+        }
+      
+        if(videoRunning)
+        {
+            time_t now = time(NULL);
+            time_t videoSec = now - videoStart;
+            int minutes = (videoSec / 60) % 100;
+            int seconds = videoSec % 60;
+            sprintf(videoTime, "%02d:%02d", minutes, seconds);
+        }
     }
+    
 
     void drawUI() {
         setColor(0, 0, 0);
@@ -112,6 +180,14 @@ public:
         setbgColor(0, 0, 0);
         setFont(ter_u12b);
         drawText(25, 35, currentTime.c_str());
+
+        if(videoRunning) {
+            printf("videoRunning: %s\n", videoTime);
+            setColor(31, 63, 31); // Green text
+            setbgColor(0, 0, 0);  // Black background
+            setFont(ter_u12b);    // Smallest readable font
+            drawText(25, 125, videoTime);
+        }
 
         flushBuffer();
     }
@@ -158,6 +234,80 @@ public:
             std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
         }
     }
+    
+    void initPeripherals() {
+
+        testGpioReq.ba_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BA, "BUZZER_A");
+        testGpioReq.bb_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BB,  "BUZZER_B");
+        testGpioReq.flash_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_FLASH, "FLASHLIGHT");
+    }
+    
+    void alarmOff() {
+        printf("alarmOff\r\n");
+        buzzerRunning = 0;
+    }
+
+    void lightOff() {
+        printf("lightOff\r\n");
+        setLineValue(testGpioReq.flash_req, GPIO_LINE_FLASH, GPIOD_LINE_VALUE_INACTIVE);
+    }
+
+    void videoOff() {
+        printf("videoOff\r\n");
+        videoRunning = 0;
+        videoStart = 0;
+        sprintf(videoTime, "%02d:%02d", 0, 0);
+    }
+    void voipOff() {
+        printf("voipOff\r\n");
+    }
+
+    void alarmOn() {
+        printf("alarmOn\r\n");
+        if(!buzzerRunning)
+        {
+            buzzerRunning = 1;
+            // std::thread buzzerThread(&DisplayExample::updateBuzzer, this);
+            // buzzerThread.detach();
+        }
+    }
+
+    void lightOn() {
+        printf("lightOn\r\n");
+        setLineValue(testGpioReq.flash_req, GPIO_LINE_FLASH, GPIOD_LINE_VALUE_ACTIVE);
+    }
+
+    void videoOn() {
+        printf("videoOn\r\n");
+        if(!videoRunning)
+        {
+            videoRunning = 1;
+            videoStart = time(NULL);
+        }
+    }
+    void voipOn() {
+        printf("voipOn\r\n");
+    }
+
+    void updateBuzzer()
+    {
+        while(buzzerRunning)
+        {
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+        }
+    }
+
     
 
     std::string getNTPTime() {

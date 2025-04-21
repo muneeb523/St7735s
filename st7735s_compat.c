@@ -157,7 +157,17 @@ void ST7735_Init( const char* chip_path, unsigned int rst_offset, unsigned int d
    
 
 }
+void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value)
+{
+    // std::cout << "line_offset: " << line_offset
+    //           << ", rst_line_offset: " << rst_line_offset
+    //           << ", dc_offset: " << dc_line_offset << std::endl;
 
+    if (!request || gpiod_line_request_set_value(request, line_offset, value) < 0)
+    {
+        printf("Failed to set GPIO line value\r\n");
+    }
+}
 void setLineValue(unsigned int line_offset, enum gpiod_line_value value)
 {
     // Determine if the line is related to the RST (reset) or DC (data/command) pin
@@ -283,6 +293,9 @@ void _Delay(uint32_t d) {
 
     usleep(d*1000);
 
+}
+void Delay_us(int microseconds) {
+    usleep(microseconds);
 }
 
 int  Button_Init(){
