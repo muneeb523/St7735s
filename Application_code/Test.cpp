@@ -165,7 +165,7 @@ public:
     
 
     void drawUI() {
-        printf("Mode ");
+        cout<<("Mode ");
         setColor(0, 0, 0);
         fillScreen();
 
