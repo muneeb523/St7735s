@@ -165,7 +165,7 @@ public:
     
 
     void drawUI() {
-        pritnf("Mode ");
+        printf("Mode ");
         setColor(0, 0, 0);
         fillScreen();
 
@@ -203,7 +203,7 @@ public:
     
             if (value == GPIOD_LINE_VALUE_INACTIVE)
             {
-                pritnf("Button Pressed \n");
+                printf("Button Pressed \n");
                 if (!buttonPressed.load())  // Only register new presses
                 {
                     buttonPressed.store(true);
