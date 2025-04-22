@@ -195,7 +195,6 @@ void setLineValue(unsigned int line_offset, enum gpiod_line_value value)
     }
 
     // If the line value is successfully set, no further action is needed.
-    printf("Successfully set GPIO line value for line_offset: %u\n", line_offset);  // Optional debugging message
 }
 
 
