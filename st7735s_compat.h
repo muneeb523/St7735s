@@ -2,7 +2,6 @@
 #define __st7735s_compat_h__
 
 #include <inttypes.h>
-#include <gpiod.h>
 
 /* this may differ from the default 80x160 */
 #define defWIDTH   160
@@ -18,13 +17,6 @@
 extern "C" {
 #endif
 
-// Declare btn_request as an external variable so it can be shared between C and C++ code
-extern struct gpiod_line_request *btn_request;
-
-// Function declarations for SPI communication and GPIO pin control
-struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int offset, const char *consumer);
-void setLineValues(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value);
-
 void SPI_Init(void);
 void Pin_CS_Low(void);
 void Pin_CS_High(void);
@@ -37,12 +29,8 @@ void Pin_BLK_Pct(uint8_t);
 void SPI_TransmitCmd(uint16_t len, uint8_t *data);
 void SPI_TransmitData(uint16_t len, uint8_t *data);
 void SPI_Transmit(uint16_t len, uint8_t *data);
-void _Delay(uint32_t d);
-void Delay_us(int microseconds);
-int Button_Init(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
-#endif /* __st7735s_compat_h__ */
+#endif

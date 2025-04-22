@@ -216,6 +216,7 @@ void ST7735S_Init(void) {
     Pin_CS_High();
 
     initCommands();
+    printf("finished init \n");
 
 }
 
