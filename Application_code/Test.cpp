@@ -87,7 +87,6 @@ class DisplayExample
 public:
     void run()
     {
-        
         ST7735S_Init();
         setOrientation(R90);
         fillScreen();
