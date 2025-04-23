@@ -268,8 +268,8 @@ public:
         }
         else if (emergency_mode)
         {
-            lighton();
-            alarmon();
+            lightOn();
+            alarmOn();
             emergency_stream_on();
             voipOn();
         }
