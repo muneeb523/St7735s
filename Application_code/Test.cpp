@@ -10,7 +10,14 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <cstdio>
-
+#include <stdint.h>
+#include <string.h>
+#include <fstream>
+#include <vector>
+#include <cstdint>
+#define IMAGE_WIDTH 140
+#define IMAGE_HEIGHT 60
+#define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
 extern "C"
 {
 #include "../appgpio.h"
@@ -43,7 +50,7 @@ extern "C"
 // #### Stream Video from Files
 
 //    /usr/bin/Flashlight <stream_name> <compression_type> <file1_path> <file2_path> <file3_path>
-
+uint16_t barcode[IMAGE_SIZE];
 enum Mode
 {
     STREAM,
@@ -71,6 +78,7 @@ TestGpioReq testGpioReq;
 
 pid_t gst_pid = -1;
 volatile bool emergency_mode = false;
+volatile bool barcode_show = false;
 int mode, nmode = 1;
 time_t mode_change_time = 1;
 Mode current_mode = STREAM;
@@ -91,6 +99,7 @@ public:
         setOrientation(R90);
         fillScreen();
         flushBuffer();
+        loadBarcodeImage("/home/barcode/image.raw", barcode, IMAGE_SIZE);
         std::cout << "flushed" << std::endl;
 
         initButtons();
@@ -109,42 +118,89 @@ public:
             waitForButtonPress();
         }
     }
+    bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
+    {
+        std::ifstream file(path, std::ios::binary);
+        if (!file.is_open())
+        {
+            std::cerr << "Failed to open barcode image file: " << path << std::endl;
+            return false;
+        }
+
+        file.read(reinterpret_cast<char *>(buffer), size * sizeof(uint16_t));
+        if (file.gcount() != static_cast<std::streamsize>(size * sizeof(uint16_t)))
+        {
+            std::cerr << "Error: Failed to read full barcode image." << std::endl;
+            return false;
+        }
+
+        return true;
+    }
+
+    void drawUI_barcode()
+    {
+        uint16_t barcode[IMAGE_SIZE];
+        setColor(255, 255, 255); // Black background
+
+        if (loadBarcodeImage("/home/barcode/image.raw", barcode, IMAGE_SIZE))
+        {
+            std::cout << "Drawing barcode image...\n";
+            drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
+        }
+        else
+        {
+            std::cerr << "Failed to load barcode image.\n";
+        }
+
+        flushBuffer();
+    }
 
     void drawUI()
     {
         setColor(0, 0, 0); // Black background
 
-        // Battery and Signal icons
-        drawImage(5, 7, battery_level2, 16, 16);
-        drawImage(55, 7, signal_level1, 19, 16);
-
-        // Modes with their respective image names & sizes
-        ImageSize modeImages[7] = {
-            {None, 80, 60},
-            {Mode1, 80, 60},
-            {Mode2, 80, 60},
-            {Mode3, 80, 60},
-            {Mode4, 80, 60},
-            {Mode5, 80, 60},
-            {Mode6, 80, 60}};
-
-        // Draw mode image at fixed position
-        drawImage(0, 60, modeImages[mode].image, modeImages[mode].width, modeImages[mode].height);
-
-        // Display NTP Time in "HH:MM" format
-        setColor(31, 63, 31); // Green text
-        setbgColor(0, 0, 0);  // Black background
-        setFont(ter_u12b);    // Smallest readable font
-        printf("Displayed Time on Screen: %s\n", currentTime.c_str());
-        drawText(25, 35, currentTime.c_str());
-
-        if (videoRunning)
+        if (barcode_show)
         {
-            printf("videoRunning: %s\n", videoTime);
+
+            drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
+        }
+        else
+        {
+
+            // Battery and Signal icons
+            drawImage(5, 7, battery_level2, 16, 16);
+            drawImage(55, 7, signal_level1, 19, 16);
+
+            // Modes with their respective image names & sizes
+            ImageSize modeImages[7] = {
+                {None, 80, 60},
+                {Mode1, 80, 60},
+                {Mode2, 80, 60},
+                {Mode3, 80, 60},
+                {Mode4, 80, 60},
+                {Mode5, 80, 60},
+                {Mode6, 80, 60}
+
+            };
+
+            // Draw mode image at fixed position
+            drawImage(0, 60, modeImages[mode].image, modeImages[mode].width, modeImages[mode].height);
+
+            // Display NTP Time in "HH:MM" format
             setColor(31, 63, 31); // Green text
             setbgColor(0, 0, 0);  // Black background
             setFont(ter_u12b);    // Smallest readable font
-            drawText(25, 125, videoTime);
+            printf("Displayed Time on Screen: %s\n", currentTime.c_str());
+            drawText(25, 35, currentTime.c_str());
+
+            if (videoRunning)
+            {
+                printf("videoRunning: %s\n", videoTime);
+                setColor(31, 63, 31); // Green text
+                setbgColor(0, 0, 0);  // Black background
+                setFont(ter_u12b);    // Smallest readable font
+                drawText(25, 125, videoTime);
+            }
         }
 
         flushBuffer();
@@ -174,7 +230,7 @@ public:
         // Update mode cyclically through 0 to 6
         mode = (mode + 1) % 7;
 
-        if (btn & 0x02)
+        if (btn == 2)
         {
             // If button 1 (bit 1) is pressed, enter emergency mode
             if (!emergency_mode)
@@ -183,13 +239,20 @@ public:
                 // Possibly trigger an alert or a different mode?
             }
         }
-        else
+        else if (btn == 1)
         {
             // If button 1 is not pressed and we are in emergency mode, reset it
             if (emergency_mode)
             {
                 mode = 0;               // Reset mode
                 emergency_mode = false; // Exit emergency mode
+            }
+            if (barcode_show)
+            {
+                setOrientation(R90);
+
+
+                barcode_show = false;
             }
 
             // Logical filtering of allowed modes
@@ -203,13 +266,18 @@ public:
                 mode = 0; // Reset mode if above 4
             }
         }
+        else if (btn == 3)
+        {
+            setOrientation(R180);
+            barcode_show = true;
+        }
 
         mode_change_time = time(NULL); // Record the time of mode change
     }
 
     void processMode()
     {
-        if (mode_change_time != 0 && !emergency_mode)
+        if (mode_change_time != 0 && !emergency_mode && !barcode_show)
         {
             time_t now = time(NULL);
             if (now - mode_change_time > 3)
@@ -291,6 +359,7 @@ public:
         testGpioReq.flash_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_FLASH, "FLASHLIGHT");
         testGpioReq.self_kill = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_SELF_KILL, "SELF_KILL");
     }
+
     void emergency_stream_on()
     {
 
