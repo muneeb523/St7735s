@@ -137,23 +137,7 @@ public:
         return true;
     }
 
-    void drawUI_barcode()
-    {
-        uint16_t barcode[IMAGE_SIZE];
-        setColor(255, 255, 255); // Black background
-
-        if (loadBarcodeImage("/home/barcode/image.raw", barcode, IMAGE_SIZE))
-        {
-            std::cout << "Drawing barcode image...\n";
-            drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
-        }
-        else
-        {
-            std::cerr << "Failed to load barcode image.\n";
-        }
-
-        flushBuffer();
-    }
+  
 
     void drawUI()
     {
@@ -161,7 +145,9 @@ public:
 
         if (barcode_show)
         {
-
+         
+            setColor(255, 255, 255); // white background
+            
             drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
         }
         else
