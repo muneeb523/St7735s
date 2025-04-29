@@ -122,7 +122,6 @@ std::string currentTime = "00:00"; // Default Time
 int videoRunning = 0;
 time_t videoStart = 0;
 char videoTime[6] = "00:00"; // Default Time
-std::condition_variable buzzer_cv;
 
 class DisplayExample
 {
@@ -146,8 +145,8 @@ public:
         std::thread shadowThread(&DisplayExample::shadowUpdateThread, this);
         shadowThread.detach();
 
-        std::thread shadowThread(&DisplayExample::updateBuzzer, this);
-        shadowThread.detach();
+        buzzer_thread = std::thread(&DisplayExample::updateBuzzer, this);
+        buzzer_thread.detach(); // Detach the buzzer thread
 
         std::cout << "NTP" << std::endl;
 
@@ -533,7 +532,6 @@ public:
         {
             current_state.alarm_on = true;
             buzzer_running = true;
-      
         }
     }
 
@@ -580,38 +578,38 @@ public:
     }
 
     void updateBuzzer()
-{
-    while (true)
     {
-        bool local_buzzer_running = false;
+        while (true)
+        {
+            bool local_buzzer_running = false;
 
-        // Safely read shared flag
-        {
-            std::lock_guard<std::mutex> lock(buzzer_mutex);
-            local_buzzer_running = buzzer_running;
-        }
+            // Safely read shared flag
+            {
+                std::lock_guard<std::mutex> lock(buzzer_mutex);
+                local_buzzer_running = buzzer_running;
+            }
 
-        if (local_buzzer_running)
-        {
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-        }
-        else
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            if (local_buzzer_running)
+            {
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
         }
     }
-}
 
     void updateNTPTime()
     {
