@@ -15,6 +15,7 @@
 #include <fstream>
 #include <vector>
 #include <cstdint>
+#include <mutex>
 #include <nlohmann/json.hpp> // JSON library: https://github.com/nlohmann/json
 
 #define IMAGE_WIDTH 140
