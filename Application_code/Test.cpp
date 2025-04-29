@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <mutex>
 #include <nlohmann/json.hpp> // JSON library: https://github.com/nlohmann/json
+#include <atomic>
 
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
