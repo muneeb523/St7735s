@@ -15,6 +15,8 @@
 #include <fstream>
 #include <vector>
 #include <cstdint>
+#include <nlohmann/json.hpp> // JSON library: https://github.com/nlohmann/json
+
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
@@ -38,6 +40,37 @@ extern "C"
 #define GPIO_LINE_FLASH 7
 #define GPIO_LINE_SELF_KILL 20
 
+using json = nlohmann::json;
+std::mutex state_mutex;
+std::atomic<bool> state_dirty = false;
+std::atomic<bool> running = true;
+
+std::thread buzzer_thread;
+std::atomic<bool> buzzer_running = false;
+std::mutex buzzer_mutex;
+
+struct DeviceState
+{
+
+    std::string light_mode = "static";
+    int light_brightness = 128;
+    volatile bool alarm_on = false;
+    std::string alarm_sound = "siren";
+    volatile bool camera_recording = false;
+    int battery_level = 50;
+    volatile bool battery_charging = false;
+    float gps_latitude = 0.0;
+    float gps_longitude = 0.0;
+    bool wifi_connected = false;
+    std::string wifi_ssid = "";
+    int wifi_strength = 0;
+    volatile bool in_emergency = false;
+    bool cellular_connected = false;
+    int cellular_strength = 0;
+};
+
+DeviceState current_state;
+
 // //<Usage
 // #### Stream Video from a Live Source (Emergency Mode )
 
@@ -50,6 +83,7 @@ extern "C"
 // #### Stream Video from Files
 
 //    /usr/bin/Flashlight <stream_name> <compression_type> <file1_path> <file2_path> <file3_path>
+
 uint16_t barcode[IMAGE_SIZE];
 enum Mode
 {
@@ -77,7 +111,6 @@ typedef struct
 TestGpioReq testGpioReq;
 
 pid_t gst_pid = -1;
-volatile bool emergency_mode = false;
 volatile bool barcode_show = false;
 int mode, nmode = 1;
 time_t mode_change_time = 1;
@@ -87,8 +120,7 @@ std::string currentTime = "00:00"; // Default Time
 int videoRunning = 0;
 time_t videoStart = 0;
 char videoTime[6] = "00:00"; // Default Time
-
-int buzzerRunning = 0;
+std::condition_variable buzzer_cv;
 
 class DisplayExample
 {
@@ -108,6 +140,12 @@ public:
         // Start NTP time update in a separate thread
         std::thread ntpThread(&DisplayExample::updateNTPTime, this);
         ntpThread.detach();
+
+        std::thread shadowThread(&DisplayExample::shadowUpdateThread, this);
+        shadowThread.detach();
+
+        std::thread shadowThread(&DisplayExample::updateBuzzer, this);
+        shadowThread.detach();
 
         std::cout << "NTP" << std::endl;
 
@@ -137,17 +175,15 @@ public:
         return true;
     }
 
-  
-
     void drawUI()
     {
         setColor(0, 0, 0); // Black background
 
         if (barcode_show)
         {
-         
+
             setColor(255, 255, 255); // white background
-            
+
             drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
         }
         else
@@ -192,6 +228,67 @@ public:
         flushBuffer();
     }
 
+    void shadowUpdateThread()
+    {
+        while (true)
+        {
+            if (state_dirty.load())
+            {
+                update_shadow_json();
+                state_dirty = false;
+            }
+            std::this_thread::sleep_for(std::chrono::seconds(60)); // configurable delay
+        }
+    }
+
+    void mark_state_dirty()
+    {
+        state_dirty = true;
+    }
+
+    void update_shadow_json()
+    {
+        std::lock_guard<std::mutex> lock(state_mutex);
+
+        json shadow;
+        shadow["state"]["reported"] = {
+
+            {"light_mode", current_state.light_mode},
+            {"light_brightness", current_state.light_brightness},
+            {"alarm_on", current_state.alarm_on},
+            {"alarm_sound", current_state.alarm_sound},
+            {"camera_recording", current_state.camera_recording},
+            {"battery_level", current_state.battery_level},
+            {"battery_charging", current_state.battery_charging},
+            {"gps_latitude", current_state.gps_latitude},
+            {"gps_longitude", current_state.gps_longitude},
+            {"wifi_connected", current_state.wifi_connected},
+            {"wifi_ssid", current_state.wifi_ssid},
+            {"wifi_strength", current_state.wifi_strength},
+            {"in_emergency", current_state.in_emergency},
+            {"cellular_connected", current_state.cellular_connected},
+            {"cellular_strength", current_state.cellular_strength}};
+
+        std::string tmp_path = "/etc/aws_iot_device/shadow-input.json.tmp";
+        std::string final_path = "/etc/aws_iot_device/shadow-input.json";
+
+        std::ofstream tmp_file(tmp_path);
+        if (tmp_file.is_open())
+        {
+            tmp_file << shadow.dump(4);
+            tmp_file.close();
+
+            if (std::rename(tmp_path.c_str(), final_path.c_str()) != 0)
+            {
+                std::cerr << "[Shadow] Failed to rename temp shadow file to final\n";
+            }
+        }
+        else
+        {
+            std::cerr << "[Shadow] Failed to open temp shadow file\n";
+        }
+    }
+
     /**
      * Wait for either button to be pressed and update mode
      */
@@ -213,30 +310,31 @@ public:
 
     void updateMode(int btn)
     {
+        std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
         // Update mode cyclically through 0 to 6
         mode = (mode + 1) % 7;
 
         if (btn == 2)
         {
             // If button 1 (bit 1) is pressed, enter emergency mode
-            if (!emergency_mode)
+            if (!current_state.in_emergency)
             {
-                emergency_mode = true;
+                current_state.in_emergency = true;
                 // Possibly trigger an alert or a different mode?
             }
         }
         else if (btn == 1)
         {
             // If button 1 is not pressed and we are in emergency mode, reset it
-            if (emergency_mode)
+            if (current_state.in_emergency)
             {
-                mode = 0;               // Reset mode
-                emergency_mode = false; // Exit emergency mode
+                mode = 0;                           // Reset mode
+                current_state.in_emergency = false; // Exit emergency mode
             }
+
             if (barcode_show)
             {
                 setOrientation(R90);
-
 
                 barcode_show = false;
             }
@@ -258,12 +356,16 @@ public:
             barcode_show = true;
         }
 
+        mark_state_dirty();
+
         mode_change_time = time(NULL); // Record the time of mode change
     }
 
     void processMode()
     {
-        if (mode_change_time != 0 && !emergency_mode && !barcode_show)
+        std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
+
+        if (mode_change_time != 0 && !current_state.in_emergency && !barcode_show)
         {
             time_t now = time(NULL);
             if (now - mode_change_time > 3)
@@ -319,13 +421,16 @@ public:
                     voipOn();
                 }
             }
+            mark_state_dirty();
         }
-        else if (emergency_mode)
+        else if (current_state.in_emergency)
         {
             lightOn();
             alarmOn();
             emergency_stream_on();
             voipOn();
+
+            mark_state_dirty();
         }
         if (videoRunning)
         {
@@ -378,8 +483,10 @@ public:
 
     void alarmOff()
     {
+        std::lock_guard<std::mutex> lock(buzzer_mutex);
         printf("alarmOff\r\n");
-        buzzerRunning = 0;
+        current_state.alarm_on = false;
+        buzzer_running = false;
     }
 
     void lightOff()
@@ -390,6 +497,7 @@ public:
 
     void videoOff()
     {
+        current_state.camera_recording = false;
 
         printf("videoOff\r\n");
         if (gst_pid != -1)
@@ -416,12 +524,14 @@ public:
 
     void alarmOn()
     {
+        std::lock_guard<std::mutex> lock(buzzer_mutex);
+
         printf("alarmOn\r\n");
-        if (!buzzerRunning)
+        if (!buzzer_running)
         {
-            buzzerRunning = 1;
-            // std::thread buzzerThread(&DisplayExample::updateBuzzer, this);
-            // buzzerThread.detach();
+            current_state.alarm_on = true;
+            buzzer_running = true;
+      
         }
     }
 
@@ -433,6 +543,7 @@ public:
 
     void videoOn()
     {
+        current_state.camera_recording = true;
 
         printf("videoOn\r\n");
         if (!videoRunning)
@@ -467,8 +578,18 @@ public:
     }
 
     void updateBuzzer()
+{
+    while (true)
     {
-        while (buzzerRunning)
+        bool local_buzzer_running = false;
+
+        // Safely read shared flag
+        {
+            std::lock_guard<std::mutex> lock(buzzer_mutex);
+            local_buzzer_running = buzzer_running;
+        }
+
+        if (local_buzzer_running)
         {
             setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
             setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
@@ -483,7 +604,12 @@ public:
             setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
             std::this_thread::sleep_for(std::chrono::microseconds(125));
         }
+        else
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
+}
 
     void updateNTPTime()
     {
