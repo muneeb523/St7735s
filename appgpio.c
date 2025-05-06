@@ -58,10 +58,12 @@ char *find_event_device(const char *target_name)
         {
             printf("[DEBUG] Found handler line: %s", line);
 
-            // Copy to temporary buffer since strtok will modify it
+            // Skip the "H: Handlers=" part (12 characters)
+            const char *handlers_start = line + 12;
+
             char line_copy[512];
-            strncpy(line_copy, line, sizeof(line_copy));
-            line_copy[sizeof(line_copy) - 1] = '\0';
+            strncpy(line_copy, handlers_start, sizeof(line_copy) - 1);
+            line_copy[sizeof(line_copy) - 1] = '\0'; // Ensure null termination
 
             char *token = strtok(line_copy, " ");
             while (token)
@@ -86,7 +88,6 @@ char *find_event_device(const char *target_name)
     fclose(fp);
     return NULL;
 }
-
 
 // Function to simulate the requestOutputLine (you should implement it according to your system)
 struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int offset, const char *consumer)
