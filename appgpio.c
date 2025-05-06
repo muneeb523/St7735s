@@ -39,9 +39,8 @@ char *find_event_device(const char *target_name)
 
     while (fgets(line, sizeof(line), fp))
     {
-        printf("[DEBUG] Read line: %s", line);  // No \n needed, fgets includes it
+        printf("[DEBUG] Read line: %s", line);
 
-        // Check for matching device name
         if (strncmp(line, "N: Name=", 8) == 0)
         {
             if (strstr(line, target_name))
@@ -49,14 +48,22 @@ char *find_event_device(const char *target_name)
                 printf("[DEBUG] Found matching device name line: %s", line);
                 found = 1;
             }
+            else
+            {
+                found = 0; // Reset if this device is not the one
+            }
         }
 
-        // If matching device name was found, look for its handlers
         if (found && strncmp(line, "H: Handlers=", 12) == 0)
         {
             printf("[DEBUG] Found handler line: %s", line);
 
-            char *token = strtok(line, " ");
+            // Copy to temporary buffer since strtok will modify it
+            char line_copy[512];
+            strncpy(line_copy, line, sizeof(line_copy));
+            line_copy[sizeof(line_copy) - 1] = '\0';
+
+            char *token = strtok(line_copy, " ");
             while (token)
             {
                 printf("[DEBUG] Token: %s\n", token);
@@ -70,6 +77,8 @@ char *find_event_device(const char *target_name)
                 }
                 token = strtok(NULL, " ");
             }
+
+            found = 0; // Reset after handler is processed
         }
     }
 
