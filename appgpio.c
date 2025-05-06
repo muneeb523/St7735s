@@ -154,7 +154,7 @@ int initButtons(void)
         return -1;
     }
 
-    unsigned int offsets[] = {GPIO_LINE1};
+    unsigned int offsets[] = {GPIO_LINE2};
 
     if (gpiod_line_config_add_line_settings(line_config, offsets, 1, settings) < 0)
     {
