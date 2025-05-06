@@ -18,7 +18,6 @@
 #include <mutex>
 #include <nlohmann/json.hpp> // JSON library: https://github.com/nlohmann/json
 #include <atomic>
-
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
@@ -241,6 +240,25 @@ public:
             std::this_thread::sleep_for(std::chrono::seconds(60)); // configurable delay
         }
     }
+    
+    void Enter_Power_Mode()
+    {
+        const std::string power_state_file = "/sys/power/state";
+        // Open the file for writing
+        std::ofstream power_state_stream(power_state_file);
+        // Check if the file was opened successfully
+        if (!power_state_stream.is_open())
+        {
+            std::cerr << "Error: Unable to open " << power_state_file << std::endl;
+            return 1;
+        }
+        // Write the "mem" value to trigger suspend-to-RAM
+        power_state_stream << "mem" << std::endl;
+        // Close the file after writing
+        power_state_stream.close();
+
+    }
+
 
     void mark_state_dirty()
     {
