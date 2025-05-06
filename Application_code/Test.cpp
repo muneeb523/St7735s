@@ -298,7 +298,10 @@ public:
         int pressed = 0;
         while (pressed == 0)
         {
+            pritnf("checking for button presses\n");
+
             pressed = areButtonsPressed();
+            printf("Not evne out of it\n");
             usleep(10000); // 10ms sleep to avoid CPU hogging
         }
         printf("areButtonsPressed %d\r\n", pressed);
