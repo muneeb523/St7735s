@@ -466,7 +466,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execl("/usr/bin/Flashlight", "Flashlight", "demo-stream", "h265", nullptr);
+                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h265", nullptr);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }
@@ -557,7 +557,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execl("/usr/bin/Flashlight", "Flashlight", "demo-stream", "h265", "local_storage", nullptr);
+                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h265", "local_storage", nullptr);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }
