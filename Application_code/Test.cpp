@@ -298,7 +298,7 @@ public:
         int pressed = 0;
         while (pressed == 0)
         {
-            pritnf("checking for button presses\n");
+            printf("checking for button presses\n");
 
             pressed = areButtonsPressed();
             printf("Not evne out of it\n");
