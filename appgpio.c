@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <linux/input.h>
 #include "appgpio.h"
+#include <poll.h>
 
 #define PAGE_SIZE 4096 // Typical page size on ARM
 #define PAGE_MASK (PAGE_SIZE - 1)
@@ -271,27 +272,34 @@ int areButtonsPressed(void)
             return -1;
         }
         printf("hi from here q\n");
-        if (read(fd, &ev, sizeof(struct input_event)) > 0)
+
+        struct pollfd pfd;
+        pfd.fd = fd;
+        pfd.events = POLLIN;
+
+        int poll_result = poll(&pfd, 1, 50); // Wait up to 50ms
+
+        if (poll_result < 0)
         {
-            printf("Able to read the input events\n");
-            if (ev.type == EV_KEY && ev.code == KEY_WAKEUP)
+            perror("poll failed");
+            close(fd);
+            return -1;
+        }
+        else if (poll_result > 0)
+        {
+            if (read(fd, &ev, sizeof(struct input_event)) > 0)
             {
-                if (ev.value == 1)
+                if (ev.type == EV_KEY && ev.code == KEY_WAKEUP)
                 {
-                    printf("Button 1 pressed (eventX)\n");
-                    event_value = 2;
-                }
-                else if (ev.value == 0)
-                {
-                    printf("Button 1 released (eventX)\n");
+                    if (ev.value == 1)
+                    {
+                        event_value = 2;
+                    }
                 }
             }
         }
-        else
-        {
 
-            printf("Sad times\n");
-        }
+        pritntf("HEllollll\n");
 
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
