@@ -284,7 +284,7 @@ int areButtonsPressed(void)
             return -1;
         }
         else if (poll_result > 0)
-        {
+        
             if (read(fd, &ev, sizeof(struct input_event)) > 0)
             {
                 if (ev.type == EV_KEY && ev.code == KEY_WAKEUP)
@@ -324,7 +324,7 @@ int areButtonsPressed(void)
 
                 printf("button (GPIO): %d (Event): %d\n", values[0], event_value);
 
-                if (values[0] == GPIOD_LINE_VALUE_ACTIVE && event_value == 2)
+                if (values[0] == GPIOD_LINE_VALUE_INACTIVE && event_value == 2)
                 {
                     last_trigger_time = now;
                     close(fd);
