@@ -121,7 +121,7 @@ std::string currentTime = "00:00"; // Default Time
 
 int videoRunning = 0;
 time_t videoStart = 0;
-char videoTime[6] = "00:00"; // Default Time
+char videoTime[9] = "00:00"; // Default Time
 
 class DisplayExample
 {
