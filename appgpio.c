@@ -57,31 +57,47 @@ char *find_event_device(const char *target_name)
         if (found && strncmp(line, "H: Handlers=", 12) == 0)
         {
             printf("[DEBUG] Found handler line: %s", line);
-
-            // Skip the "H: Handlers=" part (12 characters)
-            const char *handlers_start = line + 12;
-
+        
+            const char *handlers = line + 12; // Skip the prefix
+            printf("[DEBUG] Handler string after prefix skip: %s\n", handlers);
+        
             char line_copy[512];
-            strncpy(line_copy, handlers_start, sizeof(line_copy) - 1);
-            line_copy[sizeof(line_copy) - 1] = '\0'; // Ensure null termination
-
+            int written = snprintf(line_copy, sizeof(line_copy), "%s", handlers);
+            if (written < 0 || written >= sizeof(line_copy)) {
+                printf("[ERROR] snprintf failed or handler line too long\n");
+                fclose(fp);
+                return NULL;
+            }
+        
+            printf("[DEBUG] line_copy created: %s\n", line_copy);
+        
             char *token = strtok(line_copy, " ");
+            if (!token) {
+                printf("[ERROR] strtok returned NULL on first call\n");
+            }
+        
             while (token)
             {
                 printf("[DEBUG] Token: %s\n", token);
-
+        
                 if (strncmp(token, "event", 5) == 0)
                 {
+                    printf("[DEBUG] Matching token found: %s\n", token);
                     snprintf(event_path, sizeof(event_path), "%s%s", EVENT_DEV_PATH, token);
                     printf("[DEBUG] Found event device: %s\n", event_path);
                     fclose(fp);
                     return event_path;
                 }
+        
                 token = strtok(NULL, " ");
+                if (token)
+                    printf("[DEBUG] Next token: %s\n", token);
             }
-
+        
+            printf("[DEBUG] No event token found in this handler line.\n");
             found = 0; // Reset after handler is processed
         }
+        
     }
 
     printf("[DEBUG] Device not found.\n");
