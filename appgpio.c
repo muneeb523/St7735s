@@ -249,6 +249,7 @@ int areButtonsPressed(void)
         perror("Failed to open event device");
         return 1;
     }
+    printf("Opened Succesfully\n");
 
     struct input_event ev;
     struct timespec start_time, current_time;
@@ -264,32 +265,37 @@ int areButtonsPressed(void)
         if (gpiod_line_request_get_values(line_request, values) < 0)
         {
             perror("Failed to read GPIO values");
+            close(fd);
             return -1;
         }
 
-        // Read event device
         if (read(fd, &ev, sizeof(struct input_event)) > 0)
         {
+            printf("Able to read the input events\n");
             if (ev.type == EV_KEY && ev.code == KEY_WAKEUP)
             {
                 if (ev.value == 1)
                 {
-                    printf("Button 2 pressed (eventX)\n");
+                    printf("Button 1 pressed (eventX)\n");
                     event_value = 2;
                 }
                 else if (ev.value == 0)
                 {
-                    printf("Button 2 released (eventX)\n");
+                    printf("Button 1 released (eventX)\n");
                 }
             }
         }
+        else{
 
-        // Timeout check
+            printf("Sad times\n");
+        }
+
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
                          (current_time.tv_nsec - start_time.tv_nsec) / 1e9;
         if (elapsed >= 1.0)
         {
+            close(fd);
             return -2;
         }
 
@@ -303,31 +309,37 @@ int areButtonsPressed(void)
                 if (gpiod_line_request_get_values(line_request, values) < 0)
                 {
                     perror("Failed to re-read GPIO values");
+                    close(fd);
                     return -1;
                 }
-
-                // Optional: re-read event device here if needed
 
                 printf("button (GPIO): %d (Event): %d\n", values[0], event_value);
 
                 if (values[0] == GPIOD_LINE_VALUE_ACTIVE && event_value == 2)
                 {
                     last_trigger_time = now;
-                    return 3; // Both pressed
+                    close(fd);
+                    return 3;
                 }
                 else if (values[0] == GPIOD_LINE_VALUE_ACTIVE)
                 {
                     last_trigger_time = now;
-                    return 2; // GPIO pressed
+                    close(fd);
+                    return 2;
                 }
                 else if (event_value == 2)
                 {
                     last_trigger_time = now;
-                    return 1; // Event pressed
+                    close(fd);
+                    return 1;
                 }
             }
         }
 
         usleep(10000); // 10ms poll
     }
+    printf("outside\n");
+
+    close(fd); // unreachable, but good practice if loop is changed later
+    return 0;
 }
