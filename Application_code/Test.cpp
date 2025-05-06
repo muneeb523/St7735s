@@ -202,6 +202,8 @@ public:
     
             if (elapsed >= 30.0) {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
+                setColor(0, 0, 0); // Black background
+                fillScreen();
                 Enter_Power_Mode();
                
             }
