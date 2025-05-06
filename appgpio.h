@@ -6,14 +6,3 @@ void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, 
 int initButtons(void);
 int areButtonsPressed(void);
 
-if (read(fd, &ev, sizeof(struct input_event)) > 0) {
-    if (ev.type == EV_KEY && ev.code == KEY_VOLUMEUP) {
-
-        if (ev.value == 1) {
-            printf("Button pressed\n");
-        } else if (ev.value == 0) {
-            printf("Button released\n");
-        }
-        
-    }
-}
