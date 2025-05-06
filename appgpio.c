@@ -22,13 +22,16 @@ void _Delay(int microseconds)
 {
     usleep(microseconds);
 }
-
 char *find_event_device(const char *target_name)
 {
+    printf("[DEBUG] Looking for device name: %s\n", target_name);
 
     FILE *fp = fopen("/proc/bus/input/devices", "r");
     if (!fp)
+    {
+        perror("[ERROR] Failed to open /proc/bus/input/devices");
         return NULL;
+    }
 
     static char event_path[256];
     char line[512];
@@ -36,19 +39,32 @@ char *find_event_device(const char *target_name)
 
     while (fgets(line, sizeof(line), fp))
     {
-        if (strncmp(line, "N: Name=", 8) == 0 && strstr(line, target_name))
+        printf("[DEBUG] Read line: %s", line);  // No \n needed, fgets includes it
+
+        // Check for matching device name
+        if (strncmp(line, "N: Name=", 8) == 0)
         {
-            found = 1;
+            if (strstr(line, target_name))
+            {
+                printf("[DEBUG] Found matching device name line: %s", line);
+                found = 1;
+            }
         }
 
+        // If matching device name was found, look for its handlers
         if (found && strncmp(line, "H: Handlers=", 12) == 0)
         {
+            printf("[DEBUG] Found handler line: %s", line);
+
             char *token = strtok(line, " ");
             while (token)
             {
+                printf("[DEBUG] Token: %s\n", token);
+
                 if (strncmp(token, "event", 5) == 0)
                 {
                     snprintf(event_path, sizeof(event_path), "%s%s", EVENT_DEV_PATH, token);
+                    printf("[DEBUG] Found event device: %s\n", event_path);
                     fclose(fp);
                     return event_path;
                 }
@@ -57,9 +73,11 @@ char *find_event_device(const char *target_name)
         }
     }
 
+    printf("[DEBUG] Device not found.\n");
     fclose(fp);
     return NULL;
 }
+
 
 // Function to simulate the requestOutputLine (you should implement it according to your system)
 struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int offset, const char *consumer)
