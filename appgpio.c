@@ -261,14 +261,16 @@ int areButtonsPressed(void)
     {
         enum gpiod_line_value values[1];
         event_value = 0;
+        printf("Here Readign the value\n");
 
         if (gpiod_line_request_get_values(line_request, values) < 0)
         {
+            printf("Error HEre\n");
             perror("Failed to read GPIO values");
             close(fd);
             return -1;
         }
-
+        printf("hi from here q\n");
         if (read(fd, &ev, sizeof(struct input_event)) > 0)
         {
             printf("Able to read the input events\n");
@@ -285,7 +287,8 @@ int areButtonsPressed(void)
                 }
             }
         }
-        else{
+        else
+        {
 
             printf("Sad times\n");
         }
