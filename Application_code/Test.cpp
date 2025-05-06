@@ -161,7 +161,7 @@ public:
             drawUI();
             processMode();
             waitForButtonPress();
-            Track_Activity();
+
         }
     }
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
