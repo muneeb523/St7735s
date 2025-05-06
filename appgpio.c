@@ -283,7 +283,7 @@ int areButtonsPressed(void)
             close(fd);
             return -1;
         }
-        else if (poll_result > 0)
+        else if (poll_result > 0){
         
             if (read(fd, &ev, sizeof(struct input_event)) > 0)
             {
@@ -308,7 +308,7 @@ int areButtonsPressed(void)
             return -2;
         }
 
-        if (values[0] == GPIOD_LINE_VALUE_ACTIVE || event_value == 2)
+        if (values[0] == GPIOD_LINE_VALUE_INACTIVE || event_value == 2)
         {
             time_t now = time(NULL);
             if (now - last_trigger_time >= 1)
