@@ -18,9 +18,11 @@
 #include <mutex>
 #include <nlohmann/json.hpp> // JSON library: https://github.com/nlohmann/json
 #include <atomic>
+#include <time.h>
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
+
 extern "C"
 {
 #include "../appgpio.h"
@@ -121,6 +123,8 @@ std::string currentTime = "00:00"; // Default Time
 int videoRunning = 0;
 time_t videoStart = 0;
 char videoTime[6] = "00:00"; // Default Time
+std::atomic<bool> activityDetected{false};
+std::thread inactivityThread;
 
 class DisplayExample
 {
@@ -147,6 +151,9 @@ public:
         buzzer_thread = std::thread(&DisplayExample::updateBuzzer, this);
         buzzer_thread.detach(); // Detach the buzzer thread
 
+        inactivityThread = std::thread(&DisplayExample::trackInactivity, this);
+        inactivityThread.detach();
+
         std::cout << "NTP" << std::endl;
 
         while (true)
@@ -154,6 +161,7 @@ public:
             drawUI();
             processMode();
             waitForButtonPress();
+            Track_Activity();
         }
     }
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
@@ -175,6 +183,33 @@ public:
         return true;
     }
 
+    void trackInactivity() {
+
+        struct timespec lastActivityTime;
+        clock_gettime(CLOCK_MONOTONIC, &lastActivityTime);
+    
+        while (true) {
+            if (activityDetected.load()) {
+                clock_gettime(CLOCK_MONOTONIC, &lastActivityTime);
+                activityDetected.store(false);
+            }
+    
+            struct timespec now;
+            clock_gettime(CLOCK_MONOTONIC, &now);
+    
+            double elapsed = (now.tv_sec - lastActivityTime.tv_sec) +
+                             (now.tv_nsec - lastActivityTime.tv_nsec) / 1e9;
+    
+            if (elapsed >= 30.0) {
+                clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
+                Enter_Power_Mode();
+               
+            }
+    
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    }
+    
     void drawUI()
     {
         setColor(0, 0, 0); // Black background
@@ -322,6 +357,7 @@ public:
         printf("areButtonsPressed %d\r\n", pressed);
         if (pressed > 0)
         {
+            activityDetected.store(true);
             updateMode(pressed);
         }
         _Delay(5000); // Assuming microseconds (5ms)
@@ -386,6 +422,7 @@ public:
 
         if (mode_change_time != 0 && !current_state.in_emergency && !barcode_show)
         {
+
             time_t now = time(NULL);
             if (now - mode_change_time > 3)
             {
@@ -440,6 +477,7 @@ public:
                     voipOn();
                 }
             }
+            activityDetected.store(true);
             mark_state_dirty();
         }
         else if (current_state.in_emergency)
@@ -450,6 +488,7 @@ public:
             voipOn();
 
             mark_state_dirty();
+            activityDetected.store(true);
         }
         if (videoRunning)
         {
