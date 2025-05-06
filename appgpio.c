@@ -21,30 +21,27 @@
 void _Delay(int microseconds)
 {
     usleep(microseconds);
-}char *find_event_device(const char *target_name)
+}
+char *find_event_device(const char *target_name)
 {
     static char event_path[256];
     FILE *fp = fopen("/proc/bus/input/devices", "r");
     if (!fp)
     {
-        perror("[ERROR] Failed to open /proc/bus/input/devices");
+        perror("Failed to open /proc/bus/input/devices");
         return NULL;
     }
 
     char line[512];
     int found = 0;
 
-    printf("[DEBUG] Looking for device name: %s\n", target_name);
-
     while (fgets(line, sizeof(line), fp))
     {
-        printf("[DEBUG] Read line: %s", line);
-
         if (strncmp(line, "N: Name=", 8) == 0)
         {
+            // Match device name
             if (strstr(line, target_name))
             {
-                printf("[DEBUG] Found matching device name line: %s", line);
                 found = 1;
             }
             else
@@ -53,50 +50,27 @@ void _Delay(int microseconds)
             }
         }
 
+        // After matching name, look for event handler
         if (found && strncmp(line, "H: Handlers=", 12) == 0)
         {
-            printf("[DEBUG] Found handler line: %s", line);
-
-            const char *handlers = line + 12;
-            printf("[DEBUG] Handler string: %s\n", handlers);
-
-            // Make a clean copy of the handler line
-            char line_copy[512];
-            memset(line_copy, 0, sizeof(line_copy));
-            strncpy(line_copy, handlers, sizeof(line_copy) - 1);
-
-            // Strip newline safely
-            char *newline = strchr(line_copy, '\n');
-            if (newline)
+            char *pos = strstr(line, "event");
+            if (pos)
             {
-                *newline = '\0';
-                printf("[DEBUG] Removed newline from handler string\n");
-            }
-
-            // Tokenize safely
-            char *token = strtok(line_copy, " ");
-            while (token)
-            {
-                printf("[DEBUG] Token: %s\n", token);
-                if (strncmp(token, "event", 5) == 0)
+                char event_name[32];
+                if (sscanf(pos, "%31s", event_name) == 1)
                 {
-                    snprintf(event_path, sizeof(event_path), "%s%s", EVENT_DEV_PATH, token);
-                    printf("[DEBUG] Found event device: %s\n", event_path);
+                    snprintf(event_path, sizeof(event_path), "%s%s", EVENT_DEV_PATH, event_name);
                     fclose(fp);
                     return event_path;
                 }
-                token = strtok(NULL, " ");
             }
-
-            printf("[DEBUG] No event handler found in this handler line.\n");
-            found = 0;
         }
     }
 
-    printf("[DEBUG] No matching device found for: %s\n", target_name);
     fclose(fp);
     return NULL;
 }
+
 // Function to simulate the requestOutputLine (you should implement it according to your system)
 struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int offset, const char *consumer)
 {
