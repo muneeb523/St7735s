@@ -299,7 +299,7 @@ int areButtonsPressed(void)
             }
         }
 
-        pritntf("HEllollll\n");
+        printf("HEllollll\n");
 
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
