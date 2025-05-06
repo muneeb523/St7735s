@@ -21,8 +21,7 @@
 void _Delay(int microseconds)
 {
     usleep(microseconds);
-}
-char *find_event_device(const char *target_name)
+}char *find_event_device(const char *target_name)
 {
     static char event_path[256];
     FILE *fp = fopen("/proc/bus/input/devices", "r");
@@ -61,10 +60,12 @@ char *find_event_device(const char *target_name)
             const char *handlers = line + 12;
             printf("[DEBUG] Handler string: %s\n", handlers);
 
+            // Make a clean copy of the handler line
             char line_copy[512];
+            memset(line_copy, 0, sizeof(line_copy));
             strncpy(line_copy, handlers, sizeof(line_copy) - 1);
-            line_copy[sizeof(line_copy) - 1] = '\0';
 
+            // Strip newline safely
             char *newline = strchr(line_copy, '\n');
             if (newline)
             {
@@ -72,6 +73,7 @@ char *find_event_device(const char *target_name)
                 printf("[DEBUG] Removed newline from handler string\n");
             }
 
+            // Tokenize safely
             char *token = strtok(line_copy, " ");
             while (token)
             {
