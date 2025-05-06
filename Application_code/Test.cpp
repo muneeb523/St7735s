@@ -240,7 +240,7 @@ public:
             std::this_thread::sleep_for(std::chrono::seconds(60)); // configurable delay
         }
     }
-    
+
     void Enter_Power_Mode()
     {
         const std::string power_state_file = "/sys/power/state";
@@ -250,7 +250,7 @@ public:
         if (!power_state_stream.is_open())
         {
             std::cerr << "Error: Unable to open " << power_state_file << std::endl;
-            return 1;
+            return ;
         }
         // Write the "mem" value to trigger suspend-to-RAM
         power_state_stream << "mem" << std::endl;
