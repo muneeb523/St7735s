@@ -298,10 +298,7 @@ public:
         int pressed = 0;
         while (pressed == 0)
         {
-            printf("checking for button presses\n");
-
             pressed = areButtonsPressed();
-            printf("Not evne out of it\n");
             usleep(10000); // 10ms sleep to avoid CPU hogging
         }
         printf("areButtonsPressed %d\r\n", pressed);
@@ -469,7 +466,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h265", nullptr);
+                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", nullptr);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }
@@ -560,7 +557,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h265", "local_storage", nullptr);
+                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }

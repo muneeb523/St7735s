@@ -242,7 +242,6 @@ int areButtonsPressed(void)
         return -1;
     }
 
-    printf("Found input device: %s\n", device_path);
 
     int fd = open(device_path, O_RDONLY);
     if (fd < 0)
@@ -250,7 +249,7 @@ int areButtonsPressed(void)
         perror("Failed to open event device");
         return 1;
     }
-    printf("Opened Succesfully\n");
+
 
     struct input_event ev;
     struct timespec start_time, current_time;
@@ -262,7 +261,7 @@ int areButtonsPressed(void)
     {
         enum gpiod_line_value values[1];
         event_value = 0;
-        printf("Here Readign the value\n");
+       
 
         if (gpiod_line_request_get_values(line_request, values) < 0)
         {
@@ -271,8 +270,7 @@ int areButtonsPressed(void)
             close(fd);
             return -1;
         }
-        printf("hi from here q\n");
-
+     
         struct pollfd pfd;
         pfd.fd = fd;
         pfd.events = POLLIN;
@@ -299,7 +297,7 @@ int areButtonsPressed(void)
             }
         }
 
-        printf("HEllollll\n");
+
 
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
