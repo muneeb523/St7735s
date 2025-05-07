@@ -44,6 +44,7 @@ extern "C"
 #define GPIO_LINE_SELF_KILL 20
 
 using json = nlohmann::json;
+extern char **environ;
 std::mutex state_mutex;
 std::atomic<bool> state_dirty = false;
 std::atomic<bool> running = true;
@@ -161,7 +162,6 @@ public:
             drawUI();
             processMode();
             waitForButtonPress();
-
         }
     }
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
@@ -183,35 +183,38 @@ public:
         return true;
     }
 
-    void trackInactivity() {
+    void trackInactivity()
+    {
 
         struct timespec lastActivityTime;
         clock_gettime(CLOCK_MONOTONIC, &lastActivityTime);
-    
-        while (true) {
-            if (activityDetected.load()) {
+
+        while (true)
+        {
+            if (activityDetected.load())
+            {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime);
                 activityDetected.store(false);
             }
-    
+
             struct timespec now;
             clock_gettime(CLOCK_MONOTONIC, &now);
-    
+
             double elapsed = (now.tv_sec - lastActivityTime.tv_sec) +
                              (now.tv_nsec - lastActivityTime.tv_nsec) / 1e9;
-    
-            if (elapsed >= 30.0) {
+
+            if (elapsed >= 30.0)
+            {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
-                setColor(0, 0, 0); // Black background
+                setColor(0, 0, 0);                                 // Black background
                 fillScreen();
                 Enter_Power_Mode();
-               
             }
-    
+
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
-    
+
     void drawUI()
     {
         setColor(0, 0, 0); // Black background
@@ -287,15 +290,13 @@ public:
         if (!power_state_stream.is_open())
         {
             std::cerr << "Error: Unable to open " << power_state_file << std::endl;
-            return ;
+            return;
         }
         // Write the "mem" value to trigger suspend-to-RAM
         power_state_stream << "mem" << std::endl;
         // Close the file after writing
         power_state_stream.close();
-
     }
-
 
     void mark_state_dirty()
     {
@@ -525,7 +526,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", nullptr);
+                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", NULL, environ);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }
@@ -562,21 +563,49 @@ public:
         printf("videoOff\r\n");
         if (gst_pid != -1)
         {
-
-            printf(" Stopping Streaming  (PID: %d)\n", gst_pid);
-            kill(gst_pid, SIGINT);        // Send SIGINT (same as Ctrl+C)
-            waitpid(gst_pid, nullptr, 0); // Wait for it to terminate
+            printf("Stopping Streaming (PID: %d)\n", gst_pid);
+            // Send SIGTERM to gracefully terminate the process
+            if (kill(gst_pid, SIGTERM) == 0)
+            {
+                printf("Sent SIGTERM to process %d\n", gst_pid);
+            }
+            else
+            {
+                perror("Failed to send SIGTERM");
+            }
+            // Wait for the process to exit
+            int status;
+            if (waitpid(gst_pid, &status, 0) == gst_pid)
+            {
+                if (WIFEXITED(status))
+                {
+                    printf("Flashlight stopped successfully with exit code %d\n", WEXITSTATUS(status));
+                }
+                else if (WIFSIGNALED(status))
+                {
+                    printf("Flashlight process terminated by signal %d\n", WTERMSIG(status));
+                }
+                else
+                {
+                    printf("Flashlight process exited abnormally\n");
+                }
+            }
+            else
+            {
+                perror("Failed to wait for the process");
+            }
+            // Reset state
             gst_pid = -1;
-            printf(" Flashlight stopped successfully\n");
+            videoRunning = 0;
+            videoStart = 0;
+            sprintf(videoTime, "%02d:%02d", 0, 0);
         }
         else
         {
-            printf(" No stream running to stop\n");
+            printf("No stream running to stop\n");
         }
-        videoRunning = 0;
-        videoStart = 0;
-        sprintf(videoTime, "%02d:%02d", 0, 0);
     }
+
     void voipOff()
     {
         printf("voipOff\r\n");
@@ -616,7 +645,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execl("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr);
+                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr,environ);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }
