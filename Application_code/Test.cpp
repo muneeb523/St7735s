@@ -173,7 +173,7 @@ public:
     }
 
     void update_wifi_ssid_from_wpa() {
-        
+
         std::string netType = getActiveNetworkType();
 
         if (netType == "wifi")
@@ -183,7 +183,7 @@ public:
         else{
             current_state.wifi_connected = false;
         }
-        std::ifstream file("/etc/wpa_supplicant/wpa_supplicant.conf");
+        std::ifstream file("/etc/wpa_supplicant.conf");
         if (!file.is_open()) return;
     
         std::string line;
