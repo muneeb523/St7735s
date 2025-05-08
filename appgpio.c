@@ -277,11 +277,11 @@ int areButtonsPressed(void)
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
                          (current_time.tv_nsec - start_time.tv_nsec) / 1e9;
-        // if (elapsed >= CHECK_TIMEOUT_S)
-        // {
-        //     close(fd);
-        //     return ERROR_TIMEOUT;
-        // }
+        if (elapsed >= CHECK_TIMEOUT_S)
+        {
+            close(fd);
+            return ERROR_TIMEOUT;
+        }
 
         // Check GPIO value
         enum gpiod_line_value gpio_val[1] ;//<Normal high state
