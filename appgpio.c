@@ -264,7 +264,7 @@ int areButtonsPressed(void)
     }
 
     struct input_event ev;
-    struct timespec start_time, current_time;
+   static struct timespec start_time, current_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
 
     struct pollfd pfd = {
@@ -277,11 +277,11 @@ int areButtonsPressed(void)
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
                          (current_time.tv_nsec - start_time.tv_nsec) / 1e9;
-        if (elapsed >= CHECK_TIMEOUT_S)
-        {
-            close(fd);
-            return ERROR_TIMEOUT;
-        }
+        // if (elapsed >= CHECK_TIMEOUT_S)
+        // {
+        //     close(fd);
+        //     return ERROR_TIMEOUT;
+        // }
 
         // Check GPIO value
         enum gpiod_line_value gpio_val[1] ;//<Normal high state
@@ -293,6 +293,7 @@ int areButtonsPressed(void)
         }
 
         int wake_event = 0;
+        printf("checking\n");
 
         // Check input event (non-blocking poll)
         int poll_result = poll(&pfd, 1, POLL_TIMEOUT_MS);
