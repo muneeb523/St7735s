@@ -52,7 +52,9 @@ std::atomic<bool> running = true;
 std::thread buzzer_thread;
 std::atomic<bool> buzzer_running = false;
 std::mutex buzzer_mutex;
-
+namespace fs = std::filesystem;
+std::string getActiveNetworkType(); // Assume already implemented
+volatile bool local_kvs_streaming=false;
 struct DeviceState
 {
 
@@ -126,6 +128,7 @@ time_t videoStart = 0;
 char videoTime[6] = "00:00"; // Default Time
 std::atomic<bool> activityDetected{false};
 std::thread inactivityThread;
+std::thread Stream_Wifi;
 
 class DisplayExample
 {
@@ -155,6 +158,9 @@ public:
         inactivityThread = std::thread(&DisplayExample::trackInactivity, this);
         inactivityThread.detach();
 
+        Stream_Wifi = std::thread(&DisplayExample::Local_KVS, this);
+        Stream_Wifi.detach();
+
         std::cout << "NTP" << std::endl;
 
         while (true)
@@ -162,8 +168,38 @@ public:
             drawUI();
             processMode();
             waitForButtonPress();
+            update_wifi_ssid_from_wpa();
         }
     }
+
+    void update_wifi_ssid_from_wpa() {
+        
+        std::string netType = getActiveNetworkType();
+
+        if (netType == "wifi")
+        {
+            current_state.wifi_connected = true;
+        }
+        else{
+            current_state.wifi_connected = false;
+        }
+        std::ifstream file("/etc/wpa_supplicant/wpa_supplicant.conf");
+        if (!file.is_open()) return;
+    
+        std::string line;
+        while (std::getline(file, line)) {
+            size_t pos = line.find("ssid=");
+            if (pos != std::string::npos) {
+                std::string ssid = line.substr(pos + 5);
+                ssid.erase(remove(ssid.begin(), ssid.end(), '\"'), ssid.end());
+                current_state.wifi_ssid = ssid;
+        
+                return;
+            }
+        }
+    }
+
+ 
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
     {
         std::ifstream file(path, std::ios::binary);
@@ -181,6 +217,96 @@ public:
         }
 
         return true;
+    }
+    std::vector<std::string> getMP4Files(const std::string &dir)
+    {
+
+        std::vector<std::string> files;
+        for (const auto &entry : fs::directory_iterator(dir))
+        {
+            if (entry.path().extension() == ".mp4")
+            {
+                files.push_back(entry.path().string());
+            }
+        }
+        return files;
+    }
+    bool runFlashlightCommand(const std::vector<std::string> &files)
+    {
+        if (files.empty())
+            return false;
+
+        std::string cmd = "/usr/bin/Flashlight NAK h264";
+        for (const auto &f : files)
+        {
+            cmd += " " + f; // Add each file path to the command
+        }
+
+        int result = system(cmd.c_str()); // Run the command using system()
+        return (result == 0);             // Return true if the command was successful
+    }
+
+    void deleteFiles(const std::vector<std::string> &files)
+    {
+        for (const auto &f : files)
+        {
+            std::error_code ec;
+            fs::remove(f, ec);
+            if (ec)
+            {
+                std::cerr << "Failed to delete: " << f << " - " << ec.message() << "\n";
+            }
+            else
+            {
+                std::cout << "Deleted: " << f << "\n";
+            }
+        }
+    }
+
+    void Local_KVS()
+    {
+
+        const std::string videoDir = "/home/local";
+
+        while (true)
+        {
+            std::string netType = getActiveNetworkType();
+
+            if (netType == "wifi" && !videoRunning)
+            {
+
+                auto files = getMP4Files(videoDir);
+
+                if (!files.empty())
+                {
+                    std::cout << "[Info] Found " << files.size() << " MP4 file(s). Streaming...\n";
+
+
+                    bool success = runFlashlightCommand(files);
+
+                    if (success)
+                    {
+                        std::cout << "[Success] Streaming done. Deleting files...\n";
+                        std::this_thread::sleep_for(std::chrono::seconds(120));
+                        deleteFiles(files);
+                    }
+                    else
+                    {
+                        std::cerr << "[Error] Streaming failed. Files kept.\n";
+                    }
+                }
+                else
+                {
+                    std::cout << "[Info] No files found.\n";
+                }
+            }
+            else
+            {
+                std::cout << "[Info] Not on Wi-Fi. Skipping streaming.\n";
+            }
+
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+        }
     }
 
     void trackInactivity()
@@ -203,12 +329,12 @@ public:
             double elapsed = (now.tv_sec - lastActivityTime.tv_sec) +
                              (now.tv_nsec - lastActivityTime.tv_nsec) / 1e9;
 
-            if (elapsed >= 30.0)
+            if (elapsed >= 60.0)
             {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
-                fillScreen();
-              //  Enter_Power_Mode();
+                 fillScreen();
+                // Enter_Power_Mode();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -283,6 +409,8 @@ public:
 
     void Enter_Power_Mode()
     {
+        if(!videoRunning){
+
         const std::string power_state_file = "/sys/power/state";
         // Open the file for writing
         std::ofstream power_state_stream(power_state_file);
@@ -296,6 +424,7 @@ public:
         power_state_stream << "mem" << std::endl;
         // Close the file after writing
         power_state_stream.close();
+    }
     }
 
     void mark_state_dirty()
@@ -485,11 +614,11 @@ public:
         }
         else if (current_state.in_emergency)
         {
+            videoOff();
             lightOn();
             alarmOn();
             emergency_stream_on();
             voipOn();
-
             mark_state_dirty();
             activityDetected.store(true);
         }
@@ -559,11 +688,12 @@ public:
     void videoOff()
     {
         current_state.camera_recording = false;
-
+    
         printf("videoOff\r\n");
         if (gst_pid != -1)
         {
             printf("Stopping Streaming (PID: %d)\n", gst_pid);
+    
             // Send SIGTERM to gracefully terminate the process
             if (kill(gst_pid, SIGTERM) == 0)
             {
@@ -573,9 +703,22 @@ public:
             {
                 perror("Failed to send SIGTERM");
             }
-            // Wait for the process to exit
+    
+            // Wait for up to 3 seconds for the process to terminate
             int status;
-            if (waitpid(gst_pid, &status, 0) == gst_pid)
+            pid_t result;
+            int wait_time = 0;
+            const int max_wait_time = 3;  // seconds
+    
+            do {
+                result = waitpid(gst_pid, &status, WNOHANG);
+                if (result == 0) {
+                    sleep(1);
+                    wait_time++;
+                }
+            } while (result == 0 && wait_time < max_wait_time);
+    
+            if (result == gst_pid)
             {
                 if (WIFEXITED(status))
                 {
@@ -590,10 +733,25 @@ public:
                     printf("Flashlight process exited abnormally\n");
                 }
             }
+            else if (result == 0)
+            {
+                // Still running after wait time: force kill
+                printf("Process did not exit in time, force killing...\n");
+                if (kill(gst_pid, SIGKILL) == 0)
+                {
+                    printf("Sent SIGKILL to process %d\n", gst_pid);
+                    waitpid(gst_pid, &status, 0);  // Ensure it's reaped
+                }
+                else
+                {
+                    perror("Failed to send SIGKILL");
+                }
+            }
             else
             {
                 perror("Failed to wait for the process");
             }
+    
             // Reset state
             gst_pid = -1;
             videoRunning = 0;
@@ -604,6 +762,26 @@ public:
         {
             printf("No stream running to stop\n");
         }
+    }
+    
+
+    std::string getActiveNetworkType()
+    {
+
+        std::ifstream file("/run/net_status.flag");
+        std::string network;
+
+        if (file.is_open())
+        {
+            std::getline(file, network);
+            file.close();
+        }
+        else
+        {
+            network = "unknown"; // Optional fallback if the file isn't found
+        }
+
+        return network; // Returns: "wifi", "lte", or "unknown"
     }
 
     void voipOff()
@@ -636,7 +814,14 @@ public:
         printf("videoOn\r\n");
         if (!videoRunning)
         {
+            std::string netType = getActiveNetworkType();
 
+            if (netType == "wifi"){
+                emergency_stream_on();
+                return;
+
+            }
+            
             if (gst_pid == -1)
             {
                 gst_pid = fork();
@@ -645,7 +830,7 @@ public:
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
-                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr,environ);
+                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr, environ);
                     perror("execl failed");
                     _exit(1); // In case execl fails
                 }

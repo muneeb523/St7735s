@@ -116,6 +116,8 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "fstream": "cpp",
-    "appgpio.h": "c"
+    "appgpio.h": "c",
+    "condition_variable": "cpp",
+    "mutex": "cpp"
   }
 }
