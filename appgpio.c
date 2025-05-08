@@ -284,8 +284,8 @@ int areButtonsPressed(void)
         }
 
         // Check GPIO value
-        enum gpiod_line_value gpio_val = GPIOD_LINE_VALUE_ACTIVE;//<Normal high state
-        if (gpiod_line_request_get_values(line_request, &gpio_val) < 0)
+        enum gpiod_line_value gpio_val[1] ;//<Normal high state
+        if (gpiod_line_request_get_values(line_request, gpio_val) < 0)
         {
             perror("Failed to read GPIO values");
             close(fd);
@@ -315,7 +315,7 @@ int areButtonsPressed(void)
             }
         }
 
-        if (gpio_val == GPIOD_LINE_VALUE_INACTIVE || wake_event)
+        if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE  || wake_event)
         {
             time_t now = time(NULL);
             if (now - last_trigger_time >= 1)
@@ -323,7 +323,7 @@ int areButtonsPressed(void)
                 usleep(DEBOUNCE_DELAY_US); // Debounce delay
 
                 // Recheck both inputs
-                if (gpiod_line_request_get_values(line_request, &gpio_val) < 0)
+                if (gpiod_line_request_get_values(line_request, gpio_val) < 0)
                 {
                     perror("Failed to re-read GPIO values");
                     close(fd);
@@ -347,14 +347,14 @@ int areButtonsPressed(void)
                     }
                 }
 
-                printf("button (GPIO): %d, event: %d\n", gpio_val, wake_event);
+                printf("button (GPIO): %d, event: %d\n", gpio_val[0], wake_event);
 
                 last_trigger_time = now;
                 close(fd);
 
-                if (gpio_val == GPIOD_LINE_VALUE_INACTIVE && wake_event)
+                if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE  && wake_event)
                     return BUTTON_BOTH;
-                else if (gpio_val == GPIOD_LINE_VALUE_INACTIVE)
+                else if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE )
                     return BUTTON_GPIO_ONLY;
                 else if (wake_event)
                     return BUTTON_EVENT_ONLY;
