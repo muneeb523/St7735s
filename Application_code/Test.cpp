@@ -347,12 +347,12 @@ public:
             double elapsed = (now.tv_sec - lastActivityTime.tv_sec) +
                              (now.tv_nsec - lastActivityTime.tv_nsec) / 1e9;
 
-            if (elapsed >= 60.0)
+            if (elapsed >= 30.0)
             {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
                 fillScreen();
-                // Enter_Power_Mode();
+                Enter_Power_Mode();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
