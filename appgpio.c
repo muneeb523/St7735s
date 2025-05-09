@@ -303,7 +303,7 @@ int areButtonsPressed(void)
             return ERROR_READ_FAIL;
         }
 
-        if (poll_result > 0 && (pfds.revents & POLLIN))
+        if (poll_result > 0 && (pfd.revents & POLLIN))
         {
             printf("Inside checkin \n");
             if (read(fd, &ev, sizeof(ev)) == sizeof(ev)) {
