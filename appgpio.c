@@ -292,11 +292,9 @@ int areButtonsPressed(void)
             close(fd);
             return ERROR_READ_FAIL;
         }
-        printf("Polling on fd=%d...\n", pfd.fd);
         int wake_event = 0;
         // Check input event (non-blocking poll)
         int poll_result = poll(&pfd, 1, POLL_TIMEOUT_MS);
-        printf("Poll result: %d, revents: 0x%x\n", poll_result, pfd.revents);
 
         if (poll_result < 0)
         {
@@ -306,7 +304,7 @@ int areButtonsPressed(void)
         }
 
         if (poll_result > 0 && (pfd.revents & POLLIN)) {
-            printf("Inside checkin \n");
+
     
             ssize_t n = read(fd, &ev, sizeof(ev));
             printf("Read returned: %zd bytes\n", n);
