@@ -353,9 +353,7 @@ int areButtonsPressed(void)
                         }
                     }
                 }
-
                 printf("button (GPIO): %d, event: %d\n", gpio_val[0], wake_event);
-
                 last_trigger_time = now;
                 close(fd);
 

@@ -33,7 +33,14 @@ extern "C"
 #include "../st7735s_compat.h"
 #include "../screen.h"
 }
-
+typedef enum
+{
+    EMERGENCY,
+    IDLE,
+    BARCODE,
+    RECORD
+} SystemState;
+SystemState currentState = IDLE;
 #define NTP_TIMESTAMP_DELTA 2208988800ULL
 #define TZ_DELTA 7 * 60 * 60
 
@@ -54,7 +61,7 @@ std::atomic<bool> buzzer_running = false;
 std::mutex buzzer_mutex;
 namespace fs = std::filesystem;
 std::string getActiveNetworkType(); // Assume already implemented
-volatile bool local_kvs_streaming=false;
+volatile bool local_kvs_streaming = false;
 struct DeviceState
 {
 
@@ -119,6 +126,7 @@ TestGpioReq testGpioReq;
 pid_t gst_pid = -1;
 volatile bool barcode_show = false;
 int mode, nmode = 1;
+volatile int Disp_mode = 0;
 time_t mode_change_time = 1;
 Mode current_mode = STREAM;
 std::string currentTime = "00:00"; // Default Time
@@ -172,34 +180,45 @@ public:
         }
     }
 
-    void update_wifi_ssid_from_wpa() {
-
+    void update_wifi_ssid_from_wpa()
+    {
         std::string netType = getActiveNetworkType();
 
         if (netType == "wifi")
         {
             current_state.wifi_connected = true;
         }
-        else{
+        else
+        {
             current_state.wifi_connected = false;
+            printf("Not connected via Wi-Fi. Current network type: %s\n", netType.c_str());
         }
+
         std::ifstream file("/etc/wpa_supplicant.conf");
-        if (!file.is_open()) return;
-    
+        if (!file.is_open())
+        {
+            printf("Error: Failed to open /etc/wpa_supplicant.conf\n");
+            return;
+        }
+
         std::string line;
-        while (std::getline(file, line)) {
+        while (std::getline(file, line))
+        {
             size_t pos = line.find("ssid=");
-            if (pos != std::string::npos) {
+            if (pos != std::string::npos)
+            {
                 std::string ssid = line.substr(pos + 5);
                 ssid.erase(remove(ssid.begin(), ssid.end(), '\"'), ssid.end());
                 current_state.wifi_ssid = ssid;
-        
+
+                printf("SSID obtained from wpa_supplicant: %s\n", ssid.c_str());
                 return;
             }
         }
+
+        printf("Error: SSID not found in /etc/wpa_supplicant.conf\n");
     }
 
- 
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
     {
         std::ifstream file(path, std::ios::binary);
@@ -281,7 +300,6 @@ public:
                 {
                     std::cout << "[Info] Found " << files.size() << " MP4 file(s). Streaming...\n";
 
-
                     bool success = runFlashlightCommand(files);
 
                     if (success)
@@ -333,7 +351,7 @@ public:
             {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
-                 fillScreen();
+                fillScreen();
                 // Enter_Power_Mode();
             }
 
@@ -341,55 +359,77 @@ public:
         }
     }
 
+    void drawBatteryAndSignalIcons()
+    {
+        drawImage(5, 7, battery_level2, 16, 16);
+        drawImage(55, 7, signal_level1, 19, 16);
+    }
+
+    void drawTimeText(const char *time, int x, int y)
+    {
+        setColor(31, 63, 31); // Green text
+        setbgColor(0, 0, 0);  // Black background
+        setFont(ter_u12b);
+        drawText(x, y, time);
+        printf("Displayed Time on Screen: %s\n", time);
+    }
     void drawUI()
     {
         setColor(0, 0, 0); // Black background
 
-        if (barcode_show)
+        ImageSize modeImages[2] = {
+            {RECORD_SCREEN, 80, 60},
+            {EMERGENCY_SCREEN, 80, 60}};
+
+        switch (currentState)
         {
-
-            setColor(255, 255, 255); // white background
-
-            drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
-        }
-        else
+        case IDLE:
         {
-
-            // Battery and Signal icons
-            drawImage(5, 7, battery_level2, 16, 16);
-            drawImage(55, 7, signal_level1, 19, 16);
-
-            // Modes with their respective image names & sizes
-            ImageSize modeImages[7] = {
-                {None, 80, 60},
-                {Mode1, 80, 60},
-                {Mode2, 80, 60},
-                {Mode3, 80, 60},
-                {Mode4, 80, 60},
-                {Mode5, 80, 60},
-                {Mode6, 80, 60}
-
-            };
-
-            // Draw mode image at fixed position
-            drawImage(0, 60, modeImages[mode].image, modeImages[mode].width, modeImages[mode].height);
-
-            // Display NTP Time in "HH:MM" format
-            setColor(31, 63, 31); // Green text
-            setbgColor(0, 0, 0);  // Black background
-            setFont(ter_u12b);    // Smallest readable font
+            drawBatteryAndSignalIcons();
+            setColor(31, 63, 31);
+            setbgColor(0, 0, 0);
+            setFont(ter_u16b);
+            drawText(10, 80, currentTime.c_str());
             printf("Displayed Time on Screen: %s\n", currentTime.c_str());
-            drawText(25, 35, currentTime.c_str());
-
-            if (videoRunning)
-            {
-                printf("videoRunning: %s\n", videoTime);
-                setColor(31, 63, 31); // Green text
-                setbgColor(0, 0, 0);  // Black background
-                setFont(ter_u12b);    // Smallest readable font
-                drawText(25, 125, videoTime);
-            }
+            break;
         }
+
+        case RECORD:
+        {
+            drawBatteryAndSignalIcons();
+            drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
+            drawTimeText(currentTime.c_str(), 25, 140);
+            break;
+        }
+
+        case EMERGENCY:
+        {
+            drawBatteryAndSignalIcons();
+            drawImage(0, 60, modeImages[1].image, modeImages[1].width, modeImages[1].height);
+            drawTimeText(currentTime.c_str(), 25, 140);
+            break;
+        }
+
+        case BARCODE:
+        {
+            setColor(255, 255, 255); // White background
+            drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
+            break;
+        }
+
+        default:
+            // Optionally handle unexpected states
+            break;
+        }
+
+        // if (videoRunning)
+        // {
+        //     setColor(31, 63, 31);
+        //     setbgColor(0, 0, 0);
+        //     setFont(ter_u12b);
+        //     drawText(25, 125, videoTime);
+        //     printf("videoRunning: %s\n", videoTime);
+        // }
 
         flushBuffer();
     }
@@ -409,22 +449,23 @@ public:
 
     void Enter_Power_Mode()
     {
-        if(!videoRunning){
-
-        const std::string power_state_file = "/sys/power/state";
-        // Open the file for writing
-        std::ofstream power_state_stream(power_state_file);
-        // Check if the file was opened successfully
-        if (!power_state_stream.is_open())
+        if (!videoRunning)
         {
-            std::cerr << "Error: Unable to open " << power_state_file << std::endl;
-            return;
+
+            const std::string power_state_file = "/sys/power/state";
+            // Open the file for writing
+            std::ofstream power_state_stream(power_state_file);
+            // Check if the file was opened successfully
+            if (!power_state_stream.is_open())
+            {
+                std::cerr << "Error: Unable to open " << power_state_file << std::endl;
+                return;
+            }
+            // Write the "mem" value to trigger suspend-to-RAM
+            power_state_stream << "mem" << std::endl;
+            // Close the file after writing
+            power_state_stream.close();
         }
-        // Write the "mem" value to trigger suspend-to-RAM
-        power_state_stream << "mem" << std::endl;
-        // Close the file after writing
-        power_state_stream.close();
-    }
     }
 
     void mark_state_dirty()
@@ -494,121 +535,119 @@ public:
         }
         _Delay(5000); // Assuming microseconds (5ms)
     }
-
     void updateMode(int btn)
     {
         std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
-        // Update mode cyclically through 0 to 6
-        mode = (mode + 1) % 7;
 
-        if (btn == 2)
+        switch (btn)
         {
-            // If button 1 (bit 1) is pressed, enter emergency mode
-            if (!current_state.in_emergency)
-            {
-                current_state.in_emergency = true;
-                // Possibly trigger an alert or a different mode?
-            }
-        }
-        else if (btn == 1)
-        {
-            // If button 1 is not pressed and we are in emergency mode, reset it
+
+        case 1: // Mode cycle button
+            mode = (mode + 1) % 2;
+
             if (current_state.in_emergency)
             {
-                mode = 0;                           // Reset mode
-                current_state.in_emergency = false; // Exit emergency mode
+                mode = 0;
+                current_state.in_emergency = false;
+                currentState = IDLE;
             }
 
             if (barcode_show)
             {
                 setOrientation(R90);
-
                 barcode_show = false;
+                currentState = IDLE;
             }
 
-            // Logical filtering of allowed modes
-            if (mode == 2)
-            {
-                mode = 3; // Skip mode 2 if not in emergency
-            }
+            currentState = (mode == 1) ? RECORD : IDLE;
+            break;
 
-            if (mode >= 5)
+        case 2: // Emergency button
+            if (!current_state.in_emergency)
             {
-                mode = 0; // Reset mode if above 4
+                currentState = EMERGENCY;
+                current_state.in_emergency = true;
             }
-        }
-        else if (btn == 3)
-        {
+            else
+            {
+                mode = 0;
+                currentState = IDLE;
+                current_state.in_emergency = false;
+            }
+            break;
+
+        case 3: // Show barcode
             setOrientation(R180);
             barcode_show = true;
+            currentState = BARCODE;
+            break;
+
+        default:
+            // No action for other button values
+            break;
         }
 
         mark_state_dirty();
-
-        mode_change_time = time(NULL); // Record the time of mode change
+        mode_change_time = time(NULL); // Record mode change time
     }
 
     void processMode()
     {
         std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
 
-        if (mode_change_time != 0 && !current_state.in_emergency && !barcode_show)
+        if (!current_state.in_emergency && !barcode_show)
         {
-
-            time_t now = time(NULL);
-            if (now - mode_change_time > 3)
+            if (mode == 0)
             {
-                mode_change_time = 0;
-                if (mode == 0)
-                {
-                    alarmOff();
-                    lightOff();
-                    videoOff();
-                    voipOff();
-                }
-                else if (mode == 1)
-                {
-                    alarmOff();
-                    lightOff();
-                    videoOn();
-                    voipOn();
-                }
-                else if (mode == 2)
-                {
-                    alarmOn();
-                    lightOn();
-                    videoOff();
-                    voipOff();
-                }
-                else if (mode == 3)
-                {
-                    alarmOff();
-                    lightOn();
-                    videoOff();
-                    voipOn();
-                }
-                else if (mode == 4)
-                {
-                    alarmOff();
-                    lightOn();
-                    videoOn();
-                    voipOff();
-                }
-                else if (mode == 5)
-                {
-                    alarmOn();
-                    lightOff();
-                    videoOn();
-                    voipOff();
-                }
-                else if (mode == 6)
-                {
-                    alarmOn();
-                    lightOff();
-                    videoOff();
-                    voipOn();
-                }
+                alarmOff();
+                lightOff();
+                videoOff();
+                voipOff();
             }
+            else if (mode == 1)
+            {
+                alarmOff();
+                lightOn();
+                videoOn();
+                voipOff();
+            }
+            //< Below modes can be used in case config changes through the shadow update and we can switch the mode accordingly
+            else if (mode == 2)
+            {
+                alarmOn();
+                lightOn();
+                videoOff();
+                voipOff();
+            }
+            else if (mode == 3)
+            {
+                alarmOff();
+                lightOn();
+                videoOff();
+                voipOn();
+            }
+            else if (mode == 4)
+            {
+                alarmOff();
+                lightOn();
+                videoOn();
+                voipOff();
+            }
+            else if (mode == 5)
+            {
+                alarmOn();
+                lightOff();
+                videoOn();
+                voipOff();
+            }
+            else if (mode == 6)
+            {
+                alarmOn();
+                lightOff();
+                videoOff();
+                voipOn();
+            }
+
             activityDetected.store(true);
             mark_state_dirty();
         }
@@ -688,12 +727,12 @@ public:
     void videoOff()
     {
         current_state.camera_recording = false;
-    
+
         printf("videoOff\r\n");
         if (gst_pid != -1)
         {
             printf("Stopping Streaming (PID: %d)\n", gst_pid);
-    
+
             // Send SIGTERM to gracefully terminate the process
             if (kill(gst_pid, SIGTERM) == 0)
             {
@@ -703,21 +742,23 @@ public:
             {
                 perror("Failed to send SIGTERM");
             }
-    
+
             // Wait for up to 3 seconds for the process to terminate
             int status;
             pid_t result;
             int wait_time = 0;
-            const int max_wait_time = 3;  // seconds
-    
-            do {
+            const int max_wait_time = 3; // seconds
+
+            do
+            {
                 result = waitpid(gst_pid, &status, WNOHANG);
-                if (result == 0) {
+                if (result == 0)
+                {
                     sleep(1);
                     wait_time++;
                 }
             } while (result == 0 && wait_time < max_wait_time);
-    
+
             if (result == gst_pid)
             {
                 if (WIFEXITED(status))
@@ -740,7 +781,7 @@ public:
                 if (kill(gst_pid, SIGKILL) == 0)
                 {
                     printf("Sent SIGKILL to process %d\n", gst_pid);
-                    waitpid(gst_pid, &status, 0);  // Ensure it's reaped
+                    waitpid(gst_pid, &status, 0); // Ensure it's reaped
                 }
                 else
                 {
@@ -751,7 +792,7 @@ public:
             {
                 perror("Failed to wait for the process");
             }
-    
+
             // Reset state
             gst_pid = -1;
             videoRunning = 0;
@@ -763,7 +804,6 @@ public:
             printf("No stream running to stop\n");
         }
     }
-    
 
     std::string getActiveNetworkType()
     {
@@ -816,12 +856,13 @@ public:
         {
             std::string netType = getActiveNetworkType();
 
-            if (netType == "wifi"){
+            if (netType == "wifi")
+            {
+
                 emergency_stream_on();
                 return;
-
             }
-            
+
             if (gst_pid == -1)
             {
                 gst_pid = fork();
