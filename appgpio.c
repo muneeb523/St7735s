@@ -309,6 +309,11 @@ int areButtonsPressed(void)
             ssize_t bytes = read(fd, &ev, sizeof(ev));
             if (bytes == sizeof(ev))
             {
+                pritnf("Here into testing \n");
+                if(ev.type == EV_KEY && ev.code == KEY_WAKEUP){
+
+                    printf("ITs ev  testing here  got wakeup and ecv_key \n")
+                }
                 if (ev.type == EV_KEY && ev.code == KEY_WAKEUP && ev.value == 1)
                 {
                     wake_event = 1;
