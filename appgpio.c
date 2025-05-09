@@ -312,7 +312,7 @@ int areButtonsPressed(void)
                 printf("Here into testing \n");
                 if(ev.type == EV_KEY && ev.code == KEY_WAKEUP){
 
-                    printf("ITs ev  testing here  got wakeup and ecv_key \n")
+                    printf("ITs ev  testing here  got wakeup and ecv_key \n");
                 }
                 if (ev.type == EV_KEY && ev.code == KEY_WAKEUP && ev.value == 1)
                 {
