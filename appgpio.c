@@ -249,6 +249,7 @@ int areButtonsPressed(void)
         fprintf(stderr, "Could not find input device for '%s'\n", TARGET_DEVICE_NAME);
         return ERROR_DEVICE_NOT_FOUND;
     }
+    printf("Found device path: %s\n", device_path);
 
     if (!line_request)
     {
@@ -293,8 +294,6 @@ int areButtonsPressed(void)
         }
 
         int wake_event = 0;
-        printf("checking\n");
-
         // Check input event (non-blocking poll)
         int poll_result = poll(&pfd, 1, POLL_TIMEOUT_MS);
         if (poll_result < 0)
@@ -304,15 +303,15 @@ int areButtonsPressed(void)
             return ERROR_READ_FAIL;
         }
 
-        if (poll_result > 0)
+        if (poll_result > 0 && (fds.revents & POLLIN))
         {
-            ssize_t bytes = read(fd, &ev, sizeof(ev));
-            if (bytes == sizeof(ev))
-            {
+            printf("Inside checkin \n");
+            if (read(fd, &ev, sizeof(ev)) == sizeof(ev)) {
+
                 printf("Here into testing \n");
                 if(ev.type == EV_KEY && ev.code == KEY_WAKEUP){
 
-                    printf("ITs ev  testing here  got wakeup and ecv_key \n");
+                    printf("Its ev  testing here  got wakeup and ecv_key \n");
                 }
                 if (ev.type == EV_KEY && ev.code == KEY_WAKEUP && ev.value == 1)
                 {
