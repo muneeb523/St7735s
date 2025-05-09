@@ -257,7 +257,7 @@ int areButtonsPressed(void)
         return ERROR_GPIO_NOT_INIT;
     }
 
-    int fd = open(device_path, O_RDONLY);
+    int fd = open(device_path, O_RDONLY | O_NONBLOCK);
     if (fd < 0)
     {
         perror("Failed to open event device");
@@ -265,7 +265,7 @@ int areButtonsPressed(void)
     }
 
     struct input_event ev;
-   static struct timespec start_time, current_time;
+    static struct timespec start_time, current_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
 
     struct pollfd pfd = {
@@ -285,17 +285,19 @@ int areButtonsPressed(void)
         }
 
         // Check GPIO value
-        enum gpiod_line_value gpio_val[1] ;//<Normal high state
+        enum gpiod_line_value gpio_val[1]; //<Normal high state
         if (gpiod_line_request_get_values(line_request, gpio_val) < 0)
         {
             perror("Failed to read GPIO values");
             close(fd);
             return ERROR_READ_FAIL;
         }
-
+        printf("Polling on fd=%d...\n", pfd.fd);
         int wake_event = 0;
         // Check input event (non-blocking poll)
         int poll_result = poll(&pfd, 1, POLL_TIMEOUT_MS);
+        printf("Poll result: %d, revents: 0x%x\n", poll_result, pfd.revents);
+
         if (poll_result < 0)
         {
             perror("poll failed");
@@ -303,24 +305,26 @@ int areButtonsPressed(void)
             return ERROR_READ_FAIL;
         }
 
-        if (poll_result > 0 && (pfd.revents & POLLIN))
-        {
+        if (poll_result > 0 && (pfd.revents & POLLIN)) {
             printf("Inside checkin \n");
-            if (read(fd, &ev, sizeof(ev)) == sizeof(ev)) {
-
-                printf("Here into testing \n");
-                if(ev.type == EV_KEY && ev.code == KEY_WAKEUP){
-
-                    printf("Its ev  testing here  got wakeup and ecv_key \n");
-                }
-                if (ev.type == EV_KEY && ev.code == KEY_WAKEUP && ev.value == 1)
-                {
-                    wake_event = 1;
+    
+            ssize_t n = read(fd, &ev, sizeof(ev));
+            printf("Read returned: %zd bytes\n", n);
+    
+            if (n == sizeof(ev)) {
+                printf("Event: type=%d, code=%d, value=%d\n", ev.type, ev.code, ev.value);
+    
+                if (ev.type == EV_KEY && ev.code == KEY_WAKEUP) {
+                    printf("KEY_WAKEUP detected\n");
+                    if (ev.value == 1) {
+                        wake_event = 1;
+                        printf("Wake event triggered!\n");
+                    }
                 }
             }
         }
 
-        if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE  || wake_event)
+        if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE || wake_event)
         {
             time_t now = time(NULL);
             if (now - last_trigger_time >= 1)
@@ -357,9 +361,9 @@ int areButtonsPressed(void)
                 last_trigger_time = now;
                 close(fd);
 
-                if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE  && wake_event)
+                if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE && wake_event)
                     return BUTTON_BOTH;
-                else if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE )
+                else if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE)
                     return BUTTON_GPIO_ONLY;
                 else if (wake_event)
                     return BUTTON_EVENT_ONLY;
