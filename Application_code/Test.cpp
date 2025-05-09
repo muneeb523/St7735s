@@ -352,7 +352,7 @@ public:
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
                 fillScreen();
-                Enter_Power_Mode();
+               // Enter_Power_Mode();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));

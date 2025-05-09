@@ -12,13 +12,17 @@
 #include "appgpio.h"
 #include <poll.h>
 #include <linux/input-event-codes.h>
+#include <sys/epoll.h>
+#include <string.h>
+#include <errno.h>
 
+#define MAX_EVENTS 5
 #define PAGE_SIZE 4096 // Typical page size on ARM
 #define PAGE_MASK (PAGE_SIZE - 1)
 
 #define TARGET_DEVICE_NAME "gpio-keys"
 #define EVENT_DEV_PATH "/dev/input/"
-#define DEBOUNCE_DELAY_US 20000 // 20ms
+#define DEBOUNCE_DELAY_US 15000 // 20ms
 #define POLL_TIMEOUT_MS 100
 #define CHECK_TIMEOUT_S 1.0
 
@@ -257,24 +261,46 @@ int areButtonsPressed(void)
         fprintf(stderr, "GPIOs not initialized\n");
         return ERROR_GPIO_NOT_INIT;
     }
-
+// Step 1: Open the input device in non-blocking mode
     int fd = open(device_path, O_RDONLY | O_NONBLOCK);
-    if (fd < 0)
-    {
-        perror("Failed to open event device");
-        return ERROR_READ_FAIL;
+    if (fd < 0) {
+        perror("Failed to open input device");
+        return EXIT_FAILURE;
+    }
+       // Step 2: Create an epoll instance
+    int epfd = epoll_create1(0);
+    if (epfd == -1) {
+        perror("Failed to create epoll instance");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+      // Step 3: Configure the epoll event
+    struct epoll_event ev;
+    memset(&ev, 0, sizeof(ev));
+    ev.events = EPOLLIN;
+    ev.data.fd = fd;
+      // Step 4: Register the input fd with epoll
+    if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
+        perror("Failed to add fd to epoll");
+        close(fd);
+        close(epfd);
+        return EXIT_FAILURE;
     }
 
-    struct input_event ev;
+     // Step 5: Set up event buffer and input event struct
+    struct epoll_event events[MAX_EVENTS];
+    struct input_event ie;
+       
+
     static struct timespec start_time, current_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
 
-    struct pollfd pfd = {
-        .fd = fd,
-        .events = POLLIN};
+ 
 
     while (1)
     {
+          int wake_event = 0;
+
         // Check elapsed time
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
@@ -284,7 +310,30 @@ int areButtonsPressed(void)
             close(fd);
             return ERROR_TIMEOUT;
         }
-
+       int nfds = epoll_wait(epfd, events, MAX_EVENTS, 10); // Timeout: 10ms
+        if (nfds == -1) {
+            perror("epoll_wait error");
+            break;
+        }
+        for (int i = 0; i < nfds; i++) {
+            if (events[i].data.fd == fd) {
+                // Read all available input events
+                while (read(fd, &ie, sizeof(struct input_event)) > 0) {
+                    if (ie.type == EV_KEY && ie.code == KEY_WAKEUP) {
+                        if (ie.value == 1) {
+                            wake_event=1;
+                        } else if (ie.value == 0) {
+                            printf("Button Released\n");
+                        }
+                    }
+                }
+                // If read() fails for a reason other than "no data", report
+                if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                    perror("read error");
+                    break;
+                }
+            }
+        }
         // Check GPIO value
         enum gpiod_line_value gpio_val[1]; //<Normal high state
         if (gpiod_line_request_get_values(line_request, gpio_val) < 0)
@@ -293,35 +342,6 @@ int areButtonsPressed(void)
             close(fd);
             return ERROR_READ_FAIL;
         }
-        int wake_event = 0;
-        // Check input event (non-blocking poll)
-        int poll_result = poll(&pfd, 1, POLL_TIMEOUT_MS);
-
-        if (poll_result < 0)
-        {
-            perror("poll failed");
-            close(fd);
-            return ERROR_READ_FAIL;
-        }
-
-        if (poll_result > 0 && (pfd.revents & POLLIN)) {
-    
-            ssize_t n = read(fd, &ev, sizeof(ev));
-            printf("Read returned: %zd bytes\n", n);
-    
-            if (n == sizeof(ev)) {
-                printf("Event: type=%d, code=%d, value=%d\n", ev.type, ev.code, ev.value);
-    
-                if (ev.type == EV_KEY && ev.code == KEY_WAKEUP) {
-                    printf("KEY_WAKEUP detected\n");
-                    if (ev.value == 1) {
-                        wake_event = 1;
-                        printf("Wake event triggered!\n");
-                    }
-                }
-            }
-        }
-
         if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE || wake_event)
         {
             time_t now = time(NULL);
@@ -337,26 +357,9 @@ int areButtonsPressed(void)
                     return ERROR_READ_FAIL;
                 }
 
-                poll_result = poll(&pfd, 1, POLL_TIMEOUT_MS);
-                if (poll_result > 0)
-                {
-                    ssize_t bytes = read(fd, &ev, sizeof(ev));
-                    if (bytes == sizeof(ev))
-                    {
-                        if (ev.type == EV_KEY && ev.code == KEY_WAKEUP && ev.value == 1)
-                        {
-                            wake_event = 1;
-                        }
-                        else
-                        {
-                            wake_event = 0;
-                        }
-                    }
-                }
                 printf("button (GPIO): %d, event: %d\n", gpio_val[0], wake_event);
                 last_trigger_time = now;
                 close(fd);
-
                 if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE && wake_event)
                     return BUTTON_BOTH;
                 else if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE)
@@ -368,7 +371,7 @@ int areButtonsPressed(void)
             }
         }
 
-        usleep(10000); // Sleep 10ms before next check
+        usleep(5000); // Sleep 10ms before next check
     }
 
     close(fd); // Good practice even if never reached
