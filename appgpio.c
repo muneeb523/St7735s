@@ -11,6 +11,7 @@
 #include <linux/input.h>
 #include "appgpio.h"
 #include <poll.h>
+#include <linux/input-event-codes.h>
 
 #define PAGE_SIZE 4096 // Typical page size on ARM
 #define PAGE_MASK (PAGE_SIZE - 1)
@@ -18,7 +19,7 @@
 #define TARGET_DEVICE_NAME "gpio-keys"
 #define EVENT_DEV_PATH "/dev/input/"
 #define DEBOUNCE_DELAY_US 20000 // 20ms
-#define POLL_TIMEOUT_MS 50
+#define POLL_TIMEOUT_MS 100
 #define CHECK_TIMEOUT_S 1.0
 
 enum ButtonState
@@ -304,7 +305,6 @@ int areButtonsPressed(void)
         }
 
         if (poll_result > 0 && (pfd.revents & POLLIN)) {
-
     
             ssize_t n = read(fd, &ev, sizeof(ev));
             printf("Read returned: %zd bytes\n", n);
