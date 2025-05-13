@@ -57,8 +57,8 @@ std::atomic<bool> state_dirty = false;
 std::atomic<bool> running = true;
 
 std::thread buzzer_thread;
-extern std::atomic<bool> buzzer_running;
-extern std::atomic<int> buzzer_frequency_hz;
+std::atomic<bool> buzzer_running = false;
+std::atomic<int> buzzer_frequency_hz;
 std::mutex buzzer_mutex;
 namespace fs = std::filesystem;
 std::string getActiveNetworkType(); // Assume already implemented
@@ -714,6 +714,7 @@ public:
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
         buzzer_running.store(false);
+
     }
 
     void lightOff()
@@ -889,12 +890,15 @@ public:
     {
         printf("voipOn\r\n");
     }
+
     void updateBuzzer()
     {
         while (true)
         {
             if (buzzer_running.load())
             {
+                std::lock_guard<std::mutex> lock(buzzer_mutex);
+
                 int freq = buzzer_frequency_hz.load();
                 if (freq <= 0) freq = 1; // prevent division by zero
     
