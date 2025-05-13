@@ -22,7 +22,7 @@
 
 #define TARGET_DEVICE_NAME "gpio-keys"
 #define EVENT_DEV_PATH "/dev/input/"
-#define DEBOUNCE_DELAY_US 15000 // 20ms
+#define DEBOUNCE_DELAY_US 200 // 20ms
 #define POLL_TIMEOUT_MS 100
 #define CHECK_TIMEOUT_S 1.0
 
@@ -294,12 +294,14 @@ int areButtonsPressed(void)
 
     static struct timespec start_time, current_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
+    int wake_event_active = 0;
+    int gpio_event_active = 0;
 
  
 
     while (1)
     {
-          int wake_event = 0;
+          
 
         // Check elapsed time
         clock_gettime(CLOCK_MONOTONIC, &current_time);
@@ -321,7 +323,7 @@ int areButtonsPressed(void)
                 while (read(fd, &ie, sizeof(struct input_event)) > 0) {
                     if (ie.type == EV_KEY && ie.code == KEY_WAKEUP) {
                         if (ie.value == 1) {
-                            wake_event=1;
+                            wake_event_active = 1;
                         } else if (ie.value == 0) {
                             printf("Button Released\n");
                         }
@@ -342,7 +344,8 @@ int areButtonsPressed(void)
             close(fd);
             return ERROR_READ_FAIL;
         }
-        if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE || wake_event)
+        gpio_event_active = (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE);
+        if (wake_event_active || gpio_event_active)
         {
             time_t now = time(NULL);
             if (now - last_trigger_time >= 1)
@@ -356,22 +359,34 @@ int areButtonsPressed(void)
                     close(fd);
                     return ERROR_READ_FAIL;
                 }
+                gpio_event_active = (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE);
 
-                printf("button (GPIO): %d, event: %d\n", gpio_val[0], wake_event);
+                printf("button (GPIO): %d, event: %d\n", gpio_val[0], wake_event_active);
                 last_trigger_time = now;
                 close(fd);
-                if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE && wake_event)
+                if (gpio_event_active && wake_event_active)
+                {
+                    wake_event_active = 0;
                     return BUTTON_BOTH;
-                else if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE)
+                }
+                else if (gpio_event_active)
+                {
+                    wake_event_active = 0;
                     return BUTTON_GPIO_ONLY;
-                else if (wake_event)
+                }
+                else if (wake_event_active)
+                {
+                    wake_event_active = 0;
                     return BUTTON_EVENT_ONLY;
+                }
                 else
+                {
                     return BUTTON_NONE;
+                }
             }
         }
 
-        usleep(5000); // Sleep 10ms before next check
+        usleep(2500); // Sleep 10ms before next check
     }
 
     close(fd); // Good practice even if never reached

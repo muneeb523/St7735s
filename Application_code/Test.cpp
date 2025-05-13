@@ -340,13 +340,10 @@ public:
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime);
                 activityDetected.store(false);
             }
-
             struct timespec now;
             clock_gettime(CLOCK_MONOTONIC, &now);
-
             double elapsed = (now.tv_sec - lastActivityTime.tv_sec) +
                              (now.tv_nsec - lastActivityTime.tv_nsec) / 1e9;
-
             if (elapsed >= 30.0)
             {
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
