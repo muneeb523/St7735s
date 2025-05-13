@@ -57,7 +57,8 @@ std::atomic<bool> state_dirty = false;
 std::atomic<bool> running = true;
 
 std::thread buzzer_thread;
-std::atomic<bool> buzzer_running = false;
+extern std::atomic<bool> buzzer_running;
+extern std::atomic<int> buzzer_frequency_hz;
 std::mutex buzzer_mutex;
 namespace fs = std::filesystem;
 std::string getActiveNetworkType(); // Assume already implemented
@@ -712,7 +713,7 @@ public:
         std::lock_guard<std::mutex> lock(buzzer_mutex);
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
-        buzzer_running = false;
+        buzzer_running.store(false);
     }
 
     void lightOff()
@@ -834,7 +835,8 @@ public:
         if (!buzzer_running)
         {
             current_state.alarm_on = true;
-            buzzer_running = true;
+            buzzer_running.store(true);
+            buzzer_frequency_hz.store(1000);
         }
     }
 
@@ -887,36 +889,33 @@ public:
     {
         printf("voipOn\r\n");
     }
-
     void updateBuzzer()
     {
         while (true)
         {
-            bool local_buzzer_running = false;
-
-            // Safely read shared flag
+            if (buzzer_running.load())
             {
-                std::lock_guard<std::mutex> lock(buzzer_mutex);
-                local_buzzer_running = buzzer_running;
-            }
-
-            if (local_buzzer_running)
-            {
+                int freq = buzzer_frequency_hz.load();
+                if (freq <= 0) freq = 1; // prevent division by zero
+    
+                int half_period_us = 500000 / freq; // half period in microseconds
+    
+                // Half-period: HIGH on BA, LOW on BB
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
+    
+                // Half-period: LOW on BA, HIGH on BB
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
             }
             else
             {
+                // Set both lines low (buzzer off)
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+    
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         }
