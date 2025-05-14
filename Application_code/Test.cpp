@@ -447,7 +447,7 @@ public:
 
     void Enter_Power_Mode()
     {
-        if (!videoRunning)
+        if (!videoRunning && !barcode_show )
         {
 
             const std::string power_state_file = "/sys/power/state";
