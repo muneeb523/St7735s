@@ -915,11 +915,17 @@ public:
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
                 std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
-
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+                 std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
                 // Half-period: LOW on BA, HIGH on BB
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
                 std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
+
             }
             else
             {
