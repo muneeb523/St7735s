@@ -555,6 +555,7 @@ public:
                 setOrientation(R90);
                 barcode_show = false;
                 currentState = IDLE;
+                system("pkill -2 -f /opt/ble_wifi_onboarding/main.py");
             }
 
             currentState = (mode == 1) ? RECORD : IDLE;
@@ -659,6 +660,12 @@ public:
             mark_state_dirty();
             activityDetected.store(true);
         }
+        else if (currentState == BARCODE)
+        {
+            system("systemctl restart bt-manager");
+            usleep(2000000);  // let hci0 come up
+            system("python3 /opt/ble_wifi_onboarding/main.py &");
+        }
         if (videoRunning)
         {
             time_t now = time(NULL);
@@ -714,7 +721,6 @@ public:
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
         buzzer_running.store(false);
-
     }
 
     void lightOff()
@@ -900,15 +906,16 @@ public:
                 std::lock_guard<std::mutex> lock(buzzer_mutex);
 
                 int freq = buzzer_frequency_hz.load();
-                if (freq <= 0) freq = 1; // prevent division by zero
-    
+                if (freq <= 0)
+                    freq = 1; // prevent division by zero
+
                 int half_period_us = 500000 / freq; // half period in microseconds
-    
+
                 // Half-period: HIGH on BA, LOW on BB
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
                 std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
-    
+
                 // Half-period: LOW on BA, HIGH on BB
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
@@ -919,7 +926,7 @@ public:
                 // Set both lines low (buzzer off)
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-    
+
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
         }
