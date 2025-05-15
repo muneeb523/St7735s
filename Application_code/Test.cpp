@@ -463,7 +463,7 @@ public:
         }
     }
 
-    void Read_gps_gnss()
+    int Read_gps_gnss()
     {
 
          setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
@@ -490,7 +490,6 @@ public:
         setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
 
         gps_i2c_close(fd);
-        return 0;
     }
 
     void Enter_Power_Mode()
