@@ -184,6 +184,7 @@ public:
             processMode();
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
+            Read_gps_gnss();//For testing purposes checking in a while loop 
         }
     }
     std::string execCommand(const char *cmd)
@@ -233,7 +234,6 @@ public:
         }
     }
 
-
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
     {
         std::ifstream file(path, std::ios::binary);
@@ -253,7 +253,6 @@ public:
         return true;
     }
 
-
     std::vector<std::string> getMP4Files(const std::string &dir)
     {
 
@@ -267,7 +266,6 @@ public:
         }
         return files;
     }
-
 
     bool runFlashlightCommand(const std::vector<std::string> &files)
     {
@@ -466,9 +464,9 @@ public:
     int Read_gps_gnss()
     {
 
-         setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
-         
-         _Delay(100);
+        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
+
+        _Delay(100);
 
         int fd = gps_i2c_init("/dev/i2c-2");
         if (fd < 0)
@@ -947,6 +945,7 @@ public:
     {
         while (true)
         {
+            std::lock_guard<std::mutex> lock(buzzer_mutex);
             if (buzzer_running.load())
             {
 
@@ -962,6 +961,10 @@ public:
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
                 std::this_thread::sleep_for(std::chrono::microseconds(125));
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
             }
         }
     }
