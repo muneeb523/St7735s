@@ -1,11 +1,13 @@
 ﻿#include <iostream>
 #include <chrono>
+#include <algorithm>
 #include <thread>
 #include <cstring>
 #include <ctime>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <sstream>
+#include <cstdlib>
 #include <sys/types.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -25,6 +27,7 @@
 
 extern "C"
 {
+#include "../gps_gnss.h"
 #include "../appgpio.h"
 #include "../st7735s.h"
 #include "../fonts.h"
@@ -49,6 +52,7 @@ SystemState currentState = IDLE;
 #define GPIO_LINE_BB 3
 #define GPIO_LINE_FLASH 7
 #define GPIO_LINE_SELF_KILL 20
+#define GPIO_LINE_GPS_PWR_EN 29
 
 using json = nlohmann::json;
 extern char **environ;
@@ -120,6 +124,8 @@ typedef struct
     struct gpiod_line_request *bb_req;
     struct gpiod_line_request *flash_req;
     struct gpiod_line_request *self_kill;
+    struct gpiod_line_request *gps_pwr_en;
+
 } TestGpioReq;
 
 TestGpioReq testGpioReq;
@@ -177,48 +183,56 @@ public:
             drawUI();
             processMode();
             waitForButtonPress();
-            update_wifi_ssid_from_wpa();
+            update_wifi_ssid_from_nmcli();
         }
     }
+    std::string execCommand(const char *cmd)
+    {
+        std::array<char, 128> buffer;
+        std::string result;
 
-    void update_wifi_ssid_from_wpa()
+        FILE *pipe = popen(cmd, "r");
+        if (!pipe)
+            return "";
+
+        while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
+        {
+            result += buffer.data();
+        }
+
+        pclose(pipe);
+        return result;
+    }
+
+    void update_wifi_ssid_from_nmcli()
     {
         std::string netType = getActiveNetworkType();
 
-        if (netType == "wifi")
-        {
-            current_state.wifi_connected = true;
-        }
-        else
-        {
-            current_state.wifi_connected = false;
-            printf("Not connected via Wi-Fi. Current network type: %s\n", netType.c_str());
-        }
+        current_state.wifi_connected = (netType == "wifi");
 
-        std::ifstream file("/etc/wpa_supplicant.conf");
-        if (!file.is_open())
+        if (!current_state.wifi_connected)
         {
-            printf("Error: Failed to open /etc/wpa_supplicant.conf\n");
+            printf("Not connected via Wi-Fi. Current network type: %s\n", netType.c_str());
             return;
         }
 
-        std::string line;
-        while (std::getline(file, line))
+        // Get active Wi-Fi SSID using nmcli
+        std::string ssid = execCommand("nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2");
+
+        // Trim newline if present
+        ssid.erase(std::remove(ssid.begin(), ssid.end(), '\n'), ssid.end());
+
+        if (!ssid.empty())
         {
-            size_t pos = line.find("ssid=");
-            if (pos != std::string::npos)
-            {
-                std::string ssid = line.substr(pos + 5);
-                ssid.erase(remove(ssid.begin(), ssid.end(), '\"'), ssid.end());
-                current_state.wifi_ssid = ssid;
-
-                printf("SSID obtained from wpa_supplicant: %s\n", ssid.c_str());
-                return;
-            }
+            current_state.wifi_ssid = ssid;
+            printf("Connected Wi-Fi SSID (via nmcli): %s\n", ssid.c_str());
         }
-
-        printf("Error: SSID not found in /etc/wpa_supplicant.conf\n");
+        else
+        {
+            printf("Error: Could not retrieve SSID via nmcli.\n");
+        }
     }
+
 
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
     {
@@ -238,6 +252,8 @@ public:
 
         return true;
     }
+
+
     std::vector<std::string> getMP4Files(const std::string &dir)
     {
 
@@ -251,6 +267,8 @@ public:
         }
         return files;
     }
+
+
     bool runFlashlightCommand(const std::vector<std::string> &files)
     {
         if (files.empty())
@@ -445,9 +463,39 @@ public:
         }
     }
 
+    void Read_gps_gnss()
+    {
+
+         setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
+         
+         _Delay(100);
+
+        int fd = gps_i2c_init("/dev/i2c-2");
+        if (fd < 0)
+        {
+            printf("Failed to init GPS\n");
+            return 1;
+        }
+
+        double lat, lon;
+        if (gps_get_location(fd, &lat, &lon) == 0)
+        {
+            printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
+        }
+        else
+        {
+            printf("Failed to get location\n");
+        }
+
+        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
+
+        gps_i2c_close(fd);
+        return 0;
+    }
+
     void Enter_Power_Mode()
     {
-        if (!videoRunning && !barcode_show )
+        if (!videoRunning && !barcode_show)
         {
 
             const std::string power_state_file = "/sys/power/state";
@@ -663,7 +711,7 @@ public:
         else if (currentState == BARCODE)
         {
             system("systemctl restart bt-manager");
-            usleep(2000000);  // let hci0 come up
+            usleep(2000000); // let hci0 come up
             system("python3 /opt/ble_wifi_onboarding/main.py &");
         }
         if (videoRunning)
@@ -678,11 +726,11 @@ public:
 
     void initPeripherals()
     {
-
         testGpioReq.ba_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BA, "BUZZER_A");
         testGpioReq.bb_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BB, "BUZZER_B");
         testGpioReq.flash_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_FLASH, "FLASHLIGHT");
         testGpioReq.self_kill = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_SELF_KILL, "SELF_KILL");
+        testGpioReq.gps_pwr_en = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_GPS_PWR_EN, "GPS POWER ENABLE");
     }
 
     void emergency_stream_on()
@@ -839,11 +887,10 @@ public:
         std::lock_guard<std::mutex> lock(buzzer_mutex);
 
         printf("alarmOn\r\n");
-        if (!buzzer_running)
+        if (!buzzer_running.load())
         {
             current_state.alarm_on = true;
             buzzer_running.store(true);
-            buzzer_frequency_hz.store(1000);
         }
     }
 
@@ -903,37 +950,19 @@ public:
         {
             if (buzzer_running.load())
             {
-                std::lock_guard<std::mutex> lock(buzzer_mutex);
 
-                int freq = buzzer_frequency_hz.load();
-                if (freq <= 0)
-                    freq = 1; // prevent division by zero
-
-                int half_period_us = 500000 / freq; // half period in microseconds
-
-                // Half-period: HIGH on BA, LOW on BB
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-                 std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
-                // Half-period: LOW on BA, HIGH on BB
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
                 setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
                 setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(half_period_us));
-
-            }
-            else
-            {
-                // Set both lines low (buzzer off)
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
             }
         }
     }

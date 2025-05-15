@@ -17,6 +17,7 @@ target_sources(example_exec PRIVATE
     st7735s_compat.c       # ST7735S compatibility source file
     fonts.c                # Font handling source file
     appgpio.c              # GPIO handling source file
+    Gps_gnss.c
 )
 
 # Include directories for header files
