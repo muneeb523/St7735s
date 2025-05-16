@@ -966,7 +966,6 @@ public:
     {
         while (true)
         {
-            std::lock_guard<std::mutex> lock(buzzer_mutex);
             if (buzzer_running.load())
             {
 
@@ -985,7 +984,7 @@ public:
             }
             else
             {
-                std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
+                std::this_thread::sleep_for(std::chrono::seconds(1)); // Update every minute
             }
         }
     }
