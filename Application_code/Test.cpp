@@ -519,7 +519,7 @@ public:
             gps_i2c_close(fd);
             usleep(100000);
 
-            std::this_thread::sleep_for(std::chrono::seconds(80)); // Update every minute
+            std::this_thread::sleep_for(std::chrono::seconds(60)); // Update every minute
         }
     }
     void Enter_Power_Mode()
