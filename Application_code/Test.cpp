@@ -498,6 +498,7 @@ public:
             double lat = 0.0, lon = 0.0;
             if (gps_get_location(fd, &lat, &lon) == 0)
             {
+                   printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
                 if (lat >= -90.0 && lat <= 90.0 &&
                     lon >= -180.0 && lon <= 180.0 &&
                     (fabs(lat) >= 0.05 && fabs(lon) >= 0.05)) // filter small noise
