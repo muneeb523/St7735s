@@ -25,7 +25,12 @@ int gps_i2c_init(const char* i2c_bus) {
 }
 
 void gps_i2c_close(int fd) {
-    if (fd >= 0) close(fd);
+    printf("Closing fd: %d\n", fd);
+    if (fd >= 0) {
+        if (close(fd) < 0) {
+            perror("Error closing fd");
+        }
+    }
 }
 
 static int gps_read_line(int fd, char* buffer, int max_len) {

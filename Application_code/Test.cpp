@@ -492,6 +492,8 @@ public:
 
           printf("Hi from here i failed before this \n");
         gps_i2c_close(fd);
+
+                  printf("Hi from here i failed before 22 this \n");
     }
 
     void Enter_Power_Mode()
