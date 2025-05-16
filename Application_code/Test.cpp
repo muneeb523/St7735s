@@ -643,10 +643,11 @@ public:
 
     void processMode()
     {
+        printf("Hi the issue is here\n");
         
-
         if (!current_state.in_emergency && !barcode_show)
         {
+             printf("Hi the issue is here44\n");
             if (mode == 0)
             {
                 alarmOff();
@@ -717,14 +718,7 @@ public:
             usleep(2000000); // let hci0 come up
             system("python3 /opt/ble_wifi_onboarding/main.py &");
         }
-        if (videoRunning)
-        {
-            time_t now = time(NULL);
-            time_t videoSec = now - videoStart;
-            int minutes = (videoSec / 60) % 100;
-            int seconds = videoSec % 60;
-            sprintf(videoTime, "%02d:%02d", minutes, seconds);
-        }
+    
     }
 
     void initPeripherals()
@@ -768,6 +762,8 @@ public:
 
     void alarmOff()
     {
+        printf("alarmOff  issue here\r\n");
+
         std::lock_guard<std::mutex> lock(buzzer_mutex);
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
