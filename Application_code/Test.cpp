@@ -180,6 +180,7 @@ public:
 
         while (true)
         {
+            pritnf("Hi from here\n");
             drawUI();
             processMode();
             waitForButtonPress();
