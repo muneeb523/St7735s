@@ -550,6 +550,7 @@ public:
     void update_shadow_json()
     {
         std::lock_guard<std::mutex> lock(state_mutex);
+        printf("Update json\n");
 
         json shadow;
         shadow["state"]["reported"] = {
