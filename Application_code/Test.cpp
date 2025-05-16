@@ -146,6 +146,7 @@ std::thread inactivityThread;
 std::thread Stream_Wifi;
 std::thread ReadGPs;
 
+std::thread checkwifi;
 class DisplayExample
 {
 public:
@@ -179,17 +180,18 @@ public:
         ReadGPs = std::thread(&DisplayExample::Read_gps_gnss, this);
         ReadGPs.detach();
 
+        checkwifi=std::thread(&DisplayExample::update_wifi_ssid_from_nmcli, this);
+        checkwifi.detach();
+
         std::cout << "NTP" << std::endl;
 
         while (true)
         {
      
             drawUI();
-       
-            processMode();
-      
+           processMode();
             waitForButtonPress();
-            update_wifi_ssid_from_nmcli();
+
         }
     }
     std::string execCommand(const char *cmd)
@@ -237,6 +239,8 @@ public:
         {
             printf("Error: Could not retrieve SSID via nmcli.\n");
         }
+
+        std::this_thread::sleep_for(std::chrono::seconds(60));
     }
 
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
@@ -459,7 +463,7 @@ public:
         // }
 
         flushBuffer();
-        printf("-444--1\n");
+
     }
 
     void shadowUpdateThread()
@@ -497,8 +501,9 @@ public:
             printf("Failed to get location\n");
         }
 
-        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
         gps_i2c_close(fd);
+        usleep(100000);
+        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
 
         std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
     }
