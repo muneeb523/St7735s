@@ -183,11 +183,11 @@ public:
 
         while (true)
         {
-            printf("BAck here\n");
+     
             drawUI();
-            printf("BAck here2\n");
+       
             processMode();
-            printf("BAck here3\n");
+      
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
         }
@@ -500,7 +500,7 @@ public:
         setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
         gps_i2c_close(fd);
 
-        td::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
+        std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
     }
     void Enter_Power_Mode()
     {
