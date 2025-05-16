@@ -180,11 +180,11 @@ public:
 
         while (true)
         {
-            pritnf("BAck here\n");
+            printf("BAck here\n");
             drawUI();
-            pritnf("BAck here2\n");
+            printf("BAck here2\n");
             processMode();
-            pritnf("BAck here3\n");
+            printf("BAck here3\n");
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
             Read_gps_gnss();//For testing purposes checking in a while loop 
