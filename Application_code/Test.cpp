@@ -184,7 +184,7 @@ public:
             processMode();
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
-            Read_gps_gnss();//For testing purposes checking in a while loop 
+           // Read_gps_gnss();//For testing purposes checking in a while loop 
         }
     }
     std::string execCommand(const char *cmd)
@@ -366,7 +366,7 @@ public:
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
                 fillScreen();
-                Enter_Power_Mode();
+               // Enter_Power_Mode();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
