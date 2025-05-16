@@ -32,6 +32,7 @@ void gps_i2c_close(int fd) {
             perror("Error closing fd");
         }
     }
+     printf("Closing fd: %d\n", fd);
 }
 
 int gps_read_line(int fd, char* buffer, int max_len) {

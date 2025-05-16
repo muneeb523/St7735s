@@ -501,7 +501,6 @@ public:
 
         gps_i2c_close(fd);
         usleep(100000);
-        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
 
         std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
     }
