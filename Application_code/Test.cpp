@@ -177,7 +177,7 @@ public:
 
         Stream_Wifi = std::thread(&DisplayExample::Local_KVS, this);
         Stream_Wifi.detach();
-        ReadGPs = std::thread(&DisplayExample::Read_gps_gnss, this);
+        ReadGPs = std::thread(&DisplayExample::GET_GPS_DATA, this);
         ReadGPs.detach();
 
         checkwifi = std::thread(&DisplayExample::update_wifi_ssid_from_nmcli, this);
@@ -479,14 +479,14 @@ public:
         }
     }
 
-    void Read_gps_gnss()
+    void GET_GPS_DATA()
     {
         while (1)
         {
 
             setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
 
-            usleep(2000000); // You might consider using sleep(2) or usleep(2000000) here for consistency
+            usleep(4000000);//<4 sec delay 
             int fd = gps_i2c_init("/dev/i2c-2");
             if (fd < 0)
             {
@@ -498,7 +498,17 @@ public:
             double lat = 0.0, lon = 0.0;
             if (gps_get_location(fd, &lat, &lon) == 0)
             {
-                printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
+                if (lat >= -90.0 && lat <= 90.0 &&
+                    lon >= -180.0 && lon <= 180.0 &&
+                    (fabs(lat) >= 0.05 && fabs(lon) >= 0.05)) // filter small noise
+                {
+                    current_state.gps_latitude = lat;
+                    current_state.gps_longitude = lon;
+                }
+                else
+                {
+                    fprintf(stderr, "Ignored invalid or low-accuracy GPS values: %.6f, %.6f\n", lat, lon);
+                }
             }
             else
             {
@@ -507,9 +517,8 @@ public:
 
             gps_i2c_close(fd);
             usleep(100000);
-   
 
-            std::this_thread::sleep_for(std::chrono::seconds(40)); // Update every minute
+            std::this_thread::sleep_for(std::chrono::seconds(80)); // Update every minute
         }
     }
     void Enter_Power_Mode()
