@@ -393,33 +393,34 @@ public:
     void drawUI()
     {
 
-        printf("---1\n";)
+        printf("---1\n");
         setColor(0, 0, 0); // Black background
-printf("---12\n";)
+printf("---12\n");
         ImageSize modeImages[2] = {
 
             {RECORD_SCREEN, 80, 60},
             {EMERGENCY_SCREEN, 80, 60}
         
         };
-     printf("---13\n";)
+     printf("---13\n");
         switch (currentState)
         {
         case IDLE:
-        {printf("---134\n";)
+        {
+            printf("---134\n");
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
             setFont(ter_u16b);
             drawText(10, 80, currentTime.c_str());
-            printf("---12323\n";)
+            printf("---12323\n");
             printf("Displayed Time on Screen: %s\n", currentTime.c_str());
             break;
         }
 
         case RECORD:
         {
-            printf("---1444\n";)
+            printf("---1444\n");
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -456,7 +457,7 @@ printf("---12\n";)
         // }
 
         flushBuffer();
-        printf("-444--1\n";)
+        printf("-444--1\n");
     }
 
     void shadowUpdateThread()
