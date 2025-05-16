@@ -182,7 +182,9 @@ public:
         {
             printf("Hi from here\n");
             drawUI();
+            printf("Hi from here2\n");
             processMode();
+            printf("Hi from here3\n");
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
            // Read_gps_gnss();//For testing purposes checking in a while loop 
@@ -393,8 +395,11 @@ public:
         setColor(0, 0, 0); // Black background
 
         ImageSize modeImages[2] = {
+
             {RECORD_SCREEN, 80, 60},
-            {EMERGENCY_SCREEN, 80, 60}};
+            {EMERGENCY_SCREEN, 80, 60}
+        
+        };
 
         switch (currentState)
         {
@@ -638,7 +643,7 @@ public:
 
     void processMode()
     {
-        std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
+        
 
         if (!current_state.in_emergency && !barcode_show)
         {
