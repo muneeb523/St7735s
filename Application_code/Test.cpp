@@ -180,8 +180,11 @@ public:
 
         while (true)
         {
+            pritnf("BAck here\n");
             drawUI();
+            pritnf("BAck here2\n");
             processMode();
+            pritnf("BAck here3\n");
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
             Read_gps_gnss();//For testing purposes checking in a while loop 
@@ -389,30 +392,34 @@ public:
     }
     void drawUI()
     {
-        setColor(0, 0, 0); // Black background
 
+        printf("---1\n";)
+        setColor(0, 0, 0); // Black background
+printf("---12\n";)
         ImageSize modeImages[2] = {
 
             {RECORD_SCREEN, 80, 60},
             {EMERGENCY_SCREEN, 80, 60}
         
         };
-
+     printf("---13\n";)
         switch (currentState)
         {
         case IDLE:
-        {
+        {printf("---134\n";)
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
             setFont(ter_u16b);
             drawText(10, 80, currentTime.c_str());
+            printf("---12323\n";)
             printf("Displayed Time on Screen: %s\n", currentTime.c_str());
             break;
         }
 
         case RECORD:
         {
+            printf("---1444\n";)
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -449,6 +456,7 @@ public:
         // }
 
         flushBuffer();
+        printf("-444--1\n";)
     }
 
     void shadowUpdateThread()
