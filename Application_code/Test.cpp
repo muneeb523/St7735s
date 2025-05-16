@@ -180,14 +180,11 @@ public:
 
         while (true)
         {
-            printf("Hi from here\n");
             drawUI();
-            printf("Hi from here2\n");
             processMode();
-            printf("Hi from here3\n");
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
-           // Read_gps_gnss();//For testing purposes checking in a while loop 
+            Read_gps_gnss();//For testing purposes checking in a while loop 
         }
     }
     std::string execCommand(const char *cmd)
@@ -574,7 +571,7 @@ public:
         while (pressed == 0)
         {
             pressed = areButtonsPressed();
-            usleep(10000); // 10ms sleep to avoid CPU hogging
+            usleep(5000); // 10ms sleep to avoid CPU hogging
         }
         printf("areButtonsPressed %d\r\n", pressed);
         if (pressed > 0)
@@ -582,7 +579,7 @@ public:
             activityDetected.store(true);
             updateMode(pressed);
         }
-        _Delay(5000); // Assuming microseconds (5ms)
+        _Delay(2000); // Assuming microseconds (5ms)
     }
     void updateMode(int btn)
     {
@@ -765,6 +762,7 @@ public:
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
         buzzer_running.store(false);
+         printf("buzzer_running: %s\r\n", buzzer_running.load() ? "true" : "false");
     }
 
     void lightOff()
@@ -880,8 +878,6 @@ public:
 
     void alarmOn()
     {
-        std::lock_guard<std::mutex> lock(buzzer_mutex);
-
         printf("alarmOn\r\n");
         if (!buzzer_running.load())
         {
