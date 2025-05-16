@@ -487,9 +487,10 @@ public:
         {
             printf("Failed to get location\n");
         }
+       printf("Hi from here i failed in  this \n");
+        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
 
-        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
-
+          printf("Hi from here i failed before this \n");
         gps_i2c_close(fd);
     }
 
@@ -762,7 +763,6 @@ public:
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
         buzzer_running.store(false);
-         printf("buzzer_running: %s\r\n", buzzer_running.load() ? "true" : "false");
     }
 
     void lightOff()
