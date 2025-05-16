@@ -180,18 +180,17 @@ public:
         ReadGPs = std::thread(&DisplayExample::Read_gps_gnss, this);
         ReadGPs.detach();
 
-        checkwifi=std::thread(&DisplayExample::update_wifi_ssid_from_nmcli, this);
+        checkwifi = std::thread(&DisplayExample::update_wifi_ssid_from_nmcli, this);
         checkwifi.detach();
 
         std::cout << "NTP" << std::endl;
 
         while (true)
         {
-     
-            drawUI();
-           processMode();
-            waitForButtonPress();
 
+            drawUI();
+            processMode();
+            waitForButtonPress();
         }
     }
     std::string execCommand(const char *cmd)
@@ -399,7 +398,6 @@ public:
     void drawUI()
     {
 
-
         setColor(0, 0, 0); // Black background
 
         ImageSize modeImages[2] = {
@@ -413,20 +411,20 @@ public:
         {
         case IDLE:
         {
-    
+
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
             setFont(ter_u16b);
             drawText(10, 80, currentTime.c_str());
-        
+
             printf("Displayed Time on Screen: %s\n", currentTime.c_str());
             break;
         }
 
         case RECORD:
         {
-   
+
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -463,7 +461,6 @@ public:
         // }
 
         flushBuffer();
-
     }
 
     void shadowUpdateThread()
