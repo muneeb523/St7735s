@@ -668,11 +668,11 @@ public:
 
     void processMode()
     {
-        printf("Hi the issue is here\n");
+      
 
         if (!current_state.in_emergency && !barcode_show)
         {
-            printf("Hi the issue is here44\n");
+         
             if (mode == 0)
             {
                 alarmOff();
