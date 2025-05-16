@@ -8,7 +8,7 @@ finished init
 flushed
 NTP
 [Info] No files found.
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -17,9 +17,9 @@ videoOff
 No stream running to stop
 voipOff
 Found device path: /dev/input/event1
-[ 5214.466776] wlan: mlan0 START SCAN
+Connected Wi-Fi SSID (via nmcli): Olympus
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -31,7 +31,7 @@ Found device path: /dev/input/event1
 Read the GNS data
 Sucessfull in opening the address location
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -41,7 +41,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -51,7 +51,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -62,7 +62,7 @@ voipOff
 Found device path: /dev/input/event1
 [Info] No files found.
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -72,7 +72,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -82,7 +82,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -92,8 +92,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-[ 5223.200287] wlan: SCAN COMPLETED: scanned AP count=51
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -102,10 +101,9 @@ videoOff
 No stream running to stop
 voipOff
 Found device path: /dev/input/event1
-Connected Wi-Fi SSID (via nmcli): Olympus
 areButtonsPressed -3
 [Info] No files found.
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -115,7 +113,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -125,7 +123,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -135,7 +133,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -145,7 +143,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -156,9 +154,10 @@ voipOff
 Found device path: /dev/input/event1
 [Info] No files found.
 Latitude: 0.000000, Longitude: 1.666500
-Closing fd: 18
+Closing fd: 17
+Closing fd: 17
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -168,7 +167,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -178,7 +177,28 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+^[[A^[[AareButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+^[[AareButtonsPressed -3
+[Info] No files found.
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -188,7 +208,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -198,7 +218,27 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -209,7 +249,7 @@ voipOff
 Found device path: /dev/input/event1
 [Info] No files found.
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -219,18 +259,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
-Hi the issue is here
-Hi the issue is here44
-alarmOff
-lightOff
-videoOff
-No stream running to stop
-voipOff
-Found device path: /dev/input/event1
-[ 5237.008466] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -240,7 +269,27 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -251,18 +300,7 @@ voipOff
 Found device path: /dev/input/event1
 [Info] No files found.
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
-Hi the issue is here
-Hi the issue is here44
-alarmOff
-lightOff
-videoOff
-No stream running to stop
-voipOff
-Found device path: /dev/input/event1
-[ 5240.686842] IOCTL failed: 000000006a17927a id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
-areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -272,7 +310,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -282,7 +320,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -292,7 +330,7 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -302,9 +340,8 @@ No stream running to stop
 voipOff
 Found device path: /dev/input/event1
 [Info] No files found.
-[ 5245.009212] wlan: uap0 START SCAN
 areButtonsPressed -3
-Displayed Time on Screen: 04:45
+Displayed Time on Screen: 04:53
 Hi the issue is here
 Hi the issue is here44
 alarmOff
@@ -313,3 +350,38 @@ videoOff
 No stream running to stop
 voipOff
 Found device path: /dev/input/event1
+[ 5717.004969] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here
+Hi the issue is here44
+alarmOff
+lightOff
+videoOff
+No stream running to stop
+voipOff
+Found device path: /dev/input/event1
+[ 5720.584696] IOCTL failed: 00000000ef4d3350 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+areButtonsPressed -3
+Displayed Time on Screen: 04:53
+Hi the issue is here

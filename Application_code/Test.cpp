@@ -213,33 +213,36 @@ public:
 
     void update_wifi_ssid_from_nmcli()
     {
-        std::string netType = getActiveNetworkType();
-
-        current_state.wifi_connected = (netType == "wifi");
-
-        if (!current_state.wifi_connected)
+        while (1)
         {
-            printf("Not connected via Wi-Fi. Current network type: %s\n", netType.c_str());
-            return;
+            std::string netType = getActiveNetworkType();
+
+            current_state.wifi_connected = (netType == "wifi");
+
+            if (!current_state.wifi_connected)
+            {
+                printf("Not connected via Wi-Fi. Current network type: %s\n", netType.c_str());
+                return;
+            }
+
+            // Get active Wi-Fi SSID using nmcli
+            std::string ssid = execCommand("nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2");
+
+            // Trim newline if present
+            ssid.erase(std::remove(ssid.begin(), ssid.end(), '\n'), ssid.end());
+
+            if (!ssid.empty())
+            {
+                current_state.wifi_ssid = ssid;
+                printf("Connected Wi-Fi SSID (via nmcli): %s\n", ssid.c_str());
+            }
+            else
+            {
+                printf("Error: Could not retrieve SSID via nmcli.\n");
+            }
+
+            std::this_thread::sleep_for(std::chrono::seconds(60));
         }
-
-        // Get active Wi-Fi SSID using nmcli
-        std::string ssid = execCommand("nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2");
-
-        // Trim newline if present
-        ssid.erase(std::remove(ssid.begin(), ssid.end(), '\n'), ssid.end());
-
-        if (!ssid.empty())
-        {
-            current_state.wifi_ssid = ssid;
-            printf("Connected Wi-Fi SSID (via nmcli): %s\n", ssid.c_str());
-        }
-        else
-        {
-            printf("Error: Could not retrieve SSID via nmcli.\n");
-        }
-
-        std::this_thread::sleep_for(std::chrono::seconds(60));
     }
 
     bool loadBarcodeImage(const char *path, uint16_t *buffer, size_t size)
@@ -478,31 +481,36 @@ public:
 
     void Read_gps_gnss()
     {
-        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
-        usleep(2000000); // You might consider using sleep(2) or usleep(2000000) here for consistency
-        printf("Read the GNS data\n");
-
-        int fd = gps_i2c_init("/dev/i2c-2");
-        if (fd < 0)
+        while (1)
         {
-            printf("Failed to init GPS\n");
-            return;
-        }
 
-        double lat, lon;
-        if (gps_get_location(fd, &lat, &lon) == 0)
-        {
-            printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
-        }
-        else
-        {
-            printf("Failed to get location\n");
-        }
+            setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
+            
+            usleep(2000000); // You might consider using sleep(2) or usleep(2000000) here for consistency
+            int fd = gps_i2c_init("/dev/i2c-2");
+            if (fd < 0)
+            {
+                fprintf(stderr, "Failed to initialize GPS\n");
+                sleep(30);
+                continue;
+            }
 
-        gps_i2c_close(fd);
-        usleep(100000);
+            double lat = 0.0, lon = 0.0;
+            if (gps_get_location(fd, &lat, &lon) == 0)
+            {
+                printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
+            }
+            else
+            {
+                fprintf(stderr, "Failed to get valid GPS location\n");
+            }
 
-        std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
+            gps_i2c_close(fd);
+            usleep(100000);
+            setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
+
+            std::this_thread::sleep_for(std::chrono::seconds(40)); // Update every minute
+        }
     }
     void Enter_Power_Mode()
     {

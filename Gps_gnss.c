@@ -10,14 +10,20 @@
 #define GPS_I2C_ADDR 0x42
 #define BUFFER_SIZE 256
 
- int gps_i2c_open(const char* i2c_bus) {
+// ---------- GPS I2C Functions ----------
+
+int gps_i2c_open(const char* i2c_bus) {
     int fd = open(i2c_bus, O_RDWR);
-    if (fd < 0) return -1;
+    if (fd < 0) {
+        perror("gps_i2c_open: Failed to open I2C bus");
+        return -1;
+    }
     if (ioctl(fd, I2C_SLAVE, GPS_I2C_ADDR) < 0) {
+        perror("gps_i2c_open: Failed to set slave address");
         close(fd);
         return -1;
     }
-    printf("Sucessfull in opening the address location\n");
+    printf("Successfully opened GPS I2C address\n");
     return fd;
 }
 
@@ -26,57 +32,65 @@ int gps_i2c_init(const char* i2c_bus) {
 }
 
 void gps_i2c_close(int fd) {
-    printf("Closing fd: %d\n", fd);
     if (fd >= 0) {
         if (close(fd) < 0) {
-            perror("Error closing fd");
+            perror("gps_i2c_close: Error closing fd");
+        } else {
+            printf("Closed GPS I2C file descriptor\n");
         }
     }
-     printf("Closing fd: %d\n", fd);
+}
+
+// ---------- GPS Parsing Helpers ----------
+
+double convert_to_decimal(const char* raw, const char* dir) {
+    if (!raw || !dir) return 0.0;
+    double value = atof(raw);
+    int degrees = (int)(value / 100);
+    double minutes = value - (degrees * 100);
+    double decimal = degrees + minutes / 60.0;
+
+    if (dir[0] == 'S' || dir[0] == 'W')
+        decimal *= -1.0;
+
+    return decimal;
 }
 
 int gps_read_line(int fd, char* buffer, int max_len) {
+    if (!buffer || max_len <= 0) return -1;
+
     int pos = 0;
     char byte;
     while (pos < max_len - 1) {
         int ret = read(fd, &byte, 1);
         if (ret == 0) {
-            // EOF: treat as error
             fprintf(stderr, "gps_read_line: EOF reached\n");
             break;
         } else if (ret < 0) {
             perror("gps_read_line: read error");
             break;
         }
+
         buffer[pos++] = byte;
         if (byte == '\n') break;
     }
+
     buffer[pos] = '\0';
     return pos > 0 ? pos : -1;
 }
 
-
-// Convert NMEA lat/lon format to decimal
-double convert_to_decimal(const char* nmea_coord, const char* direction) {
-    if (!nmea_coord || !direction || direction[0] == '\0') return 0.0;
-
-    double raw = atof(nmea_coord);
-    int degrees = (int)(raw / 100);
-    double minutes = raw - (degrees * 100);
-    double decimal = degrees + (minutes / 60.0);
-
-    if (direction[0] == 'S' || direction[0] == 'W') decimal *= -1;
-
-    return decimal;
-}
-
 int gps_get_location(int fd, double* latitude, double* longitude) {
+    
     char line[BUFFER_SIZE];
-    while (1) {
+    int attempts = 0;
+    const int max_attempts = 100;
+
+    while (attempts++ < max_attempts) {
         int len = gps_read_line(fd, line, sizeof(line));
         if (len <= 0 || line[0] != '$') continue;
 
-        if (strstr(line, "$GPGGA") == line || strstr(line, "$GNGGA") == line) {
+        if (strstr(line, "$GNGGA") == line || strstr(line, "$GPGGA") == line) {
+            // printf("Raw line: %s", line); // Optional: debug log
             char* tokens[15] = {0};
             char* tok = strtok(line, ",");
             int i = 0;
@@ -92,5 +106,6 @@ int gps_get_location(int fd, double* latitude, double* longitude) {
             }
         }
     }
+
     return -1;
 }
