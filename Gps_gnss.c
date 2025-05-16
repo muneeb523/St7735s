@@ -80,17 +80,13 @@ int gps_read_line(int fd, char* buffer, int max_len) {
 }
 
 int gps_get_location(int fd, double* latitude, double* longitude) {
-    
     char line[BUFFER_SIZE];
-    int attempts = 0;
-    const int max_attempts = 100;
-
-    while (attempts++ < max_attempts) {
+    while (1) {
         int len = gps_read_line(fd, line, sizeof(line));
         if (len <= 0 || line[0] != '$') continue;
 
-        if (strstr(line, "$GNGGA") == line || strstr(line, "$GPGGA") == line) {
-            // printf("Raw line: %s", line); // Optional: debug log
+        // Look for GGA sentence (or you can use RMC)
+        if (strstr(line, "$GPGGA") == line || strstr(line, "$GNGGA") == line) {
             char* tokens[15] = {0};
             char* tok = strtok(line, ",");
             int i = 0;
@@ -98,14 +94,14 @@ int gps_get_location(int fd, double* latitude, double* longitude) {
                 tokens[i++] = tok;
                 tok = strtok(NULL, ",");
             }
+            if (i < 6 || !tokens[2] || !tokens[4]) continue;
 
-            if (i >= 6 && tokens[2] && tokens[3] && tokens[4] && tokens[5]) {
-                *latitude  = convert_to_decimal(tokens[2], tokens[3]);
-                *longitude = convert_to_decimal(tokens[4], tokens[5]);
-                return 0;
-            }
+            *latitude  = convert_to_decimal(tokens[2], tokens[3]);
+            *longitude = convert_to_decimal(tokens[4], tokens[5]);
+            return 0; // success
         }
     }
-
-    return -1;
+    return -1; // failed to get valid sentence
 }
+
+
