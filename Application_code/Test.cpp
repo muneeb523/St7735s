@@ -762,9 +762,6 @@ public:
 
     void alarmOff()
     {
-        printf("alarmOff  issue here\r\n");
-
-        std::lock_guard<std::mutex> lock(buzzer_mutex);
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
         buzzer_running.store(false);
