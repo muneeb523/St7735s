@@ -17,6 +17,7 @@
         close(fd);
         return -1;
     }
+    printf("Sucessfull in opening the address location\n");
     return fd;
 }
 

@@ -480,6 +480,7 @@ public:
     {
         setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
         usleep(2000000); // You might consider using sleep(2) or usleep(2000000) here for consistency
+        printf("Read the GNS data\n");
 
         int fd = gps_i2c_init("/dev/i2c-2");
         if (fd < 0)
