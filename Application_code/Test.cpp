@@ -144,6 +144,7 @@ char videoTime[6] = "00:00"; // Default Time
 std::atomic<bool> activityDetected{false};
 std::thread inactivityThread;
 std::thread Stream_Wifi;
+std::thread ReadGPs;
 
 class DisplayExample
 {
@@ -175,6 +176,8 @@ public:
 
         Stream_Wifi = std::thread(&DisplayExample::Local_KVS, this);
         Stream_Wifi.detach();
+        ReadGPs = std::thread(&DisplayExample::Read_gps_gnss, this);
+        ReadGPs.detach();
 
         std::cout << "NTP" << std::endl;
 
@@ -187,7 +190,6 @@ public:
             printf("BAck here3\n");
             waitForButtonPress();
             update_wifi_ssid_from_nmcli();
-            Read_gps_gnss();//For testing purposes checking in a while loop 
         }
     }
     std::string execCommand(const char *cmd)
@@ -369,7 +371,7 @@ public:
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
                 fillScreen();
-               // Enter_Power_Mode();
+                // Enter_Power_Mode();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -393,34 +395,34 @@ public:
     void drawUI()
     {
 
-        printf("---1\n");
+
         setColor(0, 0, 0); // Black background
-printf("---12\n");
+
         ImageSize modeImages[2] = {
 
             {RECORD_SCREEN, 80, 60},
             {EMERGENCY_SCREEN, 80, 60}
-        
+
         };
-     printf("---13\n");
+
         switch (currentState)
         {
         case IDLE:
         {
-            printf("---134\n");
+    
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
             setFont(ter_u16b);
             drawText(10, 80, currentTime.c_str());
-            printf("---12323\n");
+        
             printf("Displayed Time on Screen: %s\n", currentTime.c_str());
             break;
         }
 
         case RECORD:
         {
-            printf("---1444\n");
+   
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -473,18 +475,16 @@ printf("---12\n");
         }
     }
 
-    int Read_gps_gnss()
+    void Read_gps_gnss()
     {
-
         setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
-
-        _Delay(100);
+        usleep(2000000); // You might consider using sleep(2) or usleep(2000000) here for consistency
 
         int fd = gps_i2c_init("/dev/i2c-2");
         if (fd < 0)
         {
             printf("Failed to init GPS\n");
-            return 1;
+            return;
         }
 
         double lat, lon;
@@ -496,15 +496,12 @@ printf("---12\n");
         {
             printf("Failed to get location\n");
         }
-       printf("Hi from here i failed in  this \n");
-        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
 
-          printf("Hi from here i failed before this \n");
+        setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_INACTIVE);
         gps_i2c_close(fd);
 
-                  printf("Hi from here i failed before 22 this \n");
+        td::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
     }
-
     void Enter_Power_Mode()
     {
         if (!videoRunning && !barcode_show)
@@ -653,10 +650,10 @@ printf("---12\n");
     void processMode()
     {
         printf("Hi the issue is here\n");
-        
+
         if (!current_state.in_emergency && !barcode_show)
         {
-             printf("Hi the issue is here44\n");
+            printf("Hi the issue is here44\n");
             if (mode == 0)
             {
                 alarmOff();
@@ -727,7 +724,6 @@ printf("---12\n");
             usleep(2000000); // let hci0 come up
             system("python3 /opt/ble_wifi_onboarding/main.py &");
         }
-    
     }
 
     void initPeripherals()

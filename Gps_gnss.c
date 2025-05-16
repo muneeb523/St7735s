@@ -10,7 +10,7 @@
 #define GPS_I2C_ADDR 0x42
 #define BUFFER_SIZE 256
 
-static int gps_i2c_open(const char* i2c_bus) {
+ int gps_i2c_open(const char* i2c_bus) {
     int fd = open(i2c_bus, O_RDWR);
     if (fd < 0) return -1;
     if (ioctl(fd, I2C_SLAVE, GPS_I2C_ADDR) < 0) {
@@ -33,26 +33,38 @@ void gps_i2c_close(int fd) {
     }
 }
 
-static int gps_read_line(int fd, char* buffer, int max_len) {
+int gps_read_line(int fd, char* buffer, int max_len) {
     int pos = 0;
     char byte;
     while (pos < max_len - 1) {
         int ret = read(fd, &byte, 1);
-        if (ret <= 0) continue;
+        if (ret == 0) {
+            // EOF: treat as error
+            fprintf(stderr, "gps_read_line: EOF reached\n");
+            break;
+        } else if (ret < 0) {
+            perror("gps_read_line: read error");
+            break;
+        }
         buffer[pos++] = byte;
         if (byte == '\n') break;
     }
     buffer[pos] = '\0';
-    return pos;
+    return pos > 0 ? pos : -1;
 }
 
+
 // Convert NMEA lat/lon format to decimal
-static double convert_to_decimal(const char* nmea_coord, const char* direction) {
+double convert_to_decimal(const char* nmea_coord, const char* direction) {
+    if (!nmea_coord || !direction || direction[0] == '\0') return 0.0;
+
     double raw = atof(nmea_coord);
-    int degrees = (direction[0] == 'N' || direction[0] == 'S') ? (int)(raw / 100) : (int)(raw / 100);
+    int degrees = (int)(raw / 100);
     double minutes = raw - (degrees * 100);
     double decimal = degrees + (minutes / 60.0);
+
     if (direction[0] == 'S' || direction[0] == 'W') decimal *= -1;
+
     return decimal;
 }
 
@@ -62,7 +74,6 @@ int gps_get_location(int fd, double* latitude, double* longitude) {
         int len = gps_read_line(fd, line, sizeof(line));
         if (len <= 0 || line[0] != '$') continue;
 
-        // Look for GGA sentence (or you can use RMC)
         if (strstr(line, "$GPGGA") == line || strstr(line, "$GNGGA") == line) {
             char* tokens[15] = {0};
             char* tok = strtok(line, ",");
@@ -71,12 +82,13 @@ int gps_get_location(int fd, double* latitude, double* longitude) {
                 tokens[i++] = tok;
                 tok = strtok(NULL, ",");
             }
-            if (i < 6 || !tokens[2] || !tokens[4]) continue;
 
-            *latitude  = convert_to_decimal(tokens[2], tokens[3]);
-            *longitude = convert_to_decimal(tokens[4], tokens[5]);
-            return 0; // success
+            if (i >= 6 && tokens[2] && tokens[3] && tokens[4] && tokens[5]) {
+                *latitude  = convert_to_decimal(tokens[2], tokens[3]);
+                *longitude = convert_to_decimal(tokens[4], tokens[5]);
+                return 0;
+            }
         }
     }
-    return -1; // failed to get valid sentence
+    return -1;
 }
