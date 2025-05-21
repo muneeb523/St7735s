@@ -414,7 +414,7 @@ public:
         {
         case IDLE:
         {
-            filledRect(0, 0, WIDTH, HEIGHT);
+
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
@@ -427,7 +427,7 @@ public:
 
         case RECORD:
         {
-            filledRect(0, 0, WIDTH, HEIGHT);
+
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -436,7 +436,7 @@ public:
 
         case EMERGENCY:
         {
-            filledRect(0, 0, WIDTH, HEIGHT);
+
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[1].image, modeImages[1].width, modeImages[1].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -445,7 +445,7 @@ public:
 
         case BARCODE:
         {
-            filledRect(0, 0, WIDTH, HEIGHT);
+
             setColor(255, 255, 255); // White background
             drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
             break;
@@ -628,6 +628,7 @@ public:
                 mode = 0;
                 current_state.in_emergency = false;
                 currentState = IDLE;
+                filledRect(0, 0, WIDTH, HEIGHT);
             }
 
             if (barcode_show)
@@ -636,10 +637,12 @@ public:
                 barcode_show = false;
                 currentState = IDLE;
                 system("pkill -2 -f /opt/ble_wifi_onboarding/main.py");
+                filledRect(0, 0, WIDTH, HEIGHT);
             }
             else
             {
                 currentState = (mode == 1) ? RECORD : IDLE;
+                filledRect(0, 0, WIDTH, HEIGHT);
             }
             break;
 
@@ -648,16 +651,19 @@ public:
             {
                 currentState = EMERGENCY;
                 current_state.in_emergency = true;
+                filledRect(0, 0, WIDTH, HEIGHT);
             }
             else
             {
                 mode = 0;
                 currentState = IDLE;
                 current_state.in_emergency = false;
+                filledRect(0, 0, WIDTH, HEIGHT);
             }
             break;
 
         case 3: // Show barcode
+            filledRect(0, 0, WIDTH, HEIGHT);
             setOrientation(R180);
             barcode_show = true;
             currentState = BARCODE;
