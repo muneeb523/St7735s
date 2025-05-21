@@ -414,7 +414,7 @@ public:
         {
         case IDLE:
         {
-            fillScreen();
+            filledRect(0, 0, WIDTH, HEIGHT);
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
@@ -427,7 +427,7 @@ public:
 
         case RECORD:
         {
-            fillScreen();
+            filledRect(0, 0, WIDTH, HEIGHT);
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -436,7 +436,7 @@ public:
 
         case EMERGENCY:
         {
-            fillScreen();
+            filledRect(0, 0, WIDTH, HEIGHT);
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[1].image, modeImages[1].width, modeImages[1].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -445,7 +445,7 @@ public:
 
         case BARCODE:
         {
-            fillScreen();
+            filledRect(0, 0, WIDTH, HEIGHT);
             setColor(255, 255, 255); // White background
             drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
             break;
