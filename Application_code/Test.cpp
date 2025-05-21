@@ -414,12 +414,12 @@ public:
         {
         case IDLE:
         {
-
+            fillScreen();
             drawBatteryAndSignalIcons();
             setColor(31, 63, 31);
             setbgColor(0, 0, 0);
             setFont(ter_u16b);
-            drawText(10, 80, currentTime.c_str());
+            drawText(12, 80, currentTime.c_str());
 
             printf("Displayed Time on Screen: %s\n", currentTime.c_str());
             break;
@@ -427,7 +427,7 @@ public:
 
         case RECORD:
         {
-
+            fillScreen();
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[0].image, modeImages[0].width, modeImages[0].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -436,6 +436,7 @@ public:
 
         case EMERGENCY:
         {
+            fillScreen();
             drawBatteryAndSignalIcons();
             drawImage(0, 60, modeImages[1].image, modeImages[1].width, modeImages[1].height);
             drawTimeText(currentTime.c_str(), 25, 140);
@@ -444,6 +445,7 @@ public:
 
         case BARCODE:
         {
+            fillScreen();
             setColor(255, 255, 255); // White background
             drawImage(10, 10, barcode, IMAGE_WIDTH, IMAGE_HEIGHT);
             break;
@@ -486,7 +488,7 @@ public:
 
             setLineValue(testGpioReq.gps_pwr_en, GPIO_LINE_GPS_PWR_EN, GPIOD_LINE_VALUE_ACTIVE);
 
-            usleep(4000000);//<4 sec delay 
+            usleep(4000000); //<4 sec delay
             int fd = gps_i2c_init("/dev/i2c-2");
             if (fd < 0)
             {
@@ -498,7 +500,7 @@ public:
             double lat = 0.0, lon = 0.0;
             if (gps_get_location(fd, &lat, &lon) == 0)
             {
-                   printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
+                printf("Latitude: %.6f, Longitude: %.6f\n", lat, lon);
                 if (lat >= -90.0 && lat <= 90.0 &&
                     lon >= -180.0 && lon <= 180.0 &&
                     (fabs(lat) >= 0.05 && fabs(lon) >= 0.05)) // filter small noise
@@ -635,8 +637,10 @@ public:
                 currentState = IDLE;
                 system("pkill -2 -f /opt/ble_wifi_onboarding/main.py");
             }
-
-            currentState = (mode == 1) ? RECORD : IDLE;
+            else
+            {
+                currentState = (mode == 1) ? RECORD : IDLE;
+            }
             break;
 
         case 2: // Emergency button
@@ -670,11 +674,10 @@ public:
 
     void processMode()
     {
-      
 
         if (!current_state.in_emergency && !barcode_show)
         {
-         
+
             if (mode == 0)
             {
                 alarmOff();
