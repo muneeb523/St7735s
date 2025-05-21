@@ -943,6 +943,7 @@ public:
 
             if (netType == "wifi")
             {
+                printf("Wifi avaibale streaming directly to the kvs\n");
 
                 emergency_stream_on();
                 return;
