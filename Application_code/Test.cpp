@@ -62,6 +62,7 @@ std::atomic<bool> running = true;
 
 std::thread buzzer_thread;
 std::atomic<bool> buzzer_running = false;
+std::atomic<bool> video_run = false;
 std::atomic<int> buzzer_frequency_hz;
 std::mutex buzzer_mutex;
 namespace fs = std::filesystem;
@@ -318,7 +319,7 @@ public:
         {
             std::string netType = getActiveNetworkType();
 
-            if (netType == "wifi" && !videoRunning)
+            if (netType == "wifi" && !video_run.load())
             {
 
                 auto files = getMP4Files(videoDir);
@@ -350,7 +351,7 @@ public:
                 std::cout << "[Info] Not on Wi-Fi. Skipping streaming.\n";
             }
 
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(240));
         }
     }
 
@@ -769,8 +770,9 @@ public:
     }
 
     void emergency_stream_on()
-    {
-
+    {  
+        
+        video_run.store(true);
         printf("videoOn\r\n");
         if (!videoRunning)
         {
@@ -883,6 +885,7 @@ public:
             // Reset state
             gst_pid = -1;
             videoRunning = 0;
+            video_run.store(false);
             videoStart = 0;
             sprintf(videoTime, "%02d:%02d", 0, 0);
         }
@@ -935,6 +938,7 @@ public:
     void videoOn()
     {
         current_state.camera_recording = true;
+        video_run.store(true);
 
         printf("videoOn\r\n");
         if (!videoRunning)

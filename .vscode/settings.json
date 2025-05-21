@@ -118,6 +118,7 @@
     "fstream": "cpp",
     "appgpio.h": "c",
     "condition_variable": "cpp",
-    "mutex": "cpp"
+    "mutex": "cpp",
+    "codecvt": "cpp"
   }
 }
