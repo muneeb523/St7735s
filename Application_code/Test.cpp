@@ -626,6 +626,7 @@ public:
                 mode = 0;
                 current_state.in_emergency = false;
                 currentState = IDLE;
+                setColor(0, 0, 0); // Black background
                 filledRect(0, 0, WIDTH, HEIGHT);
             }
 
@@ -635,12 +636,14 @@ public:
                 barcode_show = false;
                 currentState = IDLE;
                 system("pkill -2 -f /opt/ble_wifi_onboarding/main.py");
+                setColor(0, 0, 0); // Black background
                 filledRect(0, 0, WIDTH, HEIGHT);
             }
             else
             {
                 mode = (mode + 1) % 2;
                 currentState = (mode == 1) ? RECORD : IDLE;
+                setColor(0, 0, 0); // Black background
                 filledRect(0, 0, WIDTH, HEIGHT);
             }
             break;
@@ -650,6 +653,7 @@ public:
             {
                 currentState = EMERGENCY;
                 current_state.in_emergency = true;
+                setColor(0, 0, 0); // Black background
                 filledRect(0, 0, WIDTH, HEIGHT);
             }
             else
@@ -657,12 +661,12 @@ public:
                 mode = 0;
                 currentState = IDLE;
                 current_state.in_emergency = false;
+                setColor(0, 0, 0); // Black background
                 filledRect(0, 0, WIDTH, HEIGHT);
             }
             break;
 
         case 3: // Show barcode
-            filledRect(0, 0, WIDTH, HEIGHT);
             setOrientation(R180);
             barcode_show = true;
             currentState = BARCODE;
