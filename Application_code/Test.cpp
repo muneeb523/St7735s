@@ -187,7 +187,6 @@ public:
 
         while (true)
         {
-
             drawUI();
             processMode();
             waitForButtonPress();
@@ -621,7 +620,6 @@ public:
         {
 
         case 1: // Mode cycle button
-            mode = (mode + 1) % 2;
 
             if (current_state.in_emergency)
             {
@@ -641,6 +639,7 @@ public:
             }
             else
             {
+                mode = (mode + 1) % 2;
                 currentState = (mode == 1) ? RECORD : IDLE;
                 filledRect(0, 0, WIDTH, HEIGHT);
             }
