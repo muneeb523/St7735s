@@ -890,13 +890,15 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
-                    notifyStartStream();
+                    
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
                     execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", NULL, environ);
+                    notifyStartStream();
                     perror("execl failed");
                     _exit(1); // In case execl fails
+
                 }
                 else
                 {
@@ -930,7 +932,7 @@ public:
         printf("videoOff\r\n");
         if (gst_pid != -1)
         {
-            notifyStopStream();
+
             printf("Stopping Streaming (PID: %d)\n", gst_pid);
 
             // Send SIGTERM to gracefully terminate the process
@@ -963,6 +965,7 @@ public:
             {
                 if (WIFEXITED(status))
                 {
+                    notifyStopStream();
                     printf("Flashlight stopped successfully with exit code %d\n", WEXITSTATUS(status));
                 }
                 else if (WIFSIGNALED(status))
@@ -982,6 +985,7 @@ public:
                 {
                     printf("Sent SIGKILL to process %d\n", gst_pid);
                     waitpid(gst_pid, &status, 0); // Ensure it's reaped
+                    notifyStopStream();
                 }
                 else
                 {
@@ -994,6 +998,7 @@ public:
             }
 
             // Reset state
+
             gst_pid = -1;
             videoRunning = 0;
             video_run.store(false);
