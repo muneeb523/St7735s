@@ -21,6 +21,7 @@
 #include <nlohmann/json.hpp> // JSON library: https://github.com/nlohmann/json
 #include <atomic>
 #include <time.h>
+#include <curl/curl.h>
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
@@ -193,6 +194,100 @@ public:
             waitForButtonPress();
         }
     }
+    bool notifyStartStream()
+    {
+        CURL *curl;
+        CURLcode res;
+        bool success = false;
+
+        std::string url = "https://api.rolex.mytimeli.com/stream/Simulator_Nick/start";
+        std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
+
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+        curl = curl_easy_init();
+
+        if (curl)
+        {
+            struct curl_slist *headers = nullptr;
+            headers = curl_slist_append(headers, "Content-Type: application/json");
+
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
+
+            res = curl_easy_perform(curl);
+
+            if (res != CURLE_OK)
+            {
+                std::cerr << "Start stream request failed: " << curl_easy_strerror(res) << std::endl;
+            }
+            else
+            {
+                long http_code = 0;
+                curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+                if (http_code == 200)
+                {
+                    std::cout << "Start stream notification sent successfully." << std::endl;
+                    success = true;
+                }
+                else
+                {
+                    std::cerr << "Start stream failed, HTTP status: " << http_code << std::endl;
+                }
+            }
+
+            curl_slist_free_all(headers);
+            curl_easy_cleanup(curl);
+        }
+
+        curl_global_cleanup();
+        return success;
+    }
+    bool notifyStopStream()
+    {
+        CURL *curl;
+        CURLcode res;
+        bool success = false;
+
+        std::string url = "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
+
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+        curl = curl_easy_init();
+
+        if (curl)
+        {
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+
+            res = curl_easy_perform(curl);
+
+            if (res != CURLE_OK)
+            {
+                std::cerr << "Stop stream request failed: " << curl_easy_strerror(res) << std::endl;
+            }
+            else
+            {
+                long http_code = 0;
+                curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+                if (http_code == 200)
+                {
+                    std::cout << "Stop stream notification sent successfully." << std::endl;
+                    success = true;
+                }
+                else
+                {
+                    std::cerr << "Stop stream failed, HTTP status: " << http_code << std::endl;
+                }
+            }
+
+            curl_easy_cleanup(curl);
+        }
+
+        curl_global_cleanup();
+        return success;
+    }
+
     std::string execCommand(const char *cmd)
     {
         std::array<char, 128> buffer;
@@ -770,8 +865,8 @@ public:
     }
 
     void emergency_stream_on()
-    {  
-        
+    {
+
         video_run.store(true);
         printf("videoOn\r\n");
         if (!videoRunning)
@@ -781,6 +876,7 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
+                    notifyStartStream();
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
@@ -820,6 +916,7 @@ public:
         printf("videoOff\r\n");
         if (gst_pid != -1)
         {
+            notifyStopStream();
             printf("Stopping Streaming (PID: %d)\n", gst_pid);
 
             // Send SIGTERM to gracefully terminate the process
@@ -958,6 +1055,7 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
+                    notifyStartStream();
                     videoRunning = 1;
                     videoStart = time(NULL);
                     // Child process: replace this process with the streaming app
