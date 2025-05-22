@@ -1,0 +1,1392 @@
+86656] DEBUG - postReadCallback(): [NAK] Wrote 40395 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40181 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40165 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40712 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40591 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40561 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40591 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535385552
+        >> Allocated storage byte size: 1485360
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 21194344 (20697 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1001
+        >> Current view byte size: 178749
+        >> Overall view byte size: 1483872
+        >> Current elementary frame rate (fps): 29.9896
+        >> Current transfer rate (bps): 21194344 (20697 Kbps)
+2025-05-22 12:08:56 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 42115 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 31945 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27910 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915735410,"FragmentNumber":"91343852333181982057866546008519906932430622367"}
+
+2025-05-22 12:08:56 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:56 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915736411,"FragmentNumber":"91343852333181982062818306165661428301427331309"}
+
+2025-05-22 12:08:56 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26157 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25183 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25108 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24773 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24836 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 38084 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39931 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915735410,"FragmentNumber":"91343852333181982057866546008519906932430622367"}
+
+2025-05-22 12:08:56 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40203 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40535 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40966 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40395 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40894 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 16556 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:56 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41050 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41030 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41003 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40700 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41139 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40391 bytes to Kinesis Video. Upload stream handle: 0
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 16840 bytes to Kinesis Video. Upload stream handle: 0
+Successfully opened GPS I2C address
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41087 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40906 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40683 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40845 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535411152
+        >> Allocated storage byte size: 1459760
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 19147192 (18698 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1000
+        >> Current view byte size: 179387
+        >> Overall view byte size: 1458272
+        >> Current elementary frame rate (fps): 29.9907
+        >> Current transfer rate (bps): 19147192 (18698 Kbps)
+2025-05-22 12:08:57 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48339 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 59852 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 60042 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26140 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25406 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915736411,"FragmentNumber":"91343852333181982062818306165661428301427331309"}
+
+2025-05-22 12:08:57 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:57 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915737411,"FragmentNumber":"913438523331819820677700663[ 1145.928464] IOCTL failed: 000000009b768cf9 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+22802949665175893349"}
+
+2025-05-22 12:08:57 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24581 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 49161 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37352 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915736411,"FragmentNumber":"91343852333181982062818306165661428301427331309"}
+
+2025-05-22 12:08:57 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39886 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40670 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 16629 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40360 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40384 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40936 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41226 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40696 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:57 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40471 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 15702 bytes to Kinesis Video. Upload stream handle: 0
+Latitude: 42.197827, Longitude: -87.812863
+Closed GPS I2C file descriptor
+[ 1146.427037] wlan: mlan0 START SCAN
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40346 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40768 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41277 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41446 bytes to Kinesis Video. Upload stream handle: 0
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27559 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25966 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24688 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24682 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535472758
+        >> Allocated storage byte size: 1398154
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 17067712 (16667 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1000
+        >> Current view byte size: 180005
+        >> Overall view byte size: 1396666
+        >> Current elementary frame rate (fps): 29.9891
+        >> Current transfer rate (bps): 17067712 (16667 Kbps)
+2025-05-22 12:08:58 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48957 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 44525 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 58243 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26063 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25904 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915737411,"FragmentNumber":"91343852333181982067770066322802949665175893349"}
+
+2025-05-22 12:08:58 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:58 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915738411,"FragmentNumber":"91343852333181982072721826479944471056447551420"}
+
+2025-05-22 12:08:58 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 38762 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39739 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40329 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40983 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40881 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915737411,"FragmentNumber":"91343852333181982067770066322802949665175893349"}
+
+2025-05-22 12:08:58 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40932 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40625 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41164 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41298 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41076 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27575 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25367 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:58 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24656 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24510 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24041 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 11336 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39600 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39515 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39962 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40809 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40971 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41034 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40992 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535463931
+        >> Allocated storage byte size: 1406981
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 15313592 (14954 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1001
+        >> Current view byte size: 179072
+        >> Overall view byte size: 1405493
+        >> Current elementary frame rate (fps): 29.9891
+        >> Current transfer rate (bps): 15313592 (14954 Kbps)
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:08:59 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48024 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 59535 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 60879 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26317 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25351 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915738411,"FragmentNumber":"91343852333181982072721826479944471056447551420"}
+
+2025-05-22 12:08:59 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24586 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915739412,"FragmentNumber":"91343852333181982077673586637085992427559023494"}
+
+2025-05-22 12:08:59 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48696 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24134 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37097 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39157 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915738411,"FragmentNumber":"91343852333181982072721826479944471056447551420"}
+
+2025-05-22 12:08:59 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39960 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40311 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40488 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40884 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40681 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41215 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:08:59 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 15996 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27953 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25806 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24750 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24485 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 23948 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 36701 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 12776 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40326 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40466 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535516822
+        >> Allocated storage byte size: 1354090
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 14250120 (13916 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1000
+        >> Current view byte size: 179984
+        >> Overall view byte size: 1352602
+        >> Current elementary frame rate (fps): 29.9887
+        >> Current transfer rate (bps): 14250120 (13916 Kbps)
+2025-05-22 12:09:00 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48936 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26021 bytes to Kinesis Video. Upload stream handle: 0
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27478 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25793 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915739412,"FragmentNumber":"91343852333181982077673586637085992427559023494"}
+
+2025-05-22 12:09:00 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:00 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915740412,"FragmentNumber":"91343852333181982082625346794227513768607662325"}
+
+2025-05-22 12:09:00 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25023 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24904 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915739412,"FragmentNumber":"91343852333181982077673586637085992427559023494"}
+
+2025-05-22 12:09:00 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24593 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24769 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 61113 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 38960 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39535 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40828 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41091 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40707 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40776 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 16380 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:00 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27413 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25226 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24740 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24109 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 23843 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37083 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 38828 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39502 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39426 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 14176 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535521489
+        >> Allocated storage byte size: 1349423
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 13102920 (12795 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1000
+        >> Current view byte size: 179062
+        >> Overall view byte size: 1347935
+        >> Current elementary frame rate (fps): 29.9895
+        >> Current transfer rate (bps): 13102920 (12795 Kbps)
+2025-05-22 12:09:01 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48014 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 59034 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 46545 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 43731 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 28492 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26673 bytes to Kinesis Video. Upload stream handle: 0
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 50276 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915740412,"FragmentNumber":"91343852333181982082625346794227513768607662325"}
+
+2025-05-22 12:09:01 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:01 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915741412,"FragmentNumber":"91343852333181982087577106951369035141289949653"}
+
+2025-05-22 12:09:01 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:01 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915740412,"FragmentNumber":"91343852333181982082625346794227513768607662325"}
+
+2025-05-22 12:09:01 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24272 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24292 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24245 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37355 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39543 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40247 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 15874 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40205 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40656 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40462 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:01 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40813 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40157 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40716 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40449 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40749 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40577 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40905 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40456 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 16162 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40712 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535416458
+        >> Allocated storage byte size: 1454454
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 12367016 (12077 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1001
+        >> Current view byte size: 179258
+        >> Overall view byte size: 1452966
+        >> Current elementary frame rate (fps): 29.99
+        >> Current transfer rate (bps): 12367016 (12077 Kbps)
+2025-05-22 12:09:02 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48210 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 44324 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 30599 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27010 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25674 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 49890 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24617 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24124 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37543 bytes to Kinesis Video. Upload stream handle: 0
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCall[ 1151.048829] no wr_port available: wr_bitmap=0x40000000 curr_wr_port=30
+back(): [NAK] Wrote 39094 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40032 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"RECEIVED","FragmentTimecode":1747915741412,"FragmentNumber":"91343852333181982087577106951369035141289949653"}
+
+2025-05-22 12:09:02 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:02 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"BUFFERING","FragmentTimecode":1747915742413,"FragmentNumber":"91343852333181982092528867108510556537412079497"}
+
+2025-05-22 12:09:02 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40635 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40425 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postWriteCallback(): Curl post body write function for stream with handle: NAK and upload handle: 0 returned: {"EventType":"PERSISTED","FragmentTimecode":1747915741412,"FragmentNumber":"91343852333181982087577106951369035141289949653"}
+
+2025-05-22 12:09:02 [281472949686656] DEBUG - fragmentAckReceivedHandler invoked
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40185 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40526 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 15810 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:02 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40788 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40675 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 41066 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 27782 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 25664 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24896 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48534 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37260 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39495 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39423 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40383 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 535518649
+        >> Allocated storage byte size: 1352263
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 11852144 (11574 Kbps)
+        >> Current view duration (ms): 0
+        >> Overall view duration (ms): 1000
+        >> Current view byte size: 179539
+        >> Overall view byte size: 1350775
+        >> Current elementary frame rate (fps): 29.9914
+        >> Current transfer rate (bps): 11852144 (11574 Kbps)
+2025-05-22 12:09:03 [281473043308928] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 65524 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 48491 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 59863 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 47227 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 29338 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 26608 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 51156 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24728 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24371 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24381 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 24437 bytes to Kinesis Video. Upload stream handle: 0
+areButtonsPressed -3
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 37475 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 39192 bytes to Kinesis Video. Upload stream handle: 0
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40177 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40271 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - postReadCallback(): [NAK] Wrote 40701 bytes to Kinesis Video. Upload stream handle: 0
+2025-05-22 12:09:03 [281472949686656] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 534340986
+        >> Allocated storage byte size: 2529926
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 11537648 (11267 Kbps)
+        >> Current view duration (ms): 467
+        >> Overall view duration (ms): 2000
+        >> Current view byte size: 666298
+        >> Overall view byte size: 2526998
+        >> Current elementary frame rate (fps): 29.9894
+        >> Current transfer rate (bps): 11537648 (11267 Kbps)
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:04 [281473043308928] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 533168604
+        >> Allocated storage byte size: 3702308
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 11537648 (11267 Kbps)
+        >> Current view duration (ms): 1468
+        >> Overall view duration (ms): 3001
+        >> Current view byte size: 1837240
+        >> Overall view byte size: 3697940
+        >> Current elementary frame rate (fps): 29.9895
+        >> Current transfer rate (bps): 11537648 (11267 Kbps)
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1154.535780] wlan: SCAN COMPLETED: scanned AP count=40
+[ 1154.579368] wlan: wfd0 START SCAN
+2025-05-22 12:09:05 [281473043308928] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 531996570
+        >> Allocated storage byte size: 4874342
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 11537648 (11267 Kbps)
+        >> Current view duration (ms): 2468
+        >> Overall view duration (ms): 4001
+        >> Current view byte size: 3007834
+        >> Overall view byte size: 4868534
+        >> Current elementary frame rate (fps): 29.9944
+        >> Current transfer rate (bps): 11537648 (11267 Kbps)
+Connected Wi-Fi SSID (via nmcli): Tonga
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:06 [281473043308928] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 530699965
+        >> Allocated storage byte size: 6170947
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 11537648 (11267 Kbps)
+        >> Current view duration (ms): 3468
+        >> Overall view duration (ms): 5001
+        >> Current view byte size: 4302999
+        >> Overall view byte size: 6163699
+        >> Current elementary frame rate (fps): 29.9905
+        >> Current transfer rate (bps): 11537648 (11267 Kbps)
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:07 [281473043308928] DEBUG - Kinesis Video client and stream metrics for NAK
+        >> Overall storage byte size: 536870912
+        >> Available storage byte size: 529425518
+        >> Allocated storage byte size: 7445394
+        >> Total view allocation byte size: 144080
+        >> Total streams elementary frame rate (fps): 29
+        >> Total streams transfer rate (bps): 11537648 (11267 Kbps)
+        >> Current view duration (ms): 4469
+        >> Overall view duration (ms): 6002
+        >> Current view byte size: 5576006
+        >> Overall view byte size: 7436706
+        >> Current elementary frame rate (fps): 29.9849
+        >> Current transfer rate (bps): 11537648 (11267 Kbps)
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1161.794890] wlan: SCAN COMPLETED: scanned AP count=38
+[ 1161.833437] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1168.976722] wlan: SCAN COMPLETED: scanned AP count=38
+areButtonsPressed -3
+[ 1169.008829] wlan: wfd0 START SCAN
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1176.653573] wlan: SCAN COMPLETED: scanned AP count=37
+[ 1176.664793] wlan: sched scan start
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:08 [281473043308928] WARN - curlCompleteSync(): [NAK] curl perform failed for url https://s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia with result Transferred a partial file: transfer closed with outstanding read data remaining
+2025-05-22 12:09:35 [281472949686656] WARN - curlCompleteSync(): [NAK] HTTP Error 0 : Response: (null)
+Request URL: https://s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia
+Request Headers:
+    Authorization: AWS4-HMAC-SHA256 Credential=AKIA5FCD557DW2C4QC5B/20250522/us-west-2/kinesisvideo/aws4_request, SignedHeaders=connection;host;transfer-encoding;user-agent;x-amz-date;x-amzn-fragment-acknowledgment-required;x-amzn-fragment-timecode-type;x-amzn-producer-start-timestamp;x-amzn-stream-name, Signature=24ec16f54fb225bdd0ac61167b5822dcab3888b37
+2025-05-22 12:09:35 [281472949686656] DEBUG - putStreamCurlHandler(): Network thread for Kinesis Video stream: NAK with upload handle: 0 exited. http status: 0
+2025-05-22 12:09:35 [281472949686656] WARN - putStreamCurlHandler(): [NAK] Stream with streamHandle 187650709385360 uploadHandle 0 has exited without triggering end-of-stream. Service call result: 10006
+2025-05-22 12:09:35 [281472949686656] INFO - kinesisVideoStreamTerminated(): Stream 0xaaaad5dff090 terminated upload handle 0 with service call result 10006.
+2025-05-22 12:09:35 [281472949686656] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 1
+2025-05-22 12:09:35 [281472949686656] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [10006]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:09:35 [281472949686656] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 2
+2025-05-22 12:09:35 [281472949686656] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [10006]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:09:35 [281472949686656] INFO - describeStreamResultEvent(): Describe stream result event.
+2025-05-22 12:09:35 [281472949686656] INFO - getStreamingEndpointResultEvent(): Get streaming endpoint result event.
+2025-05-22 12:09:35 [281472949686656] DEBUG - getStreamingTokenHandler invoked
+2025-05-22 12:09:35 [281472949686656] DEBUG - Refreshing credentials. Force refreshing: 1 Now time is: 1747915775824938853 Expiration: 18446744073709551615
+2025-05-22 12:09:35 [281472949686656] INFO - getStreamingTokenResultEvent(): Get streaming token result event.
+2025-05-22 12:09:35 [281472949686656] DEBUG - streamReadyHandler invoked
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: user-agent -> AWS-SDK-KVS-CPP-CLIENT/3.4.2/1.5.2 GCC/13.3.0 Linux/6.6.52-lts-next-ge0f9e2afd4cf aarch64 CPPSDK
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-stream-name -> NAK
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-producer-start-timestamp -> 1747915775.825
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-fragment-acknowledgment-required -> 1
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-fragment-timecode-type -> ABSOLUTE
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: transfer-encoding -> chunked
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: connection -> keep-alive
+2025-05-22 12:09:35 [281472949686656] INFO - putStreamResultEvent(): Put stream result event. New upload handle 1
+2025-05-22 12:09:35 [281472949686656] WARN - notifyDataAvailable(): [NAK] Failed to un-pause curl with error: 43. Curl object 0xffff7c0aba30
+2025-05-22 12:09:35 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: host -> s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia
+2025-05-22 12:09:35 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: X-Amz-Date -> 20250522T120935Z
+2025-05-22 12:09:35 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: content-type -> application/json
+2025-05-22 12:09:35 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: Authorization -> AWS4-HMAC-SHA256 Credential=AKIA5FCD557DW2C4QC5B/20250522/us-west-2/kinesisvideo/aws4_request, SignedHeaders=connection;host;transfer-encoding;user-agent;x-amz-date;x-amzn-fragment-acknowledgment-required;x-amzn-fragment-timecode-type;x-amzn-producer-start-timestamp;x-amzn-stream-name, Signature=434bfb1b5a13e842daaa318b4a0d117faa330d123bdeb71e2bef83270b6c669a
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+Update json
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:35 [281472941232512] WARN - curlCompleteSync(): [NAK] curl perform failed for url https://s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia with result Timeout was reached: Resolving timed out after 5001 milliseconds
+2025-05-22 12:09:52 [281472941232512] WARN - curlCompleteSync(): [NAK] HTTP Error 0 : Response: (null)
+Request URL: https://s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia
+Request Headers:
+    Authorization: AWS4-HMAC-SHA256 Credential=AKIA5FCD557DW2C4QC5B/20250522/us-west-2/kinesisvideo/aws4_request, SignedHeaders=connection;host;transfer-encoding;user-agent;x-amz-date;x-amzn-fragment-acknowledgment-required;x-amzn-fragment-timecode-type;x-amzn-producer-start-timestamp;x-amzn-stream-name, Signature=434bfb1b5a13e842daaa318b4a0d117faa330d123
+2025-05-22 12:09:52 [281472941232512] DEBUG - putStreamCurlHandler(): Network thread for Kinesis Video stream: NAK with upload handle: 1 exited. http status: 0
+2025-05-22 12:09:52 [281472941232512] WARN - putStreamCurlHandler(): [NAK] Stream with streamHandle 187650709385360 uploadHandle 1 has exited without triggering end-of-stream. Service call result: 599
+2025-05-22 12:09:52 [281472941232512] INFO - kinesisVideoStreamTerminated(): Stream 0xaaaad5dff090 terminated upload handle 1 with service call result 599.
+2025-05-22 12:09:52 [281472941232512] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 3
+2025-05-22 12:09:52 [281472941232512] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [599]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:09:52 [281472941232512] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 4
+2025-05-22 12:09:52 [281472941232512] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [599]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:09:52 [281472941232512] DEBUG - streamReadyHandler invoked
+2025-05-22 12:09:52 [281472941232512] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 5
+2025-05-22 12:09:52 [281472941232512] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [599]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: user-agent -> AWS-SDK-KVS-CPP-CLIENT/3.4.2/1.5.2 GCC/13.3.0 Linux/6.6.52-lts-next-ge0f9e2afd4cf aarch64 CPPSDK
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: x-amzn-stream-name -> NAK
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: x-amzn-producer-start-timestamp -> 1747915792.183
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: x-amzn-fragment-acknowledgment-required -> 1
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: x-amzn-fragment-timecode-type -> ABSOLUTE
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: transfer-encoding -> chunked
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: connection -> keep-alive
+2025-05-22 12:09:52 [281472941232512] INFO - putStreamResultEvent(): Put stream result event. New upload handle 2
+2025-05-22 12:09:52 [281472941232512] WARN - notifyDataAvailable(): [NAK] Failed to un-pause curl with error: 43. Curl object 0xffff7800a8e0
+2025-05-22 12:09:52 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: host -> s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia
+2025-05-22 12:09:52 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: X-Amz-Date -> 20250522T120952Z
+2025-05-22 12:09:52 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: content-type -> application/json
+2025-05-22 12:09:52 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: Authorization -> AWS4-HMAC-SHA256 Credential=AKIA5FCD557DW2C4QC5B/20250522/us-west-2/kinesisvideo/aws4_request, SignedHeaders=connection;host;transfer-encoding;user-agent;x-amz-date;x-amzn-fragment-acknowledgment-required;x-amzn-fragment-timecode-type;x-amzn-producer-start-timestamp;x-amzn-stream-name, Signature=615f0104305200a818298fb5b0f8e8924124c61ccfbd4c0421ead4a1241cf92e
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+Deleted: /home/local/file1.mp4
+Deleted: /home/local/file2.mp4
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+Successfully opened GPS I2C address
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+Latitude: 42.197826, Longitude: -87.812841
+Closed GPS I2C file descriptor
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1214.915530] wlan: mlan0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+2025-05-22 12:09:52 [281472949686656] WARN - curlCompleteSync(): [NAK] curl perform failed for url https://s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia with result Timeout was reached: Resolving timed out after 5000 milliseconds
+2025-05-22 12:10:07 [281472949686656] WARN - curlCompleteSync(): [NAK] HTTP Error 0 : Response: (null)
+Request URL: https://s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia
+Request Headers:
+    Authorization: AWS4-HMAC-SHA256 Credential=AKIA5FCD557DW2C4QC5B/20250522/us-west-2/kinesisvideo/aws4_request, SignedHeaders=connection;host;transfer-encoding;user-agent;x-amz-date;x-amzn-fragment-acknowledgment-required;x-amzn-fragment-timecode-type;x-amzn-producer-start-timestamp;x-amzn-stream-name, Signature=615f0104305200a818298fb5b0f8e8924124c61cc
+2025-05-22 12:10:07 [281472949686656] DEBUG - putStreamCurlHandler(): Network thread for Kinesis Video stream: NAK with upload handle: 2 exited. http status: 0
+2025-05-22 12:10:07 [281472949686656] WARN - putStreamCurlHandler(): [NAK] Stream with streamHandle 187650709385360 uploadHandle 2 has exited without triggering end-of-stream. Service call result: 599
+2025-05-22 12:10:07 [281472949686656] INFO - kinesisVideoStreamTerminated(): Stream 0xaaaad5dff090 terminated upload handle 2 with service call result 599.
+2025-05-22 12:10:07 [281472949686656] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 6
+2025-05-22 12:10:07 [281472949686656] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [599]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:10:07 [281472949686656] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 7
+2025-05-22 12:10:07 [281472949686656] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [599]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:10:07 [281472949686656] DEBUG - streamReadyHandler invoked
+2025-05-22 12:10:07 [281472949686656] DEBUG - defaultStreamStateTransitionHook(): Stream state machine retry count: 8
+2025-05-22 12:10:07 [281472949686656] DEBUG - defaultStreamStateTransitionHook():
+ KinesisVideoStream base result is [599]. Executing KVS retry handler of retry strategy type [1]
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: user-agent -> AWS-SDK-KVS-CPP-CLIENT/3.4.2/1.5.2 GCC/13.3.0 Linux/6.6.52-lts-next-ge0f9e2afd4cf aarch64 CPPSDK
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-stream-name -> NAK
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-producer-start-timestamp -> 1747915807.820
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-fragment-acknowledgment-required -> 1
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: x-amzn-fragment-timecode-type -> ABSOLUTE
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: transfer-encoding -> chunked
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: connection -> keep-alive
+2025-05-22 12:10:07 [281472949686656] INFO - putStreamResultEvent(): Put stream result event. New upload handle 3
+2025-05-22 12:10:07 [281472949686656] WARN - notifyDataAvailable(): [NAK] Failed to un-pause curl with error: 43. Curl object 0xffff7c003190
+2025-05-22 12:10:07 [281472949686656] DEBUG - setRequestHeader(): Appending header to request: host -> s-01b343f5.kinesisvideo.us-west-2.amazonaws.com/putMedia
+2025-05-22 12:10:07 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: X-Amz-Date -> 20250522T121007Z
+2025-05-22 12:10:07 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: content-type -> application/json
+2025-05-22 12:10:07 [281472941232512] DEBUG - setRequestHeader(): Appending header to request: Authorization -> AWS4-HMAC-SHA256 Credential=AKIA5FCD557DW2C4QC5B/20250522/us-west-2/kinesisvideo/aws4_request, SignedHeaders=connection;host;transfer-encoding;user-agent;x-amz-date;x-amzn-fragment-acknowledgment-required;x-amzn-fragment-timecode-type;x-amzn-producer-start-timestamp;x-amzn-stream-name, Signature=646511370f0e37c272dafea782be4e04d4c64d3c13bd3755d1a9b778fd320ca6
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1223.147421] wlan: SCAN COMPLETED: scanned AP count=46
+[ 1223.246080] wlan: sched scan stop
+[ 1223.313592] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+[ 1227.823585] wlan: SCAN COMPLETED: scanned AP count=51
+areButtonsPressed -3
+[ 1227.875084] wlan: wfd0 START SCAN
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+Connected Wi-Fi SSID (via nmcli): Tonga
+[ 1228.149355] CMD_RESP: 0x107 block in pre_asleep!
+[ 1228.154334] CMD_RESP: 0x107 block in pre_asleep!
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 05:08
+alarmOff
+lightOn
+videoOn
+Wifi avaibale streaming directly to the kvs
+videoOn
+Stream already running (PID: 4671)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+^C2025-05-22 12:10:07 [281472941232512] INFO - Stopping kvssink for NAK
+2025-05-22 12:10:26 [281473696026208] INFO - stopKinesisVideoStreamSync(): Synchronously stopping Kinesis Video Stream 0000aaaad5dff090.
+
+root@imx8mpevk:~# [ 1236.349538] wlan: SCAN COMPLETED: scanned AP count=47
