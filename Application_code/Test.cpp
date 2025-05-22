@@ -343,6 +343,23 @@ public:
 
         return success;
     }
+    std::string execCommand(const char *cmd)
+    {
+        std::array<char, 128> buffer;
+        std::string result;
+
+        FILE *pipe = popen(cmd, "r");
+        if (!pipe)
+            return "";
+
+        while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
+        {
+            result += buffer.data();
+        }
+
+        pclose(pipe);
+        return result;
+    }
 
     void update_wifi_ssid_from_nmcli()
     {
@@ -1143,103 +1160,102 @@ public:
         }
     }
 
-void voipOn()
-{
-    printf("voipOn\r\n");
-}
-
-void updateBuzzer()
-{
-    while (true)
+    void voipOn()
     {
-        if (buzzer_running.load())
-        {
-
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-            std::this_thread::sleep_for(std::chrono::microseconds(125));
-        }
-        else
-        {
-            std::this_thread::sleep_for(std::chrono::seconds(1)); // Update every minute
-        }
-    }
-}
-
-void updateNTPTime()
-{
-    while (true)
-    {
-        std::string timeStr = getNTPTime();
-        if (!timeStr.empty())
-        {
-            currentTime = timeStr;
-        }
-        std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
-    }
-}
-
-std::string getNTPTime()
-{
-    const char *ntpServer = "pool.ntp.org";
-    int port = 123;
-    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sockfd < 0)
-    {
-        perror("Socket creation failed");
-        return "";
+        printf("voipOn\r\n");
     }
 
-    struct sockaddr_in serverAddr{};
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(port);
-    inet_pton(AF_INET, "129.6.15.28", &serverAddr.sin_addr); // NIST NTP Server
-
-    uint8_t packet[48] = {0};
-    packet[0] = 0b11100011; // LI, Version, Mode
-
-    if (sendto(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+    void updateBuzzer()
     {
-        perror("Failed to send NTP request");
+        while (true)
+        {
+            if (buzzer_running.load())
+            {
+
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+                std::this_thread::sleep_for(std::chrono::microseconds(125));
+            }
+            else
+            {
+                std::this_thread::sleep_for(std::chrono::seconds(1)); // Update every minute
+            }
+        }
+    }
+
+    void updateNTPTime()
+    {
+        while (true)
+        {
+            std::string timeStr = getNTPTime();
+            if (!timeStr.empty())
+            {
+                currentTime = timeStr;
+            }
+            std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
+        }
+    }
+
+    std::string getNTPTime()
+    {
+        const char *ntpServer = "pool.ntp.org";
+        int port = 123;
+        int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+        if (sockfd < 0)
+        {
+            perror("Socket creation failed");
+            return "";
+        }
+
+        struct sockaddr_in serverAddr{};
+        serverAddr.sin_family = AF_INET;
+        serverAddr.sin_port = htons(port);
+        inet_pton(AF_INET, "129.6.15.28", &serverAddr.sin_addr); // NIST NTP Server
+
+        uint8_t packet[48] = {0};
+        packet[0] = 0b11100011; // LI, Version, Mode
+
+        if (sendto(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+        {
+            perror("Failed to send NTP request");
+            close(sockfd);
+            return "";
+        }
+
+        struct sockaddr_in responseAddr;
+        socklen_t addrLen = sizeof(responseAddr);
+        if (recvfrom(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&responseAddr, &addrLen) < 0)
+        {
+            perror("Failed to receive NTP response");
+            close(sockfd);
+            return "";
+        }
+
         close(sockfd);
-        return "";
+
+        uint32_t timestamp;
+        memcpy(&timestamp, &packet[40], sizeof(timestamp));
+        timestamp = ntohl(timestamp);
+
+        time_t unixTime = timestamp - NTP_TIMESTAMP_DELTA - TZ_DELTA;
+        struct tm *timeInfo = localtime(&unixTime);
+
+        std::ostringstream timeStream;
+        timeStream << (timeInfo->tm_hour < 10 ? "0" : "") << timeInfo->tm_hour << ":"
+                   << (timeInfo->tm_min < 10 ? "0" : "") << timeInfo->tm_min;
+
+        return timeStream.str();
     }
-
-    struct sockaddr_in responseAddr;
-    socklen_t addrLen = sizeof(responseAddr);
-    if (recvfrom(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&responseAddr, &addrLen) < 0)
-    {
-        perror("Failed to receive NTP response");
-        close(sockfd);
-        return "";
-    }
-
-    close(sockfd);
-
-    uint32_t timestamp;
-    memcpy(&timestamp, &packet[40], sizeof(timestamp));
-    timestamp = ntohl(timestamp);
-
-    time_t unixTime = timestamp - NTP_TIMESTAMP_DELTA - TZ_DELTA;
-    struct tm *timeInfo = localtime(&unixTime);
-
-    std::ostringstream timeStream;
-    timeStream << (timeInfo->tm_hour < 10 ? "0" : "") << timeInfo->tm_hour << ":"
-               << (timeInfo->tm_min < 10 ? "0" : "") << timeInfo->tm_min;
-
-    return timeStream.str();
-}
-}
-;
+};
 
 int main()
 {
