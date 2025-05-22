@@ -1142,7 +1142,8 @@ public:
             }
         }
     }
-} void voipOn()
+
+void voipOn()
 {
     printf("voipOn\r\n");
 }
