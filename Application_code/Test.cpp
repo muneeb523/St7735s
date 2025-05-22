@@ -22,6 +22,7 @@
 #include <atomic>
 #include <time.h>
 #include <curl/curl.h>
+#include <array>
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
@@ -147,7 +148,11 @@ std::atomic<bool> activityDetected{false};
 std::thread inactivityThread;
 std::thread Stream_Wifi;
 std::thread ReadGPs;
-
+bool notifyStartSent = false;
+time_t videoStart_check = 0;
+time_t videoStart_check1 = 0;
+time_t videoStopTime = 0;
+bool notifyStopSent = false;
 std::thread checkwifi;
 class DisplayExample
 {
@@ -202,15 +207,22 @@ public:
 
     bool notifyStartStream()
     {
-        CURL *curl = curl_easy_init();
-        CURLcode res;
+        const int max_retries = 5;
+        int attempt = 0;
         bool success = false;
 
         std::string url = "https://api.rolex.mytimeli.com/stream/Simulator_Nick/start";
         std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
 
-        if (curl)
+        while (attempt < max_retries && !success)
         {
+            CURL *curl = curl_easy_init();
+            if (!curl)
+            {
+                std::cerr << "Failed to initialize CURL." << std::endl;
+                break;
+            }
+
             std::string response_string;
             struct curl_slist *headers = nullptr;
             headers = curl_slist_append(headers, "Content-Type: application/json");
@@ -222,11 +234,12 @@ public:
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
 
-            res = curl_easy_perform(curl);
+            CURLcode res = curl_easy_perform(curl);
 
             if (res != CURLE_OK)
             {
-                std::cerr << "Start stream request failed: " << curl_easy_strerror(res) << std::endl;
+                std::cerr << "Start stream request failed on attempt " << (attempt + 1)
+                          << ": " << curl_easy_strerror(res) << std::endl;
             }
             else
             {
@@ -234,6 +247,7 @@ public:
                 curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
                 std::cout << "HTTP Status: " << http_code << std::endl;
                 std::cout << "Response: " << response_string << std::endl;
+
                 if (http_code == 200)
                 {
                     std::cout << "Start stream notification sent successfully." << std::endl;
@@ -241,27 +255,43 @@ public:
                 }
                 else
                 {
-                    std::cerr << "Start stream failed." << std::endl;
+                    std::cerr << "Start stream failed with HTTP status " << http_code << " on attempt "
+                              << (attempt + 1) << "." << std::endl;
                 }
             }
 
             curl_slist_free_all(headers);
             curl_easy_cleanup(curl);
+
+            if (!success)
+            {
+                attempt++;
+                if (attempt < max_retries)
+                {
+                    std::this_thread::sleep_for(std::chrono::seconds(1)); // Small delay before retry
+                }
+            }
         }
 
         return success;
     }
-
     bool notifyStopStream()
     {
-        CURL *curl = curl_easy_init();
-        CURLcode res;
+        const int max_retries = 5;
+        int attempt = 0;
         bool success = false;
 
         std::string url = "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
 
-        if (curl)
+        while (attempt < max_retries && !success)
         {
+            CURL *curl = curl_easy_init();
+            if (!curl)
+            {
+                std::cerr << "Failed to initialize CURL." << std::endl;
+                break;
+            }
+
             std::string response_string;
             struct curl_slist *headers = nullptr;
             headers = curl_slist_append(headers, "Content-Type: application/json");
@@ -272,11 +302,12 @@ public:
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
 
-            res = curl_easy_perform(curl);
+            CURLcode res = curl_easy_perform(curl);
 
             if (res != CURLE_OK)
             {
-                std::cerr << "Stop stream request failed: " << curl_easy_strerror(res) << std::endl;
+                std::cerr << "Stop stream request failed on attempt " << (attempt + 1)
+                          << ": " << curl_easy_strerror(res) << std::endl;
             }
             else
             {
@@ -284,6 +315,7 @@ public:
                 curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
                 std::cout << "HTTP Status: " << http_code << std::endl;
                 std::cout << "Response: " << response_string << std::endl;
+
                 if (http_code == 200)
                 {
                     std::cout << "Stop stream notification sent successfully." << std::endl;
@@ -291,33 +323,25 @@ public:
                 }
                 else
                 {
-                    std::cerr << "Stop stream failed." << std::endl;
+                    std::cerr << "Stop stream failed with HTTP status " << http_code
+                              << " on attempt " << (attempt + 1) << "." << std::endl;
                 }
             }
 
             curl_slist_free_all(headers);
             curl_easy_cleanup(curl);
+
+            if (!success)
+            {
+                attempt++;
+                if (attempt < max_retries)
+                {
+                    std::this_thread::sleep_for(std::chrono::seconds(1)); // Small delay before retry
+                }
+            }
         }
 
         return success;
-    }
-
-    std::string execCommand(const char *cmd)
-    {
-        std::array<char, 128> buffer;
-        std::string result;
-
-        FILE *pipe = popen(cmd, "r");
-        if (!pipe)
-            return "";
-
-        while (fgets(buffer.data(), buffer.size(), pipe) != nullptr)
-        {
-            result += buffer.data();
-        }
-
-        pclose(pipe);
-        return result;
     }
 
     void update_wifi_ssid_from_nmcli()
@@ -880,9 +904,9 @@ public:
 
     void emergency_stream_on()
     {
-
         video_run.store(true);
         printf("videoOn\r\n");
+
         if (!videoRunning)
         {
             if (gst_pid == -1)
@@ -890,15 +914,14 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
-                    
                     videoRunning = 1;
-                    videoStart = time(NULL);
-                    // Child process: replace this process with the streaming app
-                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", NULL, environ);
-                    notifyStartStream();
-                    perror("execl failed");
-                    _exit(1); // In case execl fails
+                    videoStart_check1 = time(NULL);
+                    notifyStartSent = false; // reset for delayed notify
 
+                    // Child process: replace this process with the streaming app
+                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", nullptr, environ);
+                    perror("execl failed");
+                    _exit(1); // In case exec fails
                 }
                 else
                 {
@@ -908,6 +931,23 @@ public:
             else
             {
                 printf("Stream already running (PID: %d)\n", gst_pid);
+            }
+        }
+
+        // After stream has started, wait for 10 seconds before notifying
+        if (videoRunning && !notifyStartSent && videoStart_check1 != 0)
+        {
+            time_t now = time(NULL);
+            if (difftime(now, videoStart_check1) >= 10)
+            {
+                if (notifyStartStream())
+                {
+                    notifyStartSent = true;
+                }
+                else
+                {
+                    printf("notifyStartStream failed — will retry on next call\n");
+                }
             }
         }
     }
@@ -928,14 +968,12 @@ public:
     void videoOff()
     {
         current_state.camera_recording = false;
-
         printf("videoOff\r\n");
+
         if (gst_pid != -1)
         {
-
             printf("Stopping Streaming (PID: %d)\n", gst_pid);
 
-            // Send SIGTERM to gracefully terminate the process
             if (kill(gst_pid, SIGTERM) == 0)
             {
                 printf("Sent SIGTERM to process %d\n", gst_pid);
@@ -945,11 +983,10 @@ public:
                 perror("Failed to send SIGTERM");
             }
 
-            // Wait for up to 3 seconds for the process to terminate
             int status;
             pid_t result;
             int wait_time = 0;
-            const int max_wait_time = 3; // seconds
+            const int max_wait_time = 3;
 
             do
             {
@@ -961,53 +998,48 @@ public:
                 }
             } while (result == 0 && wait_time < max_wait_time);
 
-            if (result == gst_pid)
+            if (result == gst_pid || result == 0)
             {
-                if (WIFEXITED(status))
+                // Record stop time
+                videoStopTime = time(NULL);
+                notifyStopSent = false;
+
+                // Reap if still running
+                if (result == 0)
                 {
-                    notifyStopStream();
-                    printf("Flashlight stopped successfully with exit code %d\n", WEXITSTATUS(status));
+                    printf("Force killing unresponsive process...\n");
+                    if (kill(gst_pid, SIGKILL) == 0)
+                    {
+                        waitpid(gst_pid, &status, 0);
+                        printf("Sent SIGKILL to process %d\n", gst_pid);
+                    }
+                    else
+                    {
+                        perror("Failed to send SIGKILL");
+                    }
                 }
-                else if (WIFSIGNALED(status))
-                {
-                    printf("Flashlight process terminated by signal %d\n", WTERMSIG(status));
-                }
-                else
-                {
-                    printf("Flashlight process exited abnormally\n");
-                }
-            }
-            else if (result == 0)
-            {
-                // Still running after wait time: force kill
-                printf("Process did not exit in time, force killing...\n");
-                if (kill(gst_pid, SIGKILL) == 0)
-                {
-                    printf("Sent SIGKILL to process %d\n", gst_pid);
-                    waitpid(gst_pid, &status, 0); // Ensure it's reaped
-                    notifyStopStream();
-                }
-                else
-                {
-                    perror("Failed to send SIGKILL");
-                }
+
+                gst_pid = -1;
+                videoRunning = 0;
+                video_run.store(false);
+                videoStart = 0;
+                sprintf(videoTime, "%02d:%02d", 0, 0);
             }
             else
             {
                 perror("Failed to wait for the process");
             }
-
-            // Reset state
-
-            gst_pid = -1;
-            videoRunning = 0;
-            video_run.store(false);
-            videoStart = 0;
-            sprintf(videoTime, "%02d:%02d", 0, 0);
         }
-        else
+
+        // Handle deferred notifyStopStream (after 10s)
+        if (!videoRunning && !notifyStopSent && videoStopTime != 0)
         {
-            printf("No stream running to stop\n");
+            time_t now = time(NULL);
+            if (difftime(now, videoStopTime) >= 10)
+            {
+                notifyStopStream(); // with retries
+                notifyStopSent = true;
+            }
         }
     }
 
@@ -1057,14 +1089,14 @@ public:
         video_run.store(true);
 
         printf("videoOn\r\n");
+
         if (!videoRunning)
         {
             std::string netType = getActiveNetworkType();
 
             if (netType == "wifi")
             {
-                printf("Wifi avaibale streaming directly to the kvs\n");
-
+                printf("Wifi available, streaming directly to the kvs\n");
                 emergency_stream_on();
                 return;
             }
@@ -1074,13 +1106,13 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
-                    notifyStartStream();
                     videoRunning = 1;
-                    videoStart = time(NULL);
+                    videoStart_check = time(NULL);
+                    notifyStartSent = false; // Reset the flag
                     // Child process: replace this process with the streaming app
                     execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr, environ);
                     perror("execl failed");
-                    _exit(1); // In case execl fails
+                    _exit(1); // In case exec fails
                 }
                 else
                 {
@@ -1092,103 +1124,121 @@ public:
                 printf("Stream already running (PID: %d)\n", gst_pid);
             }
         }
-    }
-    void voipOn()
-    {
-        printf("voipOn\r\n");
-    }
 
-    void updateBuzzer()
-    {
-        while (true)
+        // Outside the start condition: check if it's time to notify
+        if (videoRunning && !notifyStartSent && videoStart_check != 0)
         {
-            if (buzzer_running.load())
+            time_t now = time(NULL);
+            if (difftime(now, videoStart_check) >= 10)
             {
-
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
-                setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
-                setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
-                std::this_thread::sleep_for(std::chrono::microseconds(125));
-            }
-            else
-            {
-                std::this_thread::sleep_for(std::chrono::seconds(1)); // Update every minute
+                if (notifyStartStream())
+                {
+                    notifyStartSent = true;
+                }
+                else
+                {
+                    printf("notifyStartStream failed — will retry on next call\n");
+                }
             }
         }
     }
+} void voipOn()
+{
+    printf("voipOn\r\n");
+}
 
-    void updateNTPTime()
+void updateBuzzer()
+{
+    while (true)
     {
-        while (true)
+        if (buzzer_running.load())
         {
-            std::string timeStr = getNTPTime();
-            if (!timeStr.empty())
-            {
-                currentTime = timeStr;
-            }
-            std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
+
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_ACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_ACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+            setLineValue(testGpioReq.ba_req, GPIO_LINE_BA, GPIOD_LINE_VALUE_INACTIVE);
+            setLineValue(testGpioReq.bb_req, GPIO_LINE_BB, GPIOD_LINE_VALUE_INACTIVE);
+            std::this_thread::sleep_for(std::chrono::microseconds(125));
+        }
+        else
+        {
+            std::this_thread::sleep_for(std::chrono::seconds(1)); // Update every minute
         }
     }
+}
 
-    std::string getNTPTime()
+void updateNTPTime()
+{
+    while (true)
     {
-        const char *ntpServer = "pool.ntp.org";
-        int port = 123;
-        int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-        if (sockfd < 0)
+        std::string timeStr = getNTPTime();
+        if (!timeStr.empty())
         {
-            perror("Socket creation failed");
-            return "";
+            currentTime = timeStr;
         }
+        std::this_thread::sleep_for(std::chrono::minutes(1)); // Update every minute
+    }
+}
 
-        struct sockaddr_in serverAddr{};
-        serverAddr.sin_family = AF_INET;
-        serverAddr.sin_port = htons(port);
-        inet_pton(AF_INET, "129.6.15.28", &serverAddr.sin_addr); // NIST NTP Server
+std::string getNTPTime()
+{
+    const char *ntpServer = "pool.ntp.org";
+    int port = 123;
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0)
+    {
+        perror("Socket creation failed");
+        return "";
+    }
 
-        uint8_t packet[48] = {0};
-        packet[0] = 0b11100011; // LI, Version, Mode
+    struct sockaddr_in serverAddr{};
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(port);
+    inet_pton(AF_INET, "129.6.15.28", &serverAddr.sin_addr); // NIST NTP Server
 
-        if (sendto(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
-        {
-            perror("Failed to send NTP request");
-            close(sockfd);
-            return "";
-        }
+    uint8_t packet[48] = {0};
+    packet[0] = 0b11100011; // LI, Version, Mode
 
-        struct sockaddr_in responseAddr;
-        socklen_t addrLen = sizeof(responseAddr);
-        if (recvfrom(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&responseAddr, &addrLen) < 0)
-        {
-            perror("Failed to receive NTP response");
-            close(sockfd);
-            return "";
-        }
-
+    if (sendto(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
+    {
+        perror("Failed to send NTP request");
         close(sockfd);
-
-        uint32_t timestamp;
-        memcpy(&timestamp, &packet[40], sizeof(timestamp));
-        timestamp = ntohl(timestamp);
-
-        time_t unixTime = timestamp - NTP_TIMESTAMP_DELTA - TZ_DELTA;
-        struct tm *timeInfo = localtime(&unixTime);
-
-        std::ostringstream timeStream;
-        timeStream << (timeInfo->tm_hour < 10 ? "0" : "") << timeInfo->tm_hour << ":"
-                   << (timeInfo->tm_min < 10 ? "0" : "") << timeInfo->tm_min;
-
-        return timeStream.str();
+        return "";
     }
-};
+
+    struct sockaddr_in responseAddr;
+    socklen_t addrLen = sizeof(responseAddr);
+    if (recvfrom(sockfd, packet, sizeof(packet), 0, (struct sockaddr *)&responseAddr, &addrLen) < 0)
+    {
+        perror("Failed to receive NTP response");
+        close(sockfd);
+        return "";
+    }
+
+    close(sockfd);
+
+    uint32_t timestamp;
+    memcpy(&timestamp, &packet[40], sizeof(timestamp));
+    timestamp = ntohl(timestamp);
+
+    time_t unixTime = timestamp - NTP_TIMESTAMP_DELTA - TZ_DELTA;
+    struct tm *timeInfo = localtime(&unixTime);
+
+    std::ostringstream timeStream;
+    timeStream << (timeInfo->tm_hour < 10 ? "0" : "") << timeInfo->tm_hour << ":"
+               << (timeInfo->tm_min < 10 ? "0" : "") << timeInfo->tm_min;
+
+    return timeStream.str();
+}
+}
+;
 
 int main()
 {
