@@ -1,693 +1,140 @@
-ff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7078.610317] wlan: SCAN COMPLETED: scanned AP count=43
-[ 7078.643514] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7082.417647] wlan: SCAN COMPLETED: scanned AP count=47
-[ 7082.452629] wlan: uap0 START SCAN
-HTTP Status: 500
-Response: {"message":"Internal Server Error"}
-Start stream failed with HTTP status 500 on attempt 2.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7086.224072] wlan: SCAN COMPLETED: scanned AP count=36
-[ 7086.278818] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7093.438465] wlan: SCAN COMPLETED: scanned AP count=30
-[ 7093.471499] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7097.139294] wlan: SCAN COMPLETED: scanned AP count=41
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7105.993429] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-HTTP Status: 500
-Response: {"message":"Internal Server Error"}
-Start stream failed with HTTP status 500 on attempt 3.
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7111.195068] wlan: SCAN COMPLETED: scanned AP count=45
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7125.988174] wlan: uap0 START SCAN
-Update json
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-Button Released
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7131.267650] wlan: SCAN COMPLETED: scanned AP count=45
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"message":"Internal Server Error"}
-Start stream failed with HTTP status 500 on attempt 4.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[ 7135.216598] wlan: mlan0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-Successfully opened GPS I2C address
-Latitude: 42.197816, Longitude: -87.812842
-Closed GPS I2C file descriptor
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-button (GPIO): 1, event: 1
-areButtonsPressed 1
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-Stopping Streaming (PID: 27060)
-Sent SIGTERM to process 27060
-voipOff
-Found device path: /dev/input/event1
-[ 7143.412250] wlan: SCAN COMPLETED: scanned AP count=51
-[ 7143.436615] wlan: wfd0 START SCAN
-Connected Wi-Fi SSID (via nmcli): Tonga
-Button Released
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[ 7150.635576] wlan: SCAN COMPLETED: scanned AP count=42
-[ 7150.672235] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"message":"Internal Server Error"}
-Start stream failed with HTTP status 500 on attempt 5.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 1.
-[ 7157.744271] wlan: SCAN COMPLETED: scanned AP count=31
-[ 7157.753044] wlan: sched scan start
-[ 7157.785858] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-[ 7161.453945] wlan: SCAN COMPLETED: scanned AP count=27
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 2.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 3.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 4.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 5.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 1.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 2.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 3.
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 06:04
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-HTTP Status: 500
-Response: {"code":"internal_error","message":"Failed to stop stream"}
-Stop stream failed with HTTP status 500 on attempt 4.
-^C
+#!/bin/bash
+set -euo pipefail
+
+# Desired metrics
+MLAN_METRIC=5
+ETH_METRIC=100
+
+# Network status file
+STATUS_FILE="/run/net_status.flag"
+mkdir -p "$(dirname "$STATUS_FILE")"
+
+# Desired DNS configuration
+DNS_ENTRIES=$(cat <<EOF
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+nameserver 2001:4860:4860::8888
+nameserver 2001:4860:4860::8844
+EOF
+)
+
+# Get NetworkManager connection name for an interface
+get_conn_name() {
+    nmcli -t -f NAME,DEVICE connection show | grep ":$1$" | cut -d: -f1 || true
+}
+
+# Set metrics only if needed
+check_and_set_metric() {
+    local iface=$1
+    local target_metric=$2
+
+    local conn_name
+    conn_name=$(get_conn_name "$iface")
+    if [[ -z "$conn_name" ]]; then
+        echo "No connection found for $iface. Skipping metric setup."
+        return 1
+    fi
+
+    local current_ipv4 current_ipv6
+    current_ipv4=$(nmcli -g ipv4.route-metric connection show "$conn_name" || echo "")
+    current_ipv6=$(nmcli -g ipv6.route-metric connection show "$conn_name" || echo "")
+
+    if [[ "$current_ipv4" != "$target_metric" || "$current_ipv6" != "$target_metric" ]]; then
+        echo "Setting metrics for $iface ($conn_name): $target_metric"
+        nmcli connection modify "$conn_name" ipv4.route-metric "$target_metric"
+        nmcli connection modify "$conn_name" ipv6.route-metric "$target_metric"
+        nmcli connection down "$conn_name" || true
+        nmcli connection up "$conn_name"
+    else
+        echo "Metrics already correct for $iface ($target_metric)"
+    fi
+    return 0
+}
+
+# DNS configuration
+check_and_set_dns() {
+    local resolv_file="/etc/resolv.conf"
+    if echo "$DNS_ENTRIES" | cmp -s - "$resolv_file"; then
+        echo "DNS entries are already correct."
+    else
+        echo "Updating DNS entries in $resolv_file..."
+        echo "$DNS_ENTRIES" > "$resolv_file"
+    fi
+}
+
+# Camera configuration
+configure_camera() {
+    echo "Configuring MIPI CSI camera format..."
+    media-ctl -d /dev/media0 --set-v4l2 '"mxc-mipi-csi2.1":4[fmt:SRGGB10_1X10/1920x1080]' || echo "Camera config failed"
+}
+
+# Clean up duplicate default routes
+cleanup_routes() {
+    echo "Cleaning up duplicate or invalid routes..."
+    ip route | grep -E '^default .* dev eth0 .* metric 10' | while read -r line; do
+        echo "Removing: $line"
+        ip route del $line || true
+    done
+}
+
+# Ensure fallback via Ethernet if no default route
+ensure_fallback_route() {
+    local has_default
+    has_default=$(ip route | awk '/^default/ {print $1; exit}')
+
+    if [[ -z "$has_default" ]]; then
+        echo "No default route found. Bringing up Ethernet as fallback..."
+
+        local eth_conn
+        eth_conn=$(get_conn_name "eth0")
+        if [[ -n "$eth_conn" ]]; then
+            nmcli connection up "$eth_conn" || echo "Failed to bring up Ethernet connection."
+        fi
+
+        # Wait and recheck
+        sleep 2
+        has_default=$(ip route | awk '/^default/ {print $1; exit}')
+        if [[ -z "$has_default" ]]; then
+            echo "Warning: Still no default route after Ethernet fallback attempt!"
+        else
+            echo "Default route restored via Ethernet."
+        fi
+    else
+        echo "Default route exists. No fallback needed."
+    fi
+}
+
+# Update status file with current active route
+update_status_file() {
+    local default_iface
+    default_iface=$(ip route | awk '/^default/ {print $5; exit}')
+    case "$default_iface" in
+        mlan0) echo "wifi" > "$STATUS_FILE" ;;
+        eth0)  echo "lte" > "$STATUS_FILE" ;;
+        *)     echo "unknown" > "$STATUS_FILE" ;;
+    esac
+    echo "Current default route: $default_iface → $(cat "$STATUS_FILE")"
+}
+
+# === MAIN EXECUTION ===
+
+echo "[INFO] Starting network metric and route configuration..."
+
+mlan_ok=false
+if check_and_set_metric "mlan0" "$MLAN_METRIC"; then
+    mlan_ok=true
+fi
+
+check_and_set_metric "eth0" "$ETH_METRIC"
+check_and_set_dns
+configure_camera
+cleanup_routes
+
+# Only fallback if Wi-Fi isn't up or didn't get set
+if [[ "$mlan_ok" = false ]]; then
+    ensure_fallback_route
+fi
+
+update_status_file
+
+echo "[INFO] Network configuration script complete."

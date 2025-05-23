@@ -231,8 +231,8 @@ public:
         bool success = false;
 
         std::string url = (action == StreamAction::Start)
-                              ? "https://api.rolex.mytimeli.com/stream/Simulator_Nick/start"
-                              : "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
+                              ? "https://api.rolex.mytimeli.com/stream/TF004/start"
+                              : "https://api.rolex.mytimeli.com/stream/TF004/stop";
 
         std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
 
@@ -424,7 +424,7 @@ public:
         if (files.empty())
             return false;
 
-        std::string cmd = "/usr/bin/Flashlight NAK h264";
+        std::string cmd = "/usr/bin/Flashlight TF004 h264";
         for (const auto &f : files)
         {
             cmd += " " + f; // Add each file path to the command
@@ -932,7 +932,7 @@ public:
                 if (gst_pid == 0)
                 {
                     // Child process: replace this process with the streaming app
-                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", nullptr, environ);
+                    execle("/usr/bin/Flashlight", "Flashlight", "TF004", "h264", nullptr, environ);
                     perror("execl failed");
                     _exit(1); // In case exec fails
                 }
@@ -1146,7 +1146,7 @@ public:
                 if (gst_pid == 0)
                 {
                     // Child process: replace this process with the streaming app
-                    execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr, environ);
+                    execle("/usr/bin/Flashlight", "Flashlight", "TF004", "h264", "local_storage", nullptr, environ);
                     perror("execl failed");
                     _exit(1); // In case exec fails
                 }
