@@ -203,7 +203,7 @@ public:
         checkwifi = std::thread(&DisplayExample::update_wifi_ssid_from_nmcli, this);
         checkwifi.detach();
 
-        std::thread notifier(streamNotifierLoop);
+        std::thread notifier(&DisplayExample::streamNotifierLoop, this);
         notifier.detach();
 
         std::cout << "NTP" << std::endl;
@@ -214,6 +214,12 @@ public:
             processMode();
             waitForButtonPress();
         }
+    }
+    size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *out)
+    {
+        size_t totalSize = size * nmemb;
+        out->append((char *)contents, totalSize);
+        return totalSize;
     }
 
     void notifyStream(StreamAction action)
@@ -1051,7 +1057,7 @@ public:
                 {
                     notifyStopSent = true;
                     streamStopSuccess.store(false);
-                    videoStopTime=0;
+                    videoStopTime = 0;
                     return;
                 }
                 else
