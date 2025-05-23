@@ -207,7 +207,7 @@ public:
 
     bool notifyStartStream()
     {
-        const int max_retries = 5;
+        static int max_retries = 5;
         int attempt = 0;
         bool success = false;
 
@@ -954,9 +954,12 @@ public:
         // After stream has started, wait for 10 seconds before notifying
         if (videoRunning && !notifyStartSent && videoStart_check1 != 0)
         {
+            printf("Inside here for noitfying\n");
+
             time_t now = time(NULL);
             if (difftime(now, videoStart_check1) >= 10)
             {
+                printf("time reached going to notify\n");
                 if (notifyStartStream())
                 {
                     notifyStartSent = true;
