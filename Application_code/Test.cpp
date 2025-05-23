@@ -167,6 +167,13 @@ time_t videoStart_check = 0;
 time_t videoStopTime = 0;
 bool notifyStopSent = false;
 std::thread checkwifi;
+size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+    size_t totalSize = size * nmemb;
+    std::string *out = static_cast<std::string *>(userp);
+    out->append(static_cast<char *>(contents), totalSize);
+    return totalSize;
+}
 class DisplayExample
 {
 public:
@@ -215,13 +222,7 @@ public:
             waitForButtonPress();
         }
     }
-    size_t DisplayExample::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-    {
-        size_t totalSize = size * nmemb;
-        std::string *out = static_cast<std::string *>(userp);
-        out->append(static_cast<char *>(contents), totalSize);
-        return totalSize;
-    }
+
     void notifyStream(StreamAction action)
     {
         const int max_retries = 5;
@@ -250,7 +251,7 @@ public:
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
             curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &DisplayExample::WriteCallback);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
             if (action == StreamAction::Start)
             {
