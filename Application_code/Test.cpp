@@ -235,10 +235,10 @@ public:
                               : "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
 
         std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
-        maxtriesreach.store(max_retries);
 
         while (attempt < max_retries && !success)
         {
+            maxtriesreach.store(max_retries);
 
             CURL *curl = curl_easy_init();
             if (!curl)
