@@ -22,6 +22,8 @@
 #include <atomic>
 #include <time.h>
 #include <curl/curl.h>
+#include <condition_variable>
+#include <optional>
 #include <array>
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
@@ -55,6 +57,11 @@ SystemState currentState = IDLE;
 #define GPIO_LINE_FLASH 7
 #define GPIO_LINE_SELF_KILL 20
 #define GPIO_LINE_GPS_PWR_EN 29
+enum class StreamAction
+{
+    Start,
+    Stop
+};
 
 using json = nlohmann::json;
 extern char **environ;
@@ -67,6 +74,11 @@ std::atomic<bool> buzzer_running = false;
 std::atomic<bool> video_run = false;
 std::atomic<int> buzzer_frequency_hz;
 std::mutex buzzer_mutex;
+std::mutex actionMutex;
+std::condition_variable actionCV;
+std::optional<StreamAction> pendingAction;
+std::atomic<bool> streamStartSuccess{false};
+std::atomic<bool> streamStopSuccess{false};
 namespace fs = std::filesystem;
 std::string getActiveNetworkType(); // Assume already implemented
 volatile bool local_kvs_streaming = false;
@@ -191,6 +203,9 @@ public:
         checkwifi = std::thread(&DisplayExample::update_wifi_ssid_from_nmcli, this);
         checkwifi.detach();
 
+        std::thread notifier(streamNotifierLoop);
+        notifier.detach();
+
         std::cout << "NTP" << std::endl;
 
         while (true)
@@ -200,19 +215,17 @@ public:
             waitForButtonPress();
         }
     }
-    static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-    {
-        ((std::string *)userp)->append((char *)contents, size * nmemb);
-        return size * nmemb;
-    }
 
-    bool notifyStartStream()
+    void notifyStream(StreamAction action)
     {
-        static int max_retries = 5;
+        const int max_retries = 5;
         int attempt = 0;
         bool success = false;
 
-        std::string url = "https://api.rolex.mytimeli.com/stream/Simulator_Nick/start";
+        std::string url = (action == StreamAction::Start)
+                              ? "https://api.rolex.mytimeli.com/stream/Simulator_Nick/start"
+                              : "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
+
         std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
 
         while (attempt < max_retries && !success)
@@ -231,15 +244,18 @@ public:
             curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
             curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+            if (action == StreamAction::Start)
+            {
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
+            }
 
             CURLcode res = curl_easy_perform(curl);
-
             if (res != CURLE_OK)
             {
-                std::cerr << "Start stream request failed on attempt " << (attempt + 1)
+                std::cerr << ((action == StreamAction::Start) ? "Start" : "Stop")
+                          << " stream request failed on attempt " << (attempt + 1)
                           << ": " << curl_easy_strerror(res) << std::endl;
             }
             else
@@ -251,80 +267,14 @@ public:
 
                 if (http_code == 200)
                 {
-                    std::cout << "Start stream notification sent successfully." << std::endl;
+                    std::cout << ((action == StreamAction::Start) ? "Start" : "Stop")
+                              << " stream notification sent successfully." << std::endl;
                     success = true;
                 }
                 else
                 {
-                    std::cerr << "Start stream failed with HTTP status " << http_code << " on attempt "
-                              << (attempt + 1) << "." << std::endl;
-                }
-            }
-
-            curl_slist_free_all(headers);
-            curl_easy_cleanup(curl);
-
-            if (!success)
-            {
-                attempt++;
-                if (attempt < max_retries)
-                {
-                    std::this_thread::sleep_for(std::chrono::seconds(1)); // Small delay before retry
-                }
-            }
-        }
-
-        return success;
-    }
-    bool notifyStopStream()
-    {
-        const int max_retries = 5;
-        int attempt = 0;
-        bool success = false;
-
-        std::string url = "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
-
-        while (attempt < max_retries && !success)
-        {
-            CURL *curl = curl_easy_init();
-            if (!curl)
-            {
-                std::cerr << "Failed to initialize CURL." << std::endl;
-                break;
-            }
-
-            std::string response_string;
-            struct curl_slist *headers = nullptr;
-            headers = curl_slist_append(headers, "Content-Type: application/json");
-
-            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
-
-            CURLcode res = curl_easy_perform(curl);
-
-            if (res != CURLE_OK)
-            {
-                std::cerr << "Stop stream request failed on attempt " << (attempt + 1)
-                          << ": " << curl_easy_strerror(res) << std::endl;
-            }
-            else
-            {
-                long http_code = 0;
-                curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-                std::cout << "HTTP Status: " << http_code << std::endl;
-                std::cout << "Response: " << response_string << std::endl;
-
-                if (http_code == 200)
-                {
-                    std::cout << "Stop stream notification sent successfully." << std::endl;
-                    success = true;
-                }
-                else
-                {
-                    std::cerr << "Stop stream failed with HTTP status " << http_code
+                    std::cerr << ((action == StreamAction::Start) ? "Start" : "Stop")
+                              << " stream failed with HTTP status " << http_code
                               << " on attempt " << (attempt + 1) << "." << std::endl;
                 }
             }
@@ -337,13 +287,43 @@ public:
                 attempt++;
                 if (attempt < max_retries)
                 {
-                    std::this_thread::sleep_for(std::chrono::seconds(1)); // Small delay before retry
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
                 }
             }
         }
 
-        return success;
+        if (action == StreamAction::Start)
+            streamStartSuccess.store(success);
+        else
+            streamStopSuccess.store(success);
     }
+
+    // === Notification thread loop ===
+    void streamNotifierLoop()
+    {
+        while (true)
+        {
+            std::unique_lock<std::mutex> lock(actionMutex);
+            actionCV.wait(lock, []
+                          { return pendingAction.has_value(); });
+
+            StreamAction action = *pendingAction;
+            pendingAction.reset(); // clear the action so we don't re-run it
+
+            lock.unlock();
+
+            notifyStream(action);
+        }
+    }
+
+    // === Main thread signals new action ===
+    void signalStreamAction(StreamAction action)
+    {
+        std::lock_guard<std::mutex> lock(actionMutex);
+        pendingAction = action;
+        actionCV.notify_one();
+    }
+
     std::string execCommand(const char *cmd)
     {
         std::array<char, 128> buffer;
@@ -966,14 +946,17 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStart_check1) >= 10)
             {
-
-                if (notifyStartStream())
+                if (streamStartSuccess.load())
                 {
+                    std::cout << "Start notification successful.\n";
                     notifyStartSent = true;
+                    streamStartSuccess.store(false);
+                    videoStart_check1 = 0;
+                    return;
                 }
                 else
                 {
-                    printf("notifyStartStream failed — will retry on next call\n");
+                    signalStreamAction(StreamAction::Start);
                 }
             }
         }
@@ -1064,8 +1047,17 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStopTime) >= 10)
             {
-                notifyStopStream(); // with retries
-                notifyStopSent = true;
+                if (streamStopSuccess.load())
+                {
+                    notifyStopSent = true;
+                    streamStopSuccess.store(false);
+                    videoStopTime=0;
+                    return;
+                }
+                else
+                {
+                    signalStreamAction(StreamAction::Stop);
+                }
             }
         }
     }
@@ -1148,13 +1140,17 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStart_check) >= 10)
             {
-                if (notifyStartStream())
+                if (streamStartSuccess.load())
                 {
+                    std::cout << "Start notification successful.\n";
                     notifyStartSent = true;
+                    streamStartSuccess.store(false);
+                    videoStart_check = 0;
+                    return;
                 }
                 else
                 {
-                    printf("notifyStartStream failed — will retry on next call\n");
+                    signalStreamAction(StreamAction::Start);
                 }
             }
         }

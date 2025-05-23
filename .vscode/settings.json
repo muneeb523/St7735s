@@ -119,6 +119,7 @@
     "appgpio.h": "c",
     "condition_variable": "cpp",
     "mutex": "cpp",
-    "codecvt": "cpp"
+    "codecvt": "cpp",
+    "cstdarg": "cpp"
   }
 }
