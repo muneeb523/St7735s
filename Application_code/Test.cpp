@@ -849,7 +849,15 @@ public:
             {
                 alarmOff();
                 lightOn();
-                videoOn();
+                std::string netType = getActiveNetworkType();
+                if (netType == "wifi")
+                {
+                    emergency_stream_on();
+                }
+                else
+                {
+                    videoOn();
+                }
                 voipOff();
             }
             //< Below modes can be used in case config changes through the shadow update and we can switch the mode accordingly
@@ -922,7 +930,8 @@ public:
     void emergency_stream_on()
     {
         video_run.store(true);
-        printf("videoOn\r\n");
+
+        printf("Stream On\r\n");
 
         if (!videoRunning)
         {
@@ -950,7 +959,10 @@ public:
                 printf("Stream already running (PID: %d)\n", gst_pid);
             }
         }
-
+        printf("videoRunning = %d, notifyStartSent = %s, videoStart_check1 = %d\n",
+               videoRunning,
+               notifyStartSent ? "true" : "false",
+               videoStart_check1);
         // After stream has started, wait for 10 seconds before notifying
         if (videoRunning && !notifyStartSent && videoStart_check1 != 0)
         {
@@ -1112,15 +1124,6 @@ public:
 
         if (!videoRunning)
         {
-            std::string netType = getActiveNetworkType();
-
-            if (netType == "wifi")
-            {
-                printf("Wifi available, streaming directly to the kvs\n");
-                emergency_stream_on();
-                return;
-            }
-
             if (gst_pid == -1)
             {
                 gst_pid = fork();
@@ -1144,6 +1147,10 @@ public:
                 printf("Stream already running (PID: %d)\n", gst_pid);
             }
         }
+              printf("videoRunning = %d, notifyStartSent = %s, videoStart_check = %d\n",
+               videoRunning,
+               notifyStartSent ? "true" : "false",
+               videoStart_check);
 
         // Outside the start condition: check if it's time to notify
         if (videoRunning && !notifyStartSent && videoStart_check != 0)

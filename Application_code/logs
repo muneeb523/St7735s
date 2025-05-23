@@ -1,28 +1,316 @@
-MACHINE ??= 'imx8mp-var-dart'
-DISTRO ?= 'fsl-imx-xwayland'
-EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
-USER_CLASSES ?= "buildstats"
-PATCHRESOLVE = "noop"
-BB_DISKMON_DIRS ??= "\
-    STOPTASKS,${TMPDIR},1G,100K \
-    STOPTASKS,${DL_DIR},1G,100K \
-    STOPTASKS,${SSTATE_DIR},1G,100K \
-    STOPTASKS,/tmp,100M,100K \
-    HALT,${TMPDIR},100M,1K \
-    HALT,${DL_DIR},100M,1K \
-    HALT,${SSTATE_DIR},100M,1K \
-    HALT,/tmp,10M,1K"
-PACKAGECONFIG:append:pn-qemu-system-native = " sdl"
-CONF_VERSION = "2"
 
-DL_DIR ?= "${BSPDIR}/downloads/"
-ACCEPT_FSL_EULA = "1"
-
-PACKAGE_CLASSES = "package_deb"
-
-# Enable buildhistory
-INHERIT += "buildhistory"
-BUILDHISTORY_COMMIT = "1"
-IMAGE_BOOT_FILES:append = " Image boot.scr  u-boot.bin "
-
-IMAGE_BOOT_FILES:append = " imx8mp-var-som-1.x-symphony.dtb imx8mp-var-som-symphony.dtb imx8mp-var-som-symphony-imx8mp-var-dart.dtb  imx8mp-var-som-symphony-m7.dtb"
+Found device path: /dev/input/event1
+button (GPIO): 1, event: 1
+areButtonsPressed 1
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Started GStreamer process with PID: 1950
+voipOff
+Found device path: /dev/input/event1
+Failed to open: /etc/aws-cred.env
+Set output file path to: /home/local/file69.mp4
+[  345.147466] enter isp_mi_stop
+Inside h264log4cplus:ERROR could not open file ../kvs_log_configuration
+INFO - Logger config being used: ../kvs_log_configuration
+2025-05-23 11:12:54 [281472836673120] INFO - User agent string: AWS-SDK-KVS-CPP-CLIENT/3.4.2
+2025-05-23 11:12:54 [281472836673120] ERROR - Unable to create Rotating Credential provider. Error status: 0x15000022
+Unable to set the pipeline to the playing state.
+2025-05-23 11:12:54 [281472836673120] [  345.283831] wlan: SCAN COMPLETED: scanned AP count=33
+Connected Wi-Fi SSID (via nmcli): Tonga
+Button Released
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOn
+videoOn
+Wifi available, streaming directly to the kvs
+videoOn
+Stream already running (PID: 1950)
+voipOff
+Found device path: /dev/input/event1
+button (GPIO): 1, event: 1
+areButtonsPressed 1
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+Stopping Streaming (PID: 1950)
+Sent SIGTERM to process 1950
+voipOff
+Found device path: /dev/input/event1
+Button Released
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 1.
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 2.
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 3.
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 4.
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 5.
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:12
+alarmOff
+lightOff
+videoOff
+voipOff
