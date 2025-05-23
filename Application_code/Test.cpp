@@ -138,10 +138,11 @@ volatile bool barcode_show = false;
 int mode, nmode = 1;
 volatile int Disp_mode = 0;
 time_t mode_change_time = 1;
+time_t videoStart_check1 = 0;
 Mode current_mode = STREAM;
 std::string currentTime = "00:00"; // Default Time
 
-int videoRunning = 0;
+volatile int videoRunning = 0;
 time_t videoStart = 0;
 char videoTime[6] = "00:00"; // Default Time
 std::atomic<bool> activityDetected{false};
@@ -150,7 +151,7 @@ std::thread Stream_Wifi;
 std::thread ReadGPs;
 bool notifyStartSent = false;
 time_t videoStart_check = 0;
-time_t videoStart_check1 = 0;
+
 time_t videoStopTime = 0;
 bool notifyStopSent = false;
 std::thread checkwifi;
@@ -941,7 +942,11 @@ public:
                 if (gst_pid == 0)
                 {
                     videoRunning = 1;
+                    
                     videoStart_check1 = time(NULL);
+
+                    printf("Raw time (seconds since epoch): %ld\n", videoStart_check1);
+                    printf("Formatted time: %s", ctime(&videoStart_check1));
                     notifyStartSent = false; // reset for delayed notify
 
                     // Child process: replace this process with the streaming app
@@ -951,6 +956,7 @@ public:
                 }
                 else
                 {
+                    videoRunning = 1;
                     printf("Started GStreamer process with PID: %d\n", gst_pid);
                 }
             }
@@ -1147,7 +1153,7 @@ public:
                 printf("Stream already running (PID: %d)\n", gst_pid);
             }
         }
-              printf("videoRunning = %d, notifyStartSent = %s, videoStart_check = %d\n",
+        printf("videoRunning = %d, notifyStartSent = %s, videoStart_check = %d\n",
                videoRunning,
                notifyStartSent ? "true" : "false",
                videoStart_check);
