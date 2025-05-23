@@ -71,6 +71,7 @@ std::atomic<bool> running = true;
 
 std::thread buzzer_thread;
 std::atomic<bool> buzzer_running = false;
+std::atomic<int> maxtriesreach = 0;
 std::atomic<bool> video_run = false;
 std::atomic<int> buzzer_frequency_hz;
 std::mutex buzzer_mutex;
@@ -234,9 +235,11 @@ public:
                               : "https://api.rolex.mytimeli.com/stream/Simulator_Nick/stop";
 
         std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
+        maxtriesreach.store(max_retries);
 
         while (attempt < max_retries && !success)
         {
+
             CURL *curl = curl_easy_init();
             if (!curl)
             {
@@ -951,19 +954,29 @@ public:
         if (videoRunning && !notifyStartSent && videoStart_check1 != 0)
         {
             time_t now = time(NULL);
-            if (difftime(now, videoStart_check1) >= 10)
+            if (difftime(now, videoStart_check) >= 10)
             {
                 if (streamStartSuccess.load())
                 {
                     std::cout << "Start notification successful.\n";
                     notifyStartSent = true;
                     streamStartSuccess.store(false);
+                    maxtriesreach.store(0);
                     videoStart_check1 = 0;
                     return;
                 }
-                else
+                else if (maxtriesreach.load() == 0)
                 {
                     signalStreamAction(StreamAction::Start);
+                }
+
+                else if (maxtriesreach.load() >= 4)
+                {
+                    printf("Maximum retries Reached \n");
+                    notifyStartSent = true;
+                    streamStartSuccess.store(false);
+                    maxtriesreach.store(0);
+                    videoStart_check1 = 0;
                 }
             }
         }
@@ -1061,9 +1074,18 @@ public:
                     videoStopTime = 0;
                     return;
                 }
-                else
+                else if (maxtriesreach.load() == 0)
                 {
                     signalStreamAction(StreamAction::Stop);
+                }
+
+                else if (maxtriesreach.load() >= 4)
+                {
+                    printf("Maximum retries Reached \n");
+                    notifyStopSent = true;
+                    streamStopSuccess.store(false);
+                    maxtriesreach.store(0);
+                    videoStopTime = 0;
                 }
             }
         }
@@ -1152,12 +1174,22 @@ public:
                     std::cout << "Start notification successful.\n";
                     notifyStartSent = true;
                     streamStartSuccess.store(false);
+                    maxtriesreach.store(0);
                     videoStart_check = 0;
                     return;
                 }
-                else
+                else if (maxtriesreach.load() == 0)
                 {
                     signalStreamAction(StreamAction::Start);
+                }
+
+                else if (maxtriesreach.load() >= 4)
+                {
+                    printf("Maximum retries Reached \n");
+                    notifyStartSent = true;
+                    streamStartSuccess.store(false);
+                    maxtriesreach.store(0);
+                    videoStart_check = 0;
                 }
             }
         }

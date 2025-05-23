@@ -1,316 +1,693 @@
-
+ff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7078.610317] wlan: SCAN COMPLETED: scanned AP count=43
+[ 7078.643514] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7082.417647] wlan: SCAN COMPLETED: scanned AP count=47
+[ 7082.452629] wlan: uap0 START SCAN
+HTTP Status: 500
+Response: {"message":"Internal Server Error"}
+Start stream failed with HTTP status 500 on attempt 2.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7086.224072] wlan: SCAN COMPLETED: scanned AP count=36
+[ 7086.278818] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7093.438465] wlan: SCAN COMPLETED: scanned AP count=30
+[ 7093.471499] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7097.139294] wlan: SCAN COMPLETED: scanned AP count=41
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7105.993429] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+HTTP Status: 500
+Response: {"message":"Internal Server Error"}
+Start stream failed with HTTP status 500 on attempt 3.
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7111.195068] wlan: SCAN COMPLETED: scanned AP count=45
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7125.988174] wlan: uap0 START SCAN
+Update json
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+Button Released
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7131.267650] wlan: SCAN COMPLETED: scanned AP count=45
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+HTTP Status: 500
+Response: {"message":"Internal Server Error"}
+Start stream failed with HTTP status 500 on attempt 4.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[ 7135.216598] wlan: mlan0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+Successfully opened GPS I2C address
+Latitude: 42.197816, Longitude: -87.812842
+Closed GPS I2C file descriptor
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOn
+Stream On
+voipOff
 Found device path: /dev/input/event1
 button (GPIO): 1, event: 1
 areButtonsPressed 1
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Started GStreamer process with PID: 1950
+lightOff
+videoOff
+Stopping Streaming (PID: 27060)
+Sent SIGTERM to process 27060
 voipOff
 Found device path: /dev/input/event1
-Failed to open: /etc/aws-cred.env
-Set output file path to: /home/local/file69.mp4
-[  345.147466] enter isp_mi_stop
-Inside h264log4cplus:ERROR could not open file ../kvs_log_configuration
-INFO - Logger config being used: ../kvs_log_configuration
-2025-05-23 11:12:54 [281472836673120] INFO - User agent string: AWS-SDK-KVS-CPP-CLIENT/3.4.2
-2025-05-23 11:12:54 [281472836673120] ERROR - Unable to create Rotating Credential provider. Error status: 0x15000022
-Unable to set the pipeline to the playing state.
-2025-05-23 11:12:54 [281472836673120] [  345.283831] wlan: SCAN COMPLETED: scanned AP count=33
+[ 7143.412250] wlan: SCAN COMPLETED: scanned AP count=51
+[ 7143.436615] wlan: wfd0 START SCAN
 Connected Wi-Fi SSID (via nmcli): Tonga
 Button Released
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
-alarmOff
-lightOn
-videoOn
-Wifi available, streaming directly to the kvs
-videoOn
-Stream already running (PID: 1950)
-voipOff
-Found device path: /dev/input/event1
-button (GPIO): 1, event: 1
-areButtonsPressed 1
-Displayed Time on Screen: 04:12
-alarmOff
-lightOff
-videoOff
-Stopping Streaming (PID: 1950)
-Sent SIGTERM to process 1950
-voipOff
-Found device path: /dev/input/event1
-Button Released
-areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[ 7150.635576] wlan: SCAN COMPLETED: scanned AP count=42
+[ 7150.672235] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+HTTP Status: 500
+Response: {"message":"Internal Server Error"}
+Start stream failed with HTTP status 500 on attempt 5.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
 HTTP Status: 500
 Response: {"code":"internal_error","message":"Failed to stop stream"}
 Stop stream failed with HTTP status 500 on attempt 1.
+[ 7157.744271] wlan: SCAN COMPLETED: scanned AP count=31
+[ 7157.753044] wlan: sched scan start
+[ 7157.785858] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+[ 7161.453945] wlan: SCAN COMPLETED: scanned AP count=27
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
 HTTP Status: 500
 Response: {"code":"internal_error","message":"Failed to stop stream"}
 Stop stream failed with HTTP status 500 on attempt 2.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
 HTTP Status: 500
 Response: {"code":"internal_error","message":"Failed to stop stream"}
 Stop stream failed with HTTP status 500 on attempt 3.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
 HTTP Status: 500
 Response: {"code":"internal_error","message":"Failed to stop stream"}
 Stop stream failed with HTTP status 500 on attempt 4.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
 HTTP Status: 500
 Response: {"code":"internal_error","message":"Failed to stop stream"}
 Stop stream failed with HTTP status 500 on attempt 5.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
 voipOff
 Found device path: /dev/input/event1
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 1.
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 04:12
+Displayed Time on Screen: 06:04
 alarmOff
 lightOff
 videoOff
 voipOff
+Found device path: /dev/input/event1
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 2.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 3.
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 06:04
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+HTTP Status: 500
+Response: {"code":"internal_error","message":"Failed to stop stream"}
+Stop stream failed with HTTP status 500 on attempt 4.
+^C
