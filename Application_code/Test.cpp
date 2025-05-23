@@ -941,14 +941,6 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
-                    videoRunning = 1;
-                    
-                    videoStart_check1 = time(NULL);
-
-                    printf("Raw time (seconds since epoch): %ld\n", videoStart_check1);
-                    printf("Formatted time: %s", ctime(&videoStart_check1));
-                    notifyStartSent = false; // reset for delayed notify
-
                     // Child process: replace this process with the streaming app
                     execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", nullptr, environ);
                     perror("execl failed");
@@ -956,7 +948,9 @@ public:
                 }
                 else
                 {
+                    videoStart_check1 = time(NULL);
                     videoRunning = 1;
+                    notifyStartSent = false; // reset for delayed notify
                     printf("Started GStreamer process with PID: %d\n", gst_pid);
                 }
             }
@@ -965,19 +959,14 @@ public:
                 printf("Stream already running (PID: %d)\n", gst_pid);
             }
         }
-        printf("videoRunning = %d, notifyStartSent = %s, videoStart_check1 = %d\n",
-               videoRunning,
-               notifyStartSent ? "true" : "false",
-               videoStart_check1);
+
         // After stream has started, wait for 10 seconds before notifying
         if (videoRunning && !notifyStartSent && videoStart_check1 != 0)
         {
-            printf("Inside here for noitfying\n");
-
             time_t now = time(NULL);
             if (difftime(now, videoStart_check1) >= 10)
             {
-                printf("time reached going to notify\n");
+
                 if (notifyStartStream())
                 {
                     notifyStartSent = true;
@@ -1135,9 +1124,6 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
-                    videoRunning = 1;
-                    videoStart_check = time(NULL);
-                    notifyStartSent = false; // Reset the flag
                     // Child process: replace this process with the streaming app
                     execle("/usr/bin/Flashlight", "Flashlight", "NAK", "h264", "local_storage", nullptr, environ);
                     perror("execl failed");
@@ -1145,6 +1131,9 @@ public:
                 }
                 else
                 {
+                    videoRunning = 1;
+                    videoStart_check = time(NULL);
+                    notifyStartSent = false; // Reset the flag
                     printf("Started GStreamer process with PID: %d\n", gst_pid);
                 }
             }
@@ -1153,11 +1142,6 @@ public:
                 printf("Stream already running (PID: %d)\n", gst_pid);
             }
         }
-        printf("videoRunning = %d, notifyStartSent = %s, videoStart_check = %d\n",
-               videoRunning,
-               notifyStartSent ? "true" : "false",
-               videoStart_check);
-
         // Outside the start condition: check if it's time to notify
         if (videoRunning && !notifyStartSent && videoStart_check != 0)
         {
