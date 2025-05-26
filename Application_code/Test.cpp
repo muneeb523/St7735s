@@ -750,7 +750,7 @@ public:
     void update_shadow_json()
     {
         std::lock_guard<std::mutex> lock(state_mutex);
-        printf("Update json\n");
+        printf("Updating shadow JSON...\n");
 
         json shadow;
         shadow["state"]["reported"] = {
@@ -769,6 +769,23 @@ public:
             {"in_emergency", current_state.in_emergency},
             {"cellular_connected", current_state.cellular_connected},
             {"cellular_strength", current_state.cellular_strength}};
+
+        printf("Values being written to shadow JSON:\n");
+        printf("  light_mode: %s\n", current_state.light_mode.c_str());
+        printf("  light_brightness: %d\n", current_state.light_brightness);
+        printf("  alarm_on: %s\n", current_state.alarm_on ? "true" : "false");
+        printf("  alarm_sound: %s\n", current_state.alarm_sound.c_str());
+        printf("  camera_recording: %s\n", current_state.camera_recording ? "true" : "false");
+        printf("  battery_level: %d\n", current_state.battery_level);
+        printf("  battery_charging: %s\n", current_state.battery_charging ? "true" : "false");
+        printf("  gps_latitude: %f\n", current_state.gps_latitude);
+        printf("  gps_longitude: %f\n", current_state.gps_longitude);
+        printf("  wifi_connected: %s\n", current_state.wifi_connected ? "true" : "false");
+        printf("  wifi_ssid: %s\n", current_state.wifi_ssid.c_str());
+        printf("  wifi_strength: %d\n", current_state.wifi_strength);
+        printf("  in_emergency: %s\n", current_state.in_emergency ? "true" : "false");
+        printf("  cellular_connected: %s\n", current_state.cellular_connected ? "true" : "false");
+        printf("  cellular_strength: %d\n", current_state.cellular_strength);
 
         std::string tmp_path = "/etc/aws_iot_device/shadow-input.json.tmp";
         std::string final_path = "/etc/aws_iot_device/shadow-input.json";
@@ -790,6 +807,10 @@ public:
                 {
                     std::cerr << "[Shadow] Failed to set permissions on shadow file\n";
                 }
+                else
+                {
+                    printf("[Shadow] Shadow file updated and permissions set to 0600\n");
+                }
             }
         }
         else
@@ -797,7 +818,6 @@ public:
             std::cerr << "[Shadow] Failed to open temp shadow file\n";
         }
     }
-
     void monitorShadowOutput(std::string shadowFilePath,
                              std::string &playTestTone,
                              bool &flashlightStatus)
