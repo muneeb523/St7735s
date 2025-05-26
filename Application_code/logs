@@ -1,3 +1,8 @@
+
+root@imx8mpevk:/etc/aws_iot_device# systemctl stop application
+root@imx8mpevk:/etc/aws_iot_device# /usr/bin/application
+-sh: /usr/bin/application: No such file or directory
+root@imx8mpevk:/etc/aws_iot_device# /usr/bin/application.exe
 Start
 init
 Pin_RES_High
@@ -6,363 +11,100 @@ Pin_RES_High
 outside commands
 finished init
 flushed
-[Info] No files found.
+[Info] Not on Wi-Fi. Skipping streaming.
 NTP
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  396.952219] wlan: mlan0 START SCAN
-[  396.958734] IOCTL failed: 000000003b598b89 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
-[  397.483896] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Not connected via Wi-Fi. Current network type: unknown
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 Successfully opened GPS I2C address
-Latitude: 42.197860, Longitude: -87.812858
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+Latitude: 42.197702, Longitude: -87.812911
 Closed GPS I2C file descriptor
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
-[  402.664896] wlan: SCAN COMPLETED: scanned AP count=42
-[  402.707713] wlan: wfd0 START SCAN
-Connected Wi-Fi SSID (via nmcli): Olympus
+[  838.936669] wlan: uap0 START SCAN
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
+[  844.170671] wlan: SCAN COMPLETED: scanned AP count=39
+[  844.214936] wlan: wfd0 START SCAN
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  411.539405] wlan: SCAN COMPLETED: scanned AP count=48
-[  411.609898] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  418.319842] IOCTL failed: 00000000e2905e02 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
-[  418.662221] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  427.300975] wlan: SCAN COMPLETED: scanned AP count=37
-[  427.343093] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  430.963259] wlan: SCAN COMPLETED: scanned AP count=35
-[  431.000201] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  434.620359] wlan: SCAN COMPLETED: scanned AP count=37
-[  434.660000] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  438.485482] wlan: SCAN COMPLETED: scanned AP count=34
-[  438.523286] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  442.350602] wlan: SCAN COMPLETED: scanned AP count=36
-[  442.395007] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  447.452632] IOCTL failed: 0000000082b0f3e8 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  447.791930] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
@@ -370,455 +112,218 @@ voipOff
 Found device path: /dev/input/event1
 button (GPIO): 1, event: 1
 areButtonsPressed 1
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
-Started GStreamer process with PID: 2495
+videoOn
+Started GStreamer process with PID: 1140
 voipOff
 Found device path: /dev/input/event1
 Failed to open: /etc/aws-cred.env
-Set output file path to: /home/local/file1.mp4
-[  449.475758] enter isp_mi_stop
-[  449.659784] enter isp_mi_stop
-Inside h264log4cplus:ERROR could not open file ../kvs_log_configuration
-INFO - Logger config being used: ../kvs_log_configuration
-2025-05-26 06:41:30 [281473152761440] INFO - User agent string: AWS-SDK-KVS-CPP-CLIENT/3.4.2
-2025-05-26 06:41:30 [281473152761440] ERROR - Unable to create Rotating Credential provider. Error status: 0x15000022
-Unable to set the pipeline to the playing state.
-2025-05-26 06:41:30 [281473152761440] Button Released
+Set output file path to: /home/local/file3.mp4
+[  846.280194] enter isp_mi_stop
+[  846.613918] enter isp_mi_stop
+[  846.656962] enter isp_s_comp
+[  846.659874] enter isp_s_comp
+[  846.663374] enter isp_s_comp
+[  846.681496] enter wdr3_hw_init
+[  846.684611] wdr3 res: 1920 1080
+[  846.688104] enter isp_s_comp
+[  846.728595] enter isp_set_stream 1
+[  846.742949] enter isp_mi_start
+Button Released
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+[  852.779761] wlan: SCAN COMPLETED: scanned AP count=44
+areButtonsPressed -3
+[  852.937243] wlan: wfd0 START SCAN
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
 Maximum retries Reached
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
+videoOn
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[  453.023263] wlan: SCAN COMPLETED: scanned AP count=45
-areButtonsPressed -3
-Displayed Time on Screen: 23:40
-alarmOff
-lightOn
-Stream On
+videoOn
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
+videoOn
+voipOff
+Found device path: /dev/input/event1
+[  861.597663] wlan: SCAN COMPLETED: scanned AP count=34
+[  861.630002] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
+voipOff
+Found device path: /dev/input/event1
+[  862.585387] IOCTL failed: 00000000b71fca45 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+[  862.935065] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
+alarmOff
+lightOn
+videoOn
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:40
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-Update json
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[  458.069894] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
+videoOn
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-[  463.466678] IOCTL failed: 0000000028c33266 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
-Connected Wi-Fi SSID (via nmcli): Olympus
-[  463.815163] wlan: mlan0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-Successfully opened GPS I2C address
-Latitude: 42.197828, Longitude: -87.812883
-Closed GPS I2C file descriptor
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOn
-Stream On
+videoOn
 voipOff
 Found device path: /dev/input/event1
 button (GPIO): 1, event: 1
 areButtonsPressed 1
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
-Stopping Streaming (PID: 2495)
-Sent SIGTERM to process 2495
-voipOff
-Found device path: /dev/input/event1
-Button Released
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
+Stopping Streaming (PID: 1140)
+Sent SIGTERM to process 1140
+[  866.223427] enter isp_set_stream 0
+[  866.253305] enter isp_mi_stop
+[  866.359680] enter isp_s_comp
+[  866.423249] enter isp_mi_stop
+[  866.555770] wlan: SCAN COMPLETED: scanned AP count=18
+[  866.568036] wlan: uap0 START SCAN
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  472.564842] wlan: SCAN COMPLETED: scanned AP count=51
-[  472.615969] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  870.188518] wlan: SCAN COMPLETED: scanned AP count=32
+[  870.229239] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  476.236669] wlan: SCAN COMPLETED: scanned AP count=49
-HTTP Status: 500
-Response: {"message":"Internal Server Error"}
-Start stream failed with HTTP status 500 on attempt 1.
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
+[  873.951817] wlan: SCAN COMPLETED: scanned AP count=37
+[  873.974717] wlan: uap0 START SCAN
 areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-Maximum retries Reached
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
+Displayed Time on Screen: 04:36
 alarmOff
 lightOff
 videoOff
 voipOff
 Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  487.068710] wlan: wfd0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  495.708308] wlan: SCAN COMPLETED: scanned AP count=31
-[  495.746589] wlan: uap0 START SCAN
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-[  499.366739] wlan: SCAN COMPLETED: scanned AP count=27
-HTTP Status: 500
-Response: {"message":"Internal Server Error"}
-Start stream failed with HTTP status 500 on attempt 2.
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-areButtonsPressed -3
-Displayed Time on Screen: 23:41
-alarmOff
-lightOff
-videoOff
-voipOff
-Found device path: /dev/input/event1
-^C

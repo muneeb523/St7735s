@@ -81,9 +81,12 @@ std::condition_variable actionCV;
 std::optional<StreamAction> pendingAction;
 std::atomic<bool> streamStartSuccess{false};
 std::atomic<bool> streamStopSuccess{false};
+std::string lastSeenVersion = "";
 namespace fs = std::filesystem;
 std::string g_device_name = "TF004"; // Default fallback value
-
+std::string playTestTone = "";
+bool flashlightStatus = false;
+const std::string shadowPath = "/etc/aws_iot_device/shadow-output.json";
 std::string getActiveNetworkType(); // Assume already implemented
 volatile bool local_kvs_streaming = false;
 struct DeviceState
@@ -405,7 +408,13 @@ public:
             if (!current_state.wifi_connected)
             {
                 printf("Not connected via Wi-Fi. Current network type: %s\n", netType.c_str());
-                return;
+                // Assume LTE connection
+                if (netType == "lte")
+                {
+                    current_state.cellular_connected = true;
+                }
+                std::this_thread::sleep_for(std::chrono::seconds(20));
+                continue;
             }
 
             // Get active Wi-Fi SSID using nmcli
@@ -418,13 +427,17 @@ public:
             {
                 current_state.wifi_ssid = ssid;
                 printf("Connected Wi-Fi SSID (via nmcli): %s\n", ssid.c_str());
+                std::string wifiStrength = execCommand("nmcli -t -f active,signal dev wifi | grep '^yes' | cut -d: -f2");
+                wifiStrength.erase(std::remove(wifiStrength.begin(), wifiStrength.end(), '\n'), wifiStrength.end());
+                current_state.wifi_strength = wifiStrength;
+                printf("Wi-Fi signal strength: %s%%\n", wifiStrength.c_str());
             }
             else
             {
                 printf("Error: Could not retrieve SSID via nmcli.\n");
             }
 
-            std::this_thread::sleep_for(std::chrono::seconds(60));
+            std::this_thread::sleep_for(std::chrono::seconds(20));
         }
     }
 
@@ -534,7 +547,7 @@ public:
                 std::cout << "[Info] Not on Wi-Fi. Skipping streaming.\n";
             }
 
-            std::this_thread::sleep_for(std::chrono::seconds(240));
+            std::this_thread::sleep_for(std::chrono::seconds(60));
         }
     }
 
@@ -655,12 +668,13 @@ public:
     {
         while (true)
         {
+            monitorShadowOutput(shadowPath, playTestTone, flashlightStatus);
             if (state_dirty.load())
             {
                 update_shadow_json();
                 state_dirty = false;
             }
-            std::this_thread::sleep_for(std::chrono::seconds(60)); // configurable delay
+            std::this_thread::sleep_for(std::chrono::seconds(1)); // configurable delay
         }
     }
 
@@ -784,6 +798,71 @@ public:
         }
     }
 
+    void monitorShadowOutput(std::string shadowFilePath,
+                             std::string &playTestTone,
+                             bool &flashlightStatus)
+    {
+        if (!std::filesystem::exists(shadowFilePath))
+        {
+            std::cerr << "Shadow output file not found: " << shadowFilePath << std::endl;
+            return;
+        }
+
+        std::ifstream file(shadowFilePath);
+        if (!file.is_open())
+        {
+            std::cerr << "Failed to open shadow output file!" << std::endl;
+            return;
+        }
+
+        json shadowJson;
+        try
+        {
+            file >> shadowJson;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Failed to parse shadow JSON: " << e.what() << std::endl;
+            return;
+        }
+
+        // Optional version-based change detection
+        std::string versionStr = std::to_string(shadowJson.value("version", 0));
+        if (versionStr == lastSeenVersion)
+        {
+            return; // No update
+        }
+        lastSeenVersion = versionStr;
+
+        if (!shadowJson.contains("state") || !shadowJson["state"].contains("desired"))
+        {
+            return;
+        }
+
+        auto desired = shadowJson["state"]["desired"];
+
+        if (desired.contains("tone"))
+        {
+            playTestTone = desired["tone"];
+            std::cout << "Received tone command: " << playTestTone << std::endl;
+        }
+
+        if (desired.contains("flashlight"))
+        {
+            flashlightStatus = desired["flashlight"];
+            std::cout << "Flashlight status: " << (flashlightStatus ? "ON" : "OFF") << std::endl;
+        }
+        
+        if (flashlightStatus)
+        {
+            lightOn();
+        }
+        else
+        {
+            lightOff();
+        }
+    }
+
     /**
      * Wait for either button to be pressed and update mode
      */
@@ -807,7 +886,7 @@ public:
     void updateMode(int btn)
     {
         std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
-
+        mark_state_dirty();
         switch (btn)
         {
 
