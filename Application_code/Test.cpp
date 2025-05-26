@@ -429,7 +429,7 @@ public:
                 printf("Connected Wi-Fi SSID (via nmcli): %s\n", ssid.c_str());
                 std::string wifiStrength = execCommand("nmcli -t -f active,signal dev wifi | grep '^yes' | cut -d: -f2");
                 wifiStrength.erase(std::remove(wifiStrength.begin(), wifiStrength.end(), '\n'), wifiStrength.end());
-                current_state.wifi_strength = wifiStrength;
+                current_state.wifi_strength = std::stoi(wifiStrength);
                 printf("Wi-Fi signal strength: %s%%\n", wifiStrength.c_str());
             }
             else
@@ -852,7 +852,7 @@ public:
             flashlightStatus = desired["flashlight"];
             std::cout << "Flashlight status: " << (flashlightStatus ? "ON" : "OFF") << std::endl;
         }
-        
+
         if (flashlightStatus)
         {
             lightOn();
