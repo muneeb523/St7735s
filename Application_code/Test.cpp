@@ -25,6 +25,7 @@
 #include <condition_variable>
 #include <optional>
 #include <array>
+#include <sys/stat.h> // for chmod()
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
@@ -81,6 +82,8 @@ std::optional<StreamAction> pendingAction;
 std::atomic<bool> streamStartSuccess{false};
 std::atomic<bool> streamStopSuccess{false};
 namespace fs = std::filesystem;
+std::string g_device_name = "TF004"; // Default fallback value
+
 std::string getActiveNetworkType(); // Assume already implemented
 volatile bool local_kvs_streaming = false;
 struct DeviceState
@@ -216,12 +219,54 @@ public:
 
         std::cout << "NTP" << std::endl;
 
+        if (!load_device_name("/etc/aws_iot_device/config.json"))
+        {
+            // Handle error
+        }
+
         while (true)
         {
             drawUI();
             processMode();
             waitForButtonPress();
         }
+    }
+    bool load_device_name(const std::string &config_path)
+    {
+        std::ifstream file(config_path);
+        if (!file.is_open())
+        {
+            std::cerr << "[Config] Failed to open config file: " << config_path << "\n";
+            return false;
+        }
+
+        json config_json;
+        try
+        {
+            file >> config_json;
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "[Config] Failed to parse JSON: " << e.what() << "\n";
+            return false;
+        }
+
+        if (config_json.contains("thing-name") && config_json["thing-name"].is_string())
+        {
+            g_device_name = config_json["thing-name"];
+            return true;
+        }
+        else
+        {
+            std::cerr << "[Config] 'thing-name' not found or invalid\n";
+            return false;
+        }
+    }
+    std::string get_stream_url(StreamAction action)
+    {
+        std::string base_url = "https://api.rolex.mytimeli.com/stream/";
+        std::string action_str = (action == StreamAction::Start) ? "start" : "stop";
+        return base_url + g_device_name + "/" + action_str;
     }
 
     void notifyStream(StreamAction action)
@@ -230,10 +275,7 @@ public:
         int attempt = 0;
         bool success = false;
 
-        std::string url = (action == StreamAction::Start)
-                              ? "https://api.rolex.mytimeli.com/stream/TF004/start"
-                              : "https://api.rolex.mytimeli.com/stream/TF004/stop";
-
+        std::string url = get_stream_url(StreamAction::Start);
         std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
 
         while (attempt < max_retries && !success)
@@ -698,7 +740,6 @@ public:
 
         json shadow;
         shadow["state"]["reported"] = {
-
             {"light_mode", current_state.light_mode},
             {"light_brightness", current_state.light_brightness},
             {"alarm_on", current_state.alarm_on},
@@ -728,6 +769,14 @@ public:
             {
                 std::cerr << "[Shadow] Failed to rename temp shadow file to final\n";
             }
+            else
+            {
+                // Ensure correct permissions (0600)
+                if (chmod(final_path.c_str(), S_IRUSR | S_IWUSR) != 0)
+                {
+                    std::cerr << "[Shadow] Failed to set permissions on shadow file\n";
+                }
+            }
         }
         else
         {
@@ -751,6 +800,7 @@ public:
         {
             activityDetected.store(true);
             updateMode(pressed);
+            mark_state_dirty();
         }
         _Delay(2000); // Assuming microseconds (5ms)
     }
@@ -819,7 +869,6 @@ public:
             break;
         }
 
-        mark_state_dirty();
         mode_change_time = time(NULL); // Record mode change time
     }
 
@@ -889,7 +938,6 @@ public:
             }
 
             activityDetected.store(true);
-            mark_state_dirty();
         }
         else if (current_state.in_emergency)
         {
@@ -898,7 +946,6 @@ public:
             alarmOn();
             emergency_stream_on();
             voipOn();
-            mark_state_dirty();
             activityDetected.store(true);
         }
         else if (currentState == BARCODE)
@@ -931,8 +978,16 @@ public:
                 gst_pid = fork();
                 if (gst_pid == 0)
                 {
+                    const char *device_name_cstr = g_device_name.c_str();
+                    std::cout << "[DEBUG] execle args: /usr/bin/Flashlight "
+                              << device_name_cstr << " h264" << std::endl;
                     // Child process: replace this process with the streaming app
-                    execle("/usr/bin/Flashlight", "Flashlight", "TF004", "h264", nullptr, environ);
+                    execle("/usr/bin/Flashlight", // Path to binary
+                           "Flashlight",          // argv[0]
+                           device_name_cstr,      // argv[1] — dynamic device name
+                           "h264",                // argv[2]
+                           nullptr,               // End of args
+                           environ);
                     perror("execl failed");
                     _exit(1); // In case exec fails
                 }
@@ -1146,7 +1201,15 @@ public:
                 if (gst_pid == 0)
                 {
                     // Child process: replace this process with the streaming app
-                    execle("/usr/bin/Flashlight", "Flashlight", "TF004", "h264", "local_storage", nullptr, environ);
+                    const char *device_name_cstr = g_device_name.c_str();
+
+                    execle("/usr/bin/Flashlight", // Path to executable
+                           "Flashlight",          // argv[0]
+                           device_name_cstr,      // argv[1] — dynamic device name
+                           "h264",                // argv[2]
+                           "local_storage",       // argv[3]
+                           nullptr,               // end of args
+                           environ);              // environment variables
                     perror("execl failed");
                     _exit(1); // In case exec fails
                 }

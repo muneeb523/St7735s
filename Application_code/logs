@@ -1,140 +1,824 @@
-#!/bin/bash
-set -euo pipefail
-
-# Desired metrics
-MLAN_METRIC=5
-ETH_METRIC=100
-
-# Network status file
-STATUS_FILE="/run/net_status.flag"
-mkdir -p "$(dirname "$STATUS_FILE")"
-
-# Desired DNS configuration
-DNS_ENTRIES=$(cat <<EOF
-nameserver 8.8.8.8
-nameserver 8.8.4.4
-nameserver 2001:4860:4860::8888
-nameserver 2001:4860:4860::8844
-EOF
-)
-
-# Get NetworkManager connection name for an interface
-get_conn_name() {
-    nmcli -t -f NAME,DEVICE connection show | grep ":$1$" | cut -d: -f1 || true
-}
-
-# Set metrics only if needed
-check_and_set_metric() {
-    local iface=$1
-    local target_metric=$2
-
-    local conn_name
-    conn_name=$(get_conn_name "$iface")
-    if [[ -z "$conn_name" ]]; then
-        echo "No connection found for $iface. Skipping metric setup."
-        return 1
-    fi
-
-    local current_ipv4 current_ipv6
-    current_ipv4=$(nmcli -g ipv4.route-metric connection show "$conn_name" || echo "")
-    current_ipv6=$(nmcli -g ipv6.route-metric connection show "$conn_name" || echo "")
-
-    if [[ "$current_ipv4" != "$target_metric" || "$current_ipv6" != "$target_metric" ]]; then
-        echo "Setting metrics for $iface ($conn_name): $target_metric"
-        nmcli connection modify "$conn_name" ipv4.route-metric "$target_metric"
-        nmcli connection modify "$conn_name" ipv6.route-metric "$target_metric"
-        nmcli connection down "$conn_name" || true
-        nmcli connection up "$conn_name"
-    else
-        echo "Metrics already correct for $iface ($target_metric)"
-    fi
-    return 0
-}
-
-# DNS configuration
-check_and_set_dns() {
-    local resolv_file="/etc/resolv.conf"
-    if echo "$DNS_ENTRIES" | cmp -s - "$resolv_file"; then
-        echo "DNS entries are already correct."
-    else
-        echo "Updating DNS entries in $resolv_file..."
-        echo "$DNS_ENTRIES" > "$resolv_file"
-    fi
-}
-
-# Camera configuration
-configure_camera() {
-    echo "Configuring MIPI CSI camera format..."
-    media-ctl -d /dev/media0 --set-v4l2 '"mxc-mipi-csi2.1":4[fmt:SRGGB10_1X10/1920x1080]' || echo "Camera config failed"
-}
-
-# Clean up duplicate default routes
-cleanup_routes() {
-    echo "Cleaning up duplicate or invalid routes..."
-    ip route | grep -E '^default .* dev eth0 .* metric 10' | while read -r line; do
-        echo "Removing: $line"
-        ip route del $line || true
-    done
-}
-
-# Ensure fallback via Ethernet if no default route
-ensure_fallback_route() {
-    local has_default
-    has_default=$(ip route | awk '/^default/ {print $1; exit}')
-
-    if [[ -z "$has_default" ]]; then
-        echo "No default route found. Bringing up Ethernet as fallback..."
-
-        local eth_conn
-        eth_conn=$(get_conn_name "eth0")
-        if [[ -n "$eth_conn" ]]; then
-            nmcli connection up "$eth_conn" || echo "Failed to bring up Ethernet connection."
-        fi
-
-        # Wait and recheck
-        sleep 2
-        has_default=$(ip route | awk '/^default/ {print $1; exit}')
-        if [[ -z "$has_default" ]]; then
-            echo "Warning: Still no default route after Ethernet fallback attempt!"
-        else
-            echo "Default route restored via Ethernet."
-        fi
-    else
-        echo "Default route exists. No fallback needed."
-    fi
-}
-
-# Update status file with current active route
-update_status_file() {
-    local default_iface
-    default_iface=$(ip route | awk '/^default/ {print $5; exit}')
-    case "$default_iface" in
-        mlan0) echo "wifi" > "$STATUS_FILE" ;;
-        eth0)  echo "lte" > "$STATUS_FILE" ;;
-        *)     echo "unknown" > "$STATUS_FILE" ;;
-    esac
-    echo "Current default route: $default_iface → $(cat "$STATUS_FILE")"
-}
-
-# === MAIN EXECUTION ===
-
-echo "[INFO] Starting network metric and route configuration..."
-
-mlan_ok=false
-if check_and_set_metric "mlan0" "$MLAN_METRIC"; then
-    mlan_ok=true
-fi
-
-check_and_set_metric "eth0" "$ETH_METRIC"
-check_and_set_dns
-configure_camera
-cleanup_routes
-
-# Only fallback if Wi-Fi isn't up or didn't get set
-if [[ "$mlan_ok" = false ]]; then
-    ensure_fallback_route
-fi
-
-update_status_file
-
-echo "[INFO] Network configuration script complete."
+Start
+init
+Pin_RES_High
+Pin_RES_Low
+Pin_RES_High
+outside commands
+finished init
+flushed
+[Info] No files found.
+NTP
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  396.952219] wlan: mlan0 START SCAN
+[  396.958734] IOCTL failed: 000000003b598b89 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+[  397.483896] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+Successfully opened GPS I2C address
+Latitude: 42.197860, Longitude: -87.812858
+Closed GPS I2C file descriptor
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  402.664896] wlan: SCAN COMPLETED: scanned AP count=42
+[  402.707713] wlan: wfd0 START SCAN
+Connected Wi-Fi SSID (via nmcli): Olympus
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  411.539405] wlan: SCAN COMPLETED: scanned AP count=48
+[  411.609898] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  418.319842] IOCTL failed: 00000000e2905e02 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+[  418.662221] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  427.300975] wlan: SCAN COMPLETED: scanned AP count=37
+[  427.343093] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  430.963259] wlan: SCAN COMPLETED: scanned AP count=35
+[  431.000201] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  434.620359] wlan: SCAN COMPLETED: scanned AP count=37
+[  434.660000] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  438.485482] wlan: SCAN COMPLETED: scanned AP count=34
+[  438.523286] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  442.350602] wlan: SCAN COMPLETED: scanned AP count=36
+[  442.395007] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  447.452632] IOCTL failed: 0000000082b0f3e8 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  447.791930] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+button (GPIO): 1, event: 1
+areButtonsPressed 1
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+Started GStreamer process with PID: 2495
+voipOff
+Found device path: /dev/input/event1
+Failed to open: /etc/aws-cred.env
+Set output file path to: /home/local/file1.mp4
+[  449.475758] enter isp_mi_stop
+[  449.659784] enter isp_mi_stop
+Inside h264log4cplus:ERROR could not open file ../kvs_log_configuration
+INFO - Logger config being used: ../kvs_log_configuration
+2025-05-26 06:41:30 [281473152761440] INFO - User agent string: AWS-SDK-KVS-CPP-CLIENT/3.4.2
+2025-05-26 06:41:30 [281473152761440] ERROR - Unable to create Rotating Credential provider. Error status: 0x15000022
+Unable to set the pipeline to the playing state.
+2025-05-26 06:41:30 [281473152761440] Button Released
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+Maximum retries Reached
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[  453.023263] wlan: SCAN COMPLETED: scanned AP count=45
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:40
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+Update json
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[  458.069894] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+[  463.466678] IOCTL failed: 0000000028c33266 id=0x10000, sub_id=0x10003 action=1, status_code=0x80000007
+Connected Wi-Fi SSID (via nmcli): Olympus
+[  463.815163] wlan: mlan0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+Successfully opened GPS I2C address
+Latitude: 42.197828, Longitude: -87.812883
+Closed GPS I2C file descriptor
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOn
+Stream On
+voipOff
+Found device path: /dev/input/event1
+button (GPIO): 1, event: 1
+areButtonsPressed 1
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+Stopping Streaming (PID: 2495)
+Sent SIGTERM to process 2495
+voipOff
+Found device path: /dev/input/event1
+Button Released
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  472.564842] wlan: SCAN COMPLETED: scanned AP count=51
+[  472.615969] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  476.236669] wlan: SCAN COMPLETED: scanned AP count=49
+HTTP Status: 500
+Response: {"message":"Internal Server Error"}
+Start stream failed with HTTP status 500 on attempt 1.
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+Maximum retries Reached
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  487.068710] wlan: wfd0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  495.708308] wlan: SCAN COMPLETED: scanned AP count=31
+[  495.746589] wlan: uap0 START SCAN
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+[  499.366739] wlan: SCAN COMPLETED: scanned AP count=27
+HTTP Status: 500
+Response: {"message":"Internal Server Error"}
+Start stream failed with HTTP status 500 on attempt 2.
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+areButtonsPressed -3
+Displayed Time on Screen: 23:41
+alarmOff
+lightOff
+videoOff
+voipOff
+Found device path: /dev/input/event1
+^C
