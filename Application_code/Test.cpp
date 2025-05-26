@@ -746,7 +746,6 @@ public:
     {
         state_dirty = true;
     }
-
     void update_shadow_json()
     {
         std::lock_guard<std::mutex> lock(state_mutex);
@@ -787,35 +786,28 @@ public:
         printf("  cellular_connected: %s\n", current_state.cellular_connected ? "true" : "false");
         printf("  cellular_strength: %d\n", current_state.cellular_strength);
 
-        std::string tmp_path = "/etc/aws_iot_device/shadow-input.json.tmp";
-        std::string final_path = "/etc/aws_iot_device/shadow-input.json";
+        std::string shadow_path = "/etc/aws_iot_device/shadow-input.json";
 
-        std::ofstream tmp_file(tmp_path);
-        if (tmp_file.is_open())
+        // Open the original file directly, truncate it, and overwrite
+        std::ofstream shadow_file(shadow_path, std::ios::out | std::ios::trunc);
+        if (shadow_file.is_open())
         {
-            tmp_file << shadow.dump(4);
-            tmp_file.close();
+            shadow_file << shadow.dump(4);
+            shadow_file.close();
 
-            if (std::rename(tmp_path.c_str(), final_path.c_str()) != 0)
+            // Ensure permissions (0600) are correct
+            if (chmod(shadow_path.c_str(), S_IRUSR | S_IWUSR) != 0)
             {
-                std::cerr << "[Shadow] Failed to rename temp shadow file to final\n";
+                std::cerr << "[Shadow] Failed to set permissions on shadow file\n";
             }
             else
             {
-                // Ensure correct permissions (0600)
-                if (chmod(final_path.c_str(), S_IRUSR | S_IWUSR) != 0)
-                {
-                    std::cerr << "[Shadow] Failed to set permissions on shadow file\n";
-                }
-                else
-                {
-                    printf("[Shadow] Shadow file updated and permissions set to 0600\n");
-                }
+                printf("[Shadow] Shadow file updated in place and permissions set to 0600\n");
             }
         }
         else
         {
-            std::cerr << "[Shadow] Failed to open temp shadow file\n";
+            std::cerr << "[Shadow] Failed to open shadow file for in-place write\n";
         }
     }
     void monitorShadowOutput(std::string shadowFilePath,
