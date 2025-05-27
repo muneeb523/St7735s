@@ -479,7 +479,7 @@ public:
         if (files.empty())
             return false;
 
-        std::string cmd = "/usr/bin/Flashlight TF004 h264";
+        std::string cmd = "/usr/bin/Flashlight " + g_device_name + " h264";
         for (const auto &f : files)
         {
             cmd += " " + f; // Add each file path to the command
