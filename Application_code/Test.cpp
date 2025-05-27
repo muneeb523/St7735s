@@ -981,6 +981,7 @@ public:
                 alarmOff();
                 lightOn();
                 std::string netType = getActiveNetworkType();
+                current_state.camera_recording = true;
                 if (netType == "wifi")
                 {
                     emergency_stream_on();
