@@ -16,6 +16,8 @@
 #include <string.h>
 #include <errno.h>
 
+#define CHARGING 1
+#define NOT_CHARGING 0
 #define MAX_EVENTS 5
 #define PAGE_SIZE 4096 // Typical page size on ARM
 #define PAGE_MASK (PAGE_SIZE - 1)
@@ -146,11 +148,84 @@ void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, 
 #define GPIO_CHIP "/dev/gpiochip3" // Full path to GPIO chip
 #define GPIO_LINE1 6               // First button GPIO line number
 #define GPIO_LINE2 2               // Second button GPIO line number
+#define GPIO_LINE_14 14
 
 static struct gpiod_chip *chip = NULL;
+static struct gpiod_line_request *line_request_button = NULL;
 static struct gpiod_line_request *line_request = NULL;
 static time_t last_trigger_time = 0; // Track last trigger time for debouncing
 
+int init_battery_charging_pins()
+{
+    chip = gpiod_chip_open(GPIO_CHIP);
+    if (!chip)
+    {
+        perror("Failed to open GPIO chip");
+        return -1;
+    }
+
+    // Create line settings for input
+    struct gpiod_line_settings *settings = gpiod_line_settings_new();
+    if (!settings)
+    {
+        perror("Failed to create settings");
+        gpiod_chip_close(chip);
+        return -1;
+    }
+    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
+
+    // Create line config for both GPIO lines
+    struct gpiod_line_config *line_config = gpiod_line_config_new();
+    if (!line_config)
+    {
+        perror("Failed to create line config");
+        gpiod_line_settings_free(settings);
+        gpiod_chip_close(chip);
+        return -1;
+    }
+
+    unsigned int offsets[] = {GPIO_LINE_14};
+
+    if (gpiod_line_config_add_line_settings(line_config, offsets, 1, settings) < 0)
+    {
+        perror("Failed to add line settings");
+        gpiod_line_config_free(line_config);
+        gpiod_line_settings_free(settings);
+        gpiod_chip_close(chip);
+        return -1;
+    }
+
+    // Create request config
+    struct gpiod_request_config *req_config = gpiod_request_config_new();
+    if (!req_config)
+    {
+        perror("Failed to create request config");
+        gpiod_line_config_free(line_config);
+        gpiod_line_settings_free(settings);
+        gpiod_chip_close(chip);
+        return -1;
+    }
+    gpiod_request_config_set_consumer(req_config, "nCHRG_STATUS_1V8");
+
+    // Request both lines at once
+    line_request = gpiod_chip_request_lines(chip, req_config, line_config);
+    if (!line_request)
+    {
+        perror("Failed to request GPIO lines");
+        gpiod_request_config_free(req_config);
+        gpiod_line_config_free(line_config);
+        gpiod_line_settings_free(settings);
+        gpiod_chip_close(chip);
+        return -1;
+    }
+
+    // Clean up temporary objects
+    gpiod_request_config_free(req_config);
+    gpiod_line_config_free(line_config);
+    gpiod_line_settings_free(settings);
+
+    return 0;
+}
 /**
  * Initialize GPIOs for two buttons
  * @return 0 on success, -1 on failure
@@ -208,8 +283,8 @@ int initButtons(void)
     gpiod_request_config_set_consumer(req_config, "button");
 
     // Request both lines at once
-    line_request = gpiod_chip_request_lines(chip, req_config, line_config);
-    if (!line_request)
+    line_request_button = gpiod_chip_request_lines(chip, req_config, line_config);
+    if (!line_request_button)
     {
         perror("Failed to request GPIO lines");
         gpiod_request_config_free(req_config);
@@ -242,6 +317,21 @@ void cleanupButtons(void)
     }
 }
 
+int charging_status()
+{
+    int values[1];
+    if (!line_request)
+    {
+        fprintf(stderr, "GPIOs not initialized\n");
+        return ERROR_GPIO_NOT_INIT;
+    }
+    if (gpiod_line_request_get_values(line_request, values) < 0)
+    {
+        perror("Failed to read GPIO values");
+        return -1;
+    }
+    return values[0] == 0 ? CHARGING : NOT_CHARGING;
+}
 /**
  * Check if either button is pressed (either GPIO low) with timeout and debounce
  * @return 1 if either pressed, 0 if neither pressed, -1 on error, -2 on timeout
@@ -256,7 +346,7 @@ int areButtonsPressed(void)
     }
     printf("Found device path: %s\n", device_path);
 
-    if (!line_request)
+    if (!line_request_button)
     {
         fprintf(stderr, "GPIOs not initialized\n");
         return ERROR_GPIO_NOT_INIT;
@@ -347,7 +437,7 @@ int areButtonsPressed(void)
         }
         // Check GPIO value
         enum gpiod_line_value gpio_val[1]; //<Normal high state
-        if (gpiod_line_request_get_values(line_request, gpio_val) < 0)
+        if (gpiod_line_request_get_values(line_request_button, gpio_val) < 0)
         {
             perror("Failed to read GPIO values");
             close(fd);
@@ -363,7 +453,7 @@ int areButtonsPressed(void)
                 usleep(DEBOUNCE_DELAY_US); // Debounce delay
 
                 // Recheck both inputs
-                if (gpiod_line_request_get_values(line_request, gpio_val) < 0)
+                if (gpiod_line_request_get_values(line_request_button, gpio_val) < 0)
                 {
                     perror("Failed to re-read GPIO values");
                     close(fd);

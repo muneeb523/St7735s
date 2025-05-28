@@ -194,6 +194,7 @@ public:
         std::cout << "flushed" << std::endl;
 
         initButtons();
+        init_battery_charging_pins();
         initPeripherals();
 
         // Start NTP time update in a separate thread
@@ -401,6 +402,8 @@ public:
     {
         while (1)
         {
+
+            
             std::string netType = getActiveNetworkType();
 
             current_state.wifi_connected = (netType == "wifi");
@@ -965,6 +968,7 @@ public:
 
     void processMode()
     {
+        current_state.battery_charging=charging_status();
 
         if (!current_state.in_emergency && !barcode_show)
         {

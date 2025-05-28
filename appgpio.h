@@ -5,4 +5,6 @@ struct gpiod_line_request *requestOutputLine(const char *chip_path, unsigned int
 void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, enum gpiod_line_value value);
 int initButtons(void);
 int areButtonsPressed(void);
+int init_battery_charging_pins();
+int charging_status();
 
