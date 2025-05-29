@@ -498,9 +498,6 @@ public:
                     std::string modemPort = "/dev/ttyACM0";
 
                     int csq = getCSQFromModem(modemPort);
-                    if (csq == -1)
-                        return 1;
-
                     int rssi = convertCSQtoRSSI(csq);
                     current_state.cellular_strength = rssi;
                     int signalLevel = getSignalLevel(rssi);
