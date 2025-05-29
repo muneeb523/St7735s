@@ -26,6 +26,9 @@
 #include <optional>
 #include <array>
 #include <sys/stat.h> // for chmod()
+#include <termios.h>
+#include <fcntl.h>
+#include <regex>
 #define IMAGE_WIDTH 140
 #define IMAGE_HEIGHT 60
 #define IMAGE_SIZE (IMAGE_WIDTH * IMAGE_HEIGHT)
@@ -89,6 +92,8 @@ bool flashlightStatus = false;
 const std::string shadowPath = "/etc/aws_iot_device/shadow-output.json";
 std::string getActiveNetworkType(); // Assume already implemented
 volatile bool local_kvs_streaming = false;
+volatile int wifi_str;
+volatile int lte_str;
 struct DeviceState
 {
 
@@ -235,6 +240,81 @@ public:
             waitForButtonPress();
         }
     }
+    int getCSQFromModem(const std::string &device)
+    {
+        int fd = open(device.c_str(), O_RDWR | O_NOCTTY | O_SYNC);
+        if (fd < 0)
+        {
+            std::cerr << "Failed to open " << device << std::endl;
+            return -1;
+        }
+
+        // Configure serial port
+        struct termios tty;
+        tcgetattr(fd, &tty);
+        cfsetospeed(&tty, B115200);
+        cfsetispeed(&tty, B115200);
+        tty.c_cflag |= (CLOCAL | CREAD); // enable receiver, set local mode
+        tty.c_cflag &= ~CSIZE;
+        tty.c_cflag |= CS8;      // 8 data bits
+        tty.c_cflag &= ~PARENB;  // no parity
+        tty.c_cflag &= ~CSTOPB;  // 1 stop bit
+        tty.c_cflag &= ~CRTSCTS; // no hardware flow control
+        tty.c_lflag = 0;         // raw input
+        tty.c_oflag = 0;         // raw output
+        tty.c_cc[VMIN] = 0;      // non-blocking
+        tty.c_cc[VTIME] = 20;    // timeout in deciseconds
+
+        tcsetattr(fd, TCSANOW, &tty);
+
+        // Send AT+CSQ
+        const char *cmd = "AT+CSQ\r";
+        write(fd, cmd, strlen(cmd));
+        usleep(200000); // wait 200 ms
+
+        // Read response
+        char buf[256] = {0};
+        int n = read(fd, buf, sizeof(buf));
+        close(fd);
+
+        if (n <= 0)
+        {
+            std::cerr << "No response from modem." << std::endl;
+            return -1;
+        }
+
+        std::string response(buf);
+        std::smatch match;
+        std::regex csqPattern("\\+CSQ: (\\d+),");
+
+        if (std::regex_search(response, match, csqPattern))
+        {
+            int csq = std::stoi(match[1]);
+            return csq;
+        }
+        else
+        {
+            std::cerr << "Failed to parse +CSQ response." << std::endl;
+            return -1;
+        }
+    }
+    int convertCSQtoRSSI(int csq)
+    {
+        if (csq < 0 || csq > 31)
+            return -113; // or unknown
+        return -113 + (csq * 2);
+    }
+
+    int getSignalLevel(int rssi)
+    {
+        if (rssi >= -70)
+            return 3; // Strong
+        else if (rssi >= -90)
+            return 2; // Medium
+        else
+            return 1; // Weak
+    }
+
     bool load_device_name(const std::string &config_path)
     {
         std::ifstream file(config_path);
@@ -403,7 +483,6 @@ public:
         while (1)
         {
 
-            
             std::string netType = getActiveNetworkType();
 
             current_state.wifi_connected = (netType == "wifi");
@@ -415,6 +494,18 @@ public:
                 if (netType == "lte")
                 {
                     current_state.cellular_connected = true;
+
+                    std::string modemPort = "/dev/ttyACM0";
+
+                    int csq = getCSQFromModem(modemPort);
+                    if (csq == -1)
+                        return 1;
+
+                    int rssi = convertCSQtoRSSI(csq);
+                    current_state.cellular_strength = rssi;
+                    int signalLevel = getSignalLevel(rssi);
+
+                    lte_str = signalLevel;
                 }
                 std::this_thread::sleep_for(std::chrono::seconds(20));
                 continue;
@@ -434,6 +525,7 @@ public:
                 wifiStrength.erase(std::remove(wifiStrength.begin(), wifiStrength.end(), '\n'), wifiStrength.end());
                 current_state.wifi_strength = std::stoi(wifiStrength);
                 printf("Wi-Fi signal strength: %s%%\n", wifiStrength.c_str());
+                wifi_str = current_state.wifi_strength;
             }
             else
             {
@@ -586,7 +678,38 @@ public:
     void drawBatteryAndSignalIcons()
     {
         drawImage(5, 7, battery_level2, 16, 16);
-        drawImage(55, 7, signal_level1, 19, 16);
+        std::string netType = getActiveNetworkType();
+        if (netType == "wifi")
+        {
+            if (wifi_str >= 75)
+            {
+                drawImage(55, 7, signal4, 24, 24); // Strong signal
+            }
+            else if (wifi_str >= 40)
+            {
+                drawImage(55, 7, signal3, 24, 24); // Medium signal
+            }
+            else
+            {
+                drawImage(55, 7, signal3, 24, 24); // Weak signal
+            }
+        }
+        else if (netType == "lte")
+        {
+            switch (lte_str)
+            {
+
+            case 3:
+                drawImage(55, 7, signal_level3, 19, 16); // Strong signal
+                break;
+            case 2:
+                drawImage(55, 7, signal_level2, 19, 16); // Medium signal
+                break;
+            default:
+                drawImage(55, 7, signal_level1, 19, 16); // Weak or no signal
+                break;
+            }
+        }
     }
 
     void drawTimeText(const char *time, int x, int y)
@@ -968,7 +1091,7 @@ public:
 
     void processMode()
     {
-        current_state.battery_charging=charging_status();
+        current_state.battery_charging = charging_status();
 
         if (!current_state.in_emergency && !barcode_show)
         {
