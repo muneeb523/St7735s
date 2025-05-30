@@ -629,7 +629,7 @@ public:
     void Local_KVS()
     {
 
-        const std::string videoDir = "/home/local";
+        const std::string videoDir = "/data/local";
 
         while (true)
         {
