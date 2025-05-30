@@ -120,6 +120,8 @@
     "condition_variable": "cpp",
     "mutex": "cpp",
     "codecvt": "cpp",
-    "cstdarg": "cpp"
+    "cstdarg": "cpp",
+    "bitset": "cpp",
+    "regex": "cpp"
   }
 }

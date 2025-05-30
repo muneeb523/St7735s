@@ -366,7 +366,7 @@ public:
 
         while (attempt < max_retries && !success)
         {
-            maxtriesreach.store(max_retries);
+            maxtriesreach.store(attempt);
 
             CURL *curl = curl_easy_init();
             if (!curl)
@@ -1266,6 +1266,8 @@ public:
                 }
                 else if (maxtriesreach.load() == 0)
                 {
+                    std::cout << "Start notification send .\n";
+
                     signalStreamAction(StreamAction::Start);
                 }
 
@@ -1375,6 +1377,7 @@ public:
                 }
                 else if (maxtriesreach.load() == 0)
                 {
+                    printf("Stop notify send \n");
                     signalStreamAction(StreamAction::Stop);
                 }
 
