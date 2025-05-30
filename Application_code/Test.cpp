@@ -1347,7 +1347,7 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStopTime) >= 10)
             {
-                printf("Stop Notification send \n")
+                printf("Stop Notification send \n");
                 signalStreamAction(StreamAction::Stop);
                 notifyStopSent = true;           
                 videoStopTime = 0;
