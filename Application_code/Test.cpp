@@ -84,6 +84,8 @@ std::condition_variable actionCV;
 std::optional<StreamAction> pendingAction;
 std::atomic<bool> streamStartSuccess{false};
 std::atomic<bool> streamStopSuccess{false};
+std::string sessionId;
+std::mutex sessionMutex;
 std::string lastSeenVersion = "";
 namespace fs = std::filesystem;
 std::string g_device_name = "TF004"; // Default fallback value
@@ -355,12 +357,12 @@ public:
 
     void notifyStream(StreamAction action)
     {
-        const int max_retries = 5;
+        const int max_retries = 4;
         int attempt = 0;
         bool success = false;
 
-        std::string url = get_stream_url(StreamAction::Start);
-        std::string jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
+        std::string url = get_stream_url(action);
+        std::string jsonData;
 
         while (attempt < max_retries && !success)
         {
@@ -382,8 +384,18 @@ public:
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+
             if (action == StreamAction::Start)
             {
+                jsonData = R"({"codec":"H264","resolution":"1920x1080"})";
+                curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
+            }
+            else if (action == StreamAction::Stop)
+            {
+                std::lock_guard<std::mutex> lock(sessionMutex);
+                json stopBody;
+                stopBody["sessionId"] = sessionId;
+                jsonData = stopBody.dump();
                 curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
             }
 
@@ -403,6 +415,22 @@ public:
 
                 if (http_code == 200)
                 {
+                    if (action == StreamAction::Start)
+                    {
+                        try
+                        {
+                            auto jsonResponse = json::parse(response_string);
+                            std::lock_guard<std::mutex> lock(sessionMutex);
+                            sessionId = jsonResponse["sessionId"].get<std::string>();
+                            std::cout << "Session ID stored: " << sessionId << std::endl;
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << "Failed to parse sessionId: " << e.what() << std::endl;
+                            // Retry even if sessionId extraction fails
+                        }
+                    }
+
                     std::cout << ((action == StreamAction::Start) ? "Start" : "Stop")
                               << " stream notification sent successfully." << std::endl;
                     success = true;
