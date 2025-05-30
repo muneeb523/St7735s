@@ -366,7 +366,6 @@ public:
 
         while (attempt < max_retries && !success)
         {
-            maxtriesreach.store(attempt);
 
             CURL *curl = curl_easy_init();
             if (!curl)
@@ -1255,30 +1254,10 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStart_check) >= 10)
             {
-                if (streamStartSuccess.load())
-                {
-                    std::cout << "Start notification successful.\n";
-                    notifyStartSent = true;
-                    streamStartSuccess.store(false);
-                    maxtriesreach.store(0);
-                    videoStart_check1 = 0;
-                    return;
-                }
-                else if (maxtriesreach.load() == 0)
-                {
-                    std::cout << "Start notification send .\n";
-
-                    signalStreamAction(StreamAction::Start);
-                }
-
-                else if (maxtriesreach.load() >= 4)
-                {
-                    printf("Maximum retries Reached \n");
-                    notifyStartSent = true;
-                    streamStartSuccess.store(false);
-                    maxtriesreach.store(0);
-                    videoStart_check1 = 0;
-                }
+                std::cout << "Start notification send.\n";
+                signalStreamAction(StreamAction::Start);
+                notifyStartSent = true;
+                videoStart_check1 = 0;
             }
         }
     }
@@ -1368,27 +1347,10 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStopTime) >= 10)
             {
-                if (streamStopSuccess.load())
-                {
-                    notifyStopSent = true;
-                    streamStopSuccess.store(false);
-                    videoStopTime = 0;
-                    return;
-                }
-                else if (maxtriesreach.load() == 0)
-                {
-                    printf("Stop notify send \n");
-                    signalStreamAction(StreamAction::Stop);
-                }
-
-                else if (maxtriesreach.load() >= 4)
-                {
-                    printf("Maximum retries Reached \n");
-                    notifyStopSent = true;
-                    streamStopSuccess.store(false);
-                    maxtriesreach.store(0);
-                    videoStopTime = 0;
-                }
+                printf("Stop Notification send \n")
+                signalStreamAction(StreamAction::Stop);
+                notifyStopSent = true;           
+                videoStopTime = 0;
             }
         }
     }
@@ -1479,28 +1441,10 @@ public:
             time_t now = time(NULL);
             if (difftime(now, videoStart_check) >= 10)
             {
-                if (streamStartSuccess.load())
-                {
-                    std::cout << "Start notification successful.\n";
-                    notifyStartSent = true;
-                    streamStartSuccess.store(false);
-                    maxtriesreach.store(0);
-                    videoStart_check = 0;
-                    return;
-                }
-                else if (maxtriesreach.load() == 0)
-                {
-                    signalStreamAction(StreamAction::Start);
-                }
-
-                else if (maxtriesreach.load() >= 4)
-                {
-                    printf("Maximum retries Reached \n");
-                    notifyStartSent = true;
-                    streamStartSuccess.store(false);
-                    maxtriesreach.store(0);
-                    videoStart_check = 0;
-                }
+                videoStart_check = 0;
+                signalStreamAction(StreamAction::Start);
+                notifyStartSent = true;
+                videoStart_check = 0;
             }
         }
     }
