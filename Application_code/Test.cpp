@@ -1193,8 +1193,6 @@ public:
         }
         else if (currentState == BARCODE)
         {
-            system("systemctl restart bt-manager");
-            usleep(2000000); // let hci0 come up
             system("python3 /opt/ble_wifi_onboarding/main.py &");
         }
     }
