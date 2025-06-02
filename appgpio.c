@@ -351,14 +351,14 @@ int areButtonsPressed(void)
         fprintf(stderr, "GPIOs not initialized\n");
         return ERROR_GPIO_NOT_INIT;
     }
-    // Step 1: Open the input device in non-blocking mode
+
     int fd = open(device_path, O_RDONLY | O_NONBLOCK);
     if (fd < 0)
     {
         perror("Failed to open input device");
         return EXIT_FAILURE;
     }
-    // Step 2: Create an epoll instance
+
     int epfd = epoll_create1(0);
     if (epfd == -1)
     {
@@ -366,12 +366,8 @@ int areButtonsPressed(void)
         close(fd);
         return EXIT_FAILURE;
     }
-    // Step 3: Configure the epoll event
-    struct epoll_event ev;
-    memset(&ev, 0, sizeof(ev));
-    ev.events = EPOLLIN;
-    ev.data.fd = fd;
-    // Step 4: Register the input fd with epoll
+
+    struct epoll_event ev = {.events = EPOLLIN, .data.fd = fd};
     if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1)
     {
         perror("Failed to add fd to epoll");
@@ -380,119 +376,127 @@ int areButtonsPressed(void)
         return EXIT_FAILURE;
     }
 
-    // Step 5: Set up event buffer and input event struct
     struct epoll_event events[MAX_EVENTS];
     struct input_event ie;
 
-    static struct timespec start_time, current_time;
+    struct timespec start_time, current_time, press_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
-    int wake_event_active = 0;
-    int gpio_event_active = 0;
+
+    int gpio_pressed = 0;
+    int wake_pressed = 0;
+    int pressed_detected = 0;
 
     while (1)
     {
-
-        // Check elapsed time
         clock_gettime(CLOCK_MONOTONIC, &current_time);
         double elapsed = (current_time.tv_sec - start_time.tv_sec) +
                          (current_time.tv_nsec - start_time.tv_nsec) / 1e9;
+
         if (elapsed >= CHECK_TIMEOUT_S)
         {
             close(fd);
             close(epfd);
             return ERROR_TIMEOUT;
         }
-        int nfds = epoll_wait(epfd, events, MAX_EVENTS, 10); // Timeout: 10ms
+
+        int nfds = epoll_wait(epfd, events, MAX_EVENTS, 10);
         if (nfds == -1)
         {
             perror("epoll_wait error");
             break;
         }
+
         for (int i = 0; i < nfds; i++)
         {
             if (events[i].data.fd == fd)
             {
-                // Read all available input events
                 while (read(fd, &ie, sizeof(struct input_event)) > 0)
                 {
-                    if (ie.type == EV_KEY && ie.code == KEY_WAKEUP)
+                    if (ie.type == EV_KEY && ie.code == KEY_WAKEUP && ie.value == 1)
                     {
-                        if (ie.value == 1)
+                        wake_pressed = 1;
+                        if (!pressed_detected)
                         {
-                            wake_event_active = 1;
-                        }
-                        else if (ie.value == 0)
-                        {
-                            printf("Button Released\n");
+                            clock_gettime(CLOCK_MONOTONIC, &press_time);
+                            pressed_detected = 1;
                         }
                     }
                 }
-                // If read() fails for a reason other than "no data", report
                 if (errno != EAGAIN && errno != EWOULDBLOCK)
                 {
                     perror("read error");
-                    break;
+                    close(fd);
+                    close(epfd);
+                    return ERROR_READ_FAIL;
                 }
             }
         }
-        // Check GPIO value
-        enum gpiod_line_value gpio_val[1]; //<Normal high state
-        if (gpiod_line_request_get_values(line_request_button, gpio_val) < 0)
+
+        enum gpiod_line_value gpio_val[1];
+        if (gpiod_line_request_get_values(line_request_button, gpio_val) == 0)
+        {
+            if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE)
+            {
+                gpio_pressed = 1;
+                if (!pressed_detected)
+                {
+                    clock_gettime(CLOCK_MONOTONIC, &press_time);
+                    pressed_detected = 1;
+                }
+            }
+        }
+        else
         {
             perror("Failed to read GPIO values");
             close(fd);
             close(epfd);
             return ERROR_READ_FAIL;
         }
-        gpio_event_active = (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE);
-        if (wake_event_active || gpio_event_active)
+
+        // After detection of any press, debounce for fixed delay
+        if (pressed_detected)
         {
-            time_t now = time(NULL);
-            if (now - last_trigger_time >= 1)
+            clock_gettime(CLOCK_MONOTONIC, &current_time);
+            double debounce_elapsed = (current_time.tv_sec - press_time.tv_sec) +
+                                      (current_time.tv_nsec - press_time.tv_nsec) / 1e9;
+            if (debounce_elapsed >= (DEBOUNCE_DELAY_US / 1e6))
             {
-                usleep(DEBOUNCE_DELAY_US); // Debounce delay
+                // Final state check before return
+                if (gpiod_line_request_get_values(line_request_button, gpio_val) == 0)
+                    gpio_pressed = (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE);
 
-                // Recheck both inputs
-                if (gpiod_line_request_get_values(line_request_button, gpio_val) < 0)
+                // Also check if wake event is still pending
+                while (read(fd, &ie, sizeof(struct input_event)) > 0)
                 {
-                    perror("Failed to re-read GPIO values");
-                    close(fd);
-                    close(epfd);
-                    return ERROR_READ_FAIL;
+                    if (ie.type == EV_KEY && ie.code == KEY_WAKEUP && ie.value == 1)
+                        wake_pressed = 1;
                 }
-                gpio_event_active = (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE);
 
-                printf("button (GPIO): %d, event: %d\n", gpio_val[0], wake_event_active);
-                last_trigger_time = now;
+                printf("Final GPIO: %d, WAKE: %d\n", gpio_pressed, wake_pressed);
+
                 close(fd);
                 close(epfd);
-                if (gpio_event_active && wake_event_active)
-                {
-                    wake_event_active = 0;
-                    return BUTTON_BOTH;
-                }
-                else if (gpio_event_active)
-                {
-                    wake_event_active = 0;
-                    return BUTTON_GPIO_ONLY;
-                }
-                else if (wake_event_active)
-                {
-                    wake_event_active = 0;
-                    return BUTTON_EVENT_ONLY;
-                }
-                else
-                {
-                    wake_event_active = 0;
+                time_t now = time(NULL);
+                if (now - last_trigger_time < 1)
                     return BUTTON_NONE;
-                }
+                last_trigger_time = now;
+
+                if (wake_pressed && gpio_pressed)
+                    return BUTTON_BOTH;
+                else if (wake_pressed)
+                    return BUTTON_EVENT_ONLY;
+                else if (gpio_pressed)
+                    return BUTTON_GPIO_ONLY;
+                else
+                    return BUTTON_NONE;
             }
         }
 
-        usleep(2500); // Sleep 10ms before next check
+        usleep(2500); // pacing sleep
     }
 
-    close(fd); // Good practice even if never reached
+    // Fallback
+    close(fd);
     close(epfd);
     return BUTTON_NONE;
 }
