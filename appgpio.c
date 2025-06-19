@@ -120,6 +120,7 @@ static struct gpiod_line_request *line_requests = NULL;
 struct gpiod_line_request *line_request = NULL;
 static time_t last_trigger_time = 0; // Track last trigger time for debouncing
 
+
 int init_battery_charging_pins() {
 
     chip = gpiod_chip_open(GPIO_CHIP);
@@ -148,7 +149,7 @@ int init_battery_charging_pins() {
         return -1;
     }
 
-    unsigned int offsets[] = {GPIO_LINE_14};
+    unsigned int offsets[] = { GPIO_LINE_14 };
     if (gpiod_line_config_add_line_settings(line_config, offsets, 1, settings) < 0) {
         perror("Failed to add line settings");
         gpiod_line_config_free(line_config);
@@ -170,7 +171,7 @@ int init_battery_charging_pins() {
 
     line_request = gpiod_chip_request_lines(chip, req_config, line_config);
     if (!line_request) {
-        perror("Failed to request GPIO line");
+        perror("Failed to request GPIO lines");
         gpiod_request_config_free(req_config);
         gpiod_line_config_free(line_config);
         gpiod_line_settings_free(settings);
@@ -178,17 +179,11 @@ int init_battery_charging_pins() {
         return -1;
     }
 
+    // Clean up config objects
     gpiod_request_config_free(req_config);
     gpiod_line_config_free(line_config);
     gpiod_line_settings_free(settings);
 
-    buffer = gpiod_edge_event_buffer_new(EVENT_BUFFER_SIZE);
-    if (!buffer) {
-        perror("Failed to create edge event buffer");
-        gpiod_line_request_release(line_request);
-        gpiod_chip_close(chip);
-        return -1;
-    }
 
     return 0;
 }
