@@ -6,6 +6,8 @@
 #include <errno.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
+#include <stdint.h>
+
 #include "gps_gnss.h"
 
 #define GPS_I2C_ADDR 0x42
