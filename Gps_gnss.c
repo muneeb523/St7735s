@@ -253,7 +253,7 @@ int bq25792_enter_ship_mode()
     }
 
     val |= (1 << 7); // Set SHIP_MODE bit
-    int ret = bq25792_write_reg(fd, REG_CHARGE_OPTION_0, val);
+    int ret =  (fd, REG_CHARGE_OPTION_0, val);
     close(fd);
 
     if (ret == 0)

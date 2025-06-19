@@ -253,24 +253,25 @@ public:
     }
     void charger_irq_loop()
     {
-        while (1)
+        const struct gpiod_edge_event *events[4] = {0};
+
+        while (true)
         {
-            int ret = gpiod_line_request_read_edge_events(line_request, buffer, 4);
+            int ret = gpiod_line_request_read_edge_events(line_request, events, 4);
             if (ret < 0)
             {
-                perror("Error reading charger event");
-                charging_state = CHARGING_ERROR;
+                perror("Failed to read edge events");
                 continue;
             }
 
             for (int i = 0; i < ret; ++i)
             {
-                const struct gpiod_edge_event *event = gpiod_edge_event_buffer_get_event(buffer, i);
-                if (event && gpiod_edge_event_get_event_type(event) == GPIOD_EDGE_EVENT_FALLING_EDGE)
+                const struct gpiod_edge_event *event = events[i];
+
+                if (event && gpiod_edge_event_get_event_type((struct gpiod_edge_event *)event) == GPIOD_EDGE_EVENT_FALLING_EDGE)
                 {
-                    // int status = bq25792_get_charging_status();
-                    int status = 0;
-                    charging_state = status;
+                    int chg_status = bq25792_get_charging_status();
+                    std::cout << "[IRQ] Charging Status: " << chg_status << std::endl;
                 }
             }
         }
@@ -1088,8 +1089,8 @@ public:
         {
 
         case 0:
-        bq25792_enter_ship_mode();
-        break;
+            bq25792_enter_ship_mode();
+            break;
 
         case 1: // Mode cycle button
 
