@@ -56,10 +56,11 @@ SystemState currentState = IDLE;
 #define TZ_DELTA 7 * 60 * 60
 
 #define GPIO_DEVICE4 "/dev/gpiochip3"
-#define GPIO_LINE_BA 18
-#define GPIO_LINE_BB 3
+#define GPIO_DEVICE5 "/dev/gpiochip4"
+#define GPIO_LINE_BA 4
+#define GPIO_LINE_BB 5
 #define GPIO_LINE_FLASH 7
-#define GPIO_LINE_SELF_KILL 20
+#define GPIO_CHARGE_DISABLE 15
 #define GPIO_LINE_GPS_PWR_EN 29
 enum class StreamAction
 {
@@ -87,6 +88,7 @@ std::atomic<bool> streamStopSuccess{false};
 std::string sessionId;
 std::mutex sessionMutex;
 std::string lastSeenVersion = "";
+std::atomic<int> charging_state{NOT_CHARGING};
 namespace fs = std::filesystem;
 std::string g_device_name = "TF004"; // Default fallback value
 std::string playTestTone = "";
@@ -152,7 +154,7 @@ typedef struct
     struct gpiod_line_request *ba_req;
     struct gpiod_line_request *bb_req;
     struct gpiod_line_request *flash_req;
-    struct gpiod_line_request *self_kill;
+    struct gpiod_line_request *charge_disable;
     struct gpiod_line_request *gps_pwr_en;
 
 } TestGpioReq;
@@ -228,6 +230,9 @@ public:
         std::thread notifier(&DisplayExample::streamNotifierLoop, this);
         notifier.detach();
 
+        std::thread charger_monitor_thread(&DisplayExample::charger_irq_loop, this);
+        charger_monitor_thread.detach();
+
         std::cout << "NTP" << std::endl;
 
         if (!load_device_name("/etc/aws_iot_device/config.json"))
@@ -242,6 +247,35 @@ public:
             waitForButtonPress();
         }
     }
+    int charging_status()
+    {
+        return charging_state.load();
+    }
+    void charger_irq_loop()
+    {
+        while (1)
+        {
+            int ret = gpiod_line_request_read_edge_events(line_request, buffer, 4);
+            if (ret < 0)
+            {
+                perror("Error reading charger event");
+                charging_state = CHARGING_ERROR;
+                continue;
+            }
+
+            for (int i = 0; i < ret; ++i)
+            {
+                const struct gpiod_edge_event *event = gpiod_edge_event_buffer_get_event(buffer, i);
+                if (event && gpiod_edge_event_get_event_type(event) == GPIOD_EDGE_EVENT_FALLING_EDGE)
+                {
+                    // int status = bq25792_get_charging_status();
+                    int status = 0;
+                    charging_state = status;
+                }
+            }
+        }
+    }
+
     int getCSQFromModem(const std::string &device)
     {
         int fd = open(device.c_str(), O_RDWR | O_NOCTTY | O_SYNC);
@@ -1049,8 +1083,13 @@ public:
     {
         std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
         mark_state_dirty();
+
         switch (btn)
         {
+
+        case 0:
+        bq25792_enter_ship_mode();
+        break;
 
         case 1: // Mode cycle button
 
@@ -1116,7 +1155,6 @@ public:
     void processMode()
     {
         current_state.battery_charging = charging_status();
-
         if (!current_state.in_emergency && !barcode_show)
         {
 
@@ -1199,11 +1237,11 @@ public:
 
     void initPeripherals()
     {
-        testGpioReq.ba_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BA, "BUZZER_A");
-        testGpioReq.bb_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BB, "BUZZER_B");
+        testGpioReq.ba_req = requestOutputLine(GPIO_DEVICE5, GPIO_LINE_BA, "BUZZER_A");
+        testGpioReq.bb_req = requestOutputLine(GPIO_DEVICE5, GPIO_LINE_BB, "BUZZER_B");
         testGpioReq.flash_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_FLASH, "FLASHLIGHT");
-        testGpioReq.self_kill = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_SELF_KILL, "SELF_KILL");
         testGpioReq.gps_pwr_en = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_GPS_PWR_EN, "GPS POWER ENABLE");
+        testGpioReq.charge_disable = requestOutputLine(GPIO_DEVICE4, GPIO_CHARGE_DISABLE, "CHARGE DISABLE");
     }
 
     void emergency_stream_on()
@@ -1261,6 +1299,7 @@ public:
     }
 
     void alarmOff()
+
     {
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
@@ -1347,7 +1386,7 @@ public:
             {
                 printf("Stop Notification send \n");
                 signalStreamAction(StreamAction::Stop);
-                notifyStopSent = true;           
+                notifyStopSent = true;
                 videoStopTime = 0;
             }
         }

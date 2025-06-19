@@ -16,18 +16,29 @@
 #include <string.h>
 #include <errno.h>
 
-#define CHARGING 1
-#define NOT_CHARGING 0
+
 #define MAX_EVENTS 5
 #define PAGE_SIZE 4096 // Typical page size on ARM
 #define PAGE_MASK (PAGE_SIZE - 1)
 
-#define TARGET_DEVICE_NAME "gpio-keys"
-#define EVENT_DEV_PATH "/dev/input/"
+
 #define DEBOUNCE_DELAY_US 200 // 20ms
 #define POLL_TIMEOUT_MS 100
 #define CHECK_TIMEOUT_S 1.0
+/*Macros for button presses*/
+#define BUTTON_NONE_PRESSED     -2
+#define BUTTON_ERROR            -1
+#define BUTTON_SHUTDOWN         0
+#define BUTTON1_PRESSED         1
+#define BUTTON2_PRESSED         2
+#define BOTH_BUTTONS_PRESSED    3
 
+#define DEBOUNCE_DELAY_MS       50
+#define LONG_PRESS_SECONDS      3.0
+#define POLL_TIMEOUT_SECONDS    1.0
+#define POLLING_INTERVAL_US     5000
+
+#define CONSUMER "nCHRG_INT_Monitor"
 enum ButtonState
 {
     BUTTON_NONE = 0,
@@ -43,54 +54,6 @@ enum ButtonState
 void _Delay(int microseconds)
 {
     usleep(microseconds);
-}
-char *find_event_device(const char *target_name)
-{
-    static char event_path[256];
-    FILE *fp = fopen("/proc/bus/input/devices", "r");
-    if (!fp)
-    {
-        perror("Failed to open /proc/bus/input/devices");
-        return NULL;
-    }
-
-    char line[512];
-    int found = 0;
-
-    while (fgets(line, sizeof(line), fp))
-    {
-        if (strncmp(line, "N: Name=", 8) == 0)
-        {
-            // Match device name
-            if (strstr(line, target_name))
-            {
-                found = 1;
-            }
-            else
-            {
-                found = 0;
-            }
-        }
-
-        // After matching name, look for event handler
-        if (found && strncmp(line, "H: Handlers=", 12) == 0)
-        {
-            char *pos = strstr(line, "event");
-            if (pos)
-            {
-                char event_name[32];
-                if (sscanf(pos, "%31s", event_name) == 1)
-                {
-                    snprintf(event_path, sizeof(event_path), "%s%s", EVENT_DEV_PATH, event_name);
-                    fclose(fp);
-                    return event_path;
-                }
-            }
-        }
-    }
-
-    fclose(fp);
-    return NULL;
 }
 
 // Function to simulate the requestOutputLine (you should implement it according to your system)
@@ -147,37 +110,38 @@ void setLineValue(struct gpiod_line_request *request, unsigned int line_offset, 
 // GPIO configuration (adjust as needed)
 #define GPIO_CHIP "/dev/gpiochip3" // Full path to GPIO chip
 #define GPIO_LINE1 6               // First button GPIO line number
-#define GPIO_LINE2 2               // Second button GPIO line number
+#define GPIO_LINE2 3               // Second button GPIO line number
 #define GPIO_LINE_14 14
+#define CONSUMER_LABEL "nCHRG_INT"
 
 static struct gpiod_chip *chip = NULL;
 static struct gpiod_line_request *line_request_button = NULL;
-static struct gpiod_line_request *line_request = NULL;
+static struct gpiod_line_request *line_requests = NULL;
+struct gpiod_line_request *line_request = NULL;
 static time_t last_trigger_time = 0; // Track last trigger time for debouncing
 
-int init_battery_charging_pins()
-{
+int init_battery_charging_pins() {
+
     chip = gpiod_chip_open(GPIO_CHIP);
-    if (!chip)
-    {
+    if (!chip) {
         perror("Failed to open GPIO chip");
         return -1;
     }
 
-    // Create line settings for input
     struct gpiod_line_settings *settings = gpiod_line_settings_new();
-    if (!settings)
-    {
-        perror("Failed to create settings");
+    if (!settings) {
+        perror("Failed to create line settings");
         gpiod_chip_close(chip);
         return -1;
     }
-    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
 
-    // Create line config for both GPIO lines
+    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
+    gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_FALLING);
+    gpiod_line_settings_set_bias(settings, GPIOD_LINE_BIAS_PULL_UP);
+    gpiod_line_settings_set_event_clock(settings, GPIOD_LINE_CLOCK_MONOTONIC);
+
     struct gpiod_line_config *line_config = gpiod_line_config_new();
-    if (!line_config)
-    {
+    if (!line_config) {
         perror("Failed to create line config");
         gpiod_line_settings_free(settings);
         gpiod_chip_close(chip);
@@ -185,9 +149,7 @@ int init_battery_charging_pins()
     }
 
     unsigned int offsets[] = {GPIO_LINE_14};
-
-    if (gpiod_line_config_add_line_settings(line_config, offsets, 1, settings) < 0)
-    {
+    if (gpiod_line_config_add_line_settings(line_config, offsets, 1, settings) < 0) {
         perror("Failed to add line settings");
         gpiod_line_config_free(line_config);
         gpiod_line_settings_free(settings);
@@ -195,23 +157,20 @@ int init_battery_charging_pins()
         return -1;
     }
 
-    // Create request config
     struct gpiod_request_config *req_config = gpiod_request_config_new();
-    if (!req_config)
-    {
+    if (!req_config) {
         perror("Failed to create request config");
         gpiod_line_config_free(line_config);
         gpiod_line_settings_free(settings);
         gpiod_chip_close(chip);
         return -1;
     }
-    gpiod_request_config_set_consumer(req_config, "nCHRG_STATUS_1V8");
 
-    // Request both lines at once
+    gpiod_request_config_set_consumer(req_config, CONSUMER_LABEL);
+
     line_request = gpiod_chip_request_lines(chip, req_config, line_config);
-    if (!line_request)
-    {
-        perror("Failed to request GPIO lines");
+    if (!line_request) {
+        perror("Failed to request GPIO line");
         gpiod_request_config_free(req_config);
         gpiod_line_config_free(line_config);
         gpiod_line_settings_free(settings);
@@ -219,13 +178,24 @@ int init_battery_charging_pins()
         return -1;
     }
 
-    // Clean up temporary objects
     gpiod_request_config_free(req_config);
     gpiod_line_config_free(line_config);
     gpiod_line_settings_free(settings);
 
+    buffer = gpiod_edge_event_buffer_new(EVENT_BUFFER_SIZE);
+    if (!buffer) {
+        perror("Failed to create edge event buffer");
+        gpiod_line_request_release(line_request);
+        gpiod_chip_close(chip);
+        return -1;
+    }
+
     return 0;
 }
+/**
+ * Initialize GPIOs for two buttons
+ * @return 0 on success, -1 on failure
+ */
 /**
  * Initialize GPIOs for two buttons
  * @return 0 on success, -1 on failure
@@ -259,9 +229,8 @@ int initButtons(void)
         return -1;
     }
 
-    unsigned int offsets[] = {GPIO_LINE2};
-
-    if (gpiod_line_config_add_line_settings(line_config, offsets, 1, settings) < 0)
+    unsigned int offsets[] = {GPIO_LINE1, GPIO_LINE2};
+    if (gpiod_line_config_add_line_settings(line_config, offsets, 2, settings) < 0)
     {
         perror("Failed to add line settings");
         gpiod_line_config_free(line_config);
@@ -280,11 +249,11 @@ int initButtons(void)
         gpiod_chip_close(chip);
         return -1;
     }
-    gpiod_request_config_set_consumer(req_config, "button");
+    gpiod_request_config_set_consumer(req_config, "buttons");
 
     // Request both lines at once
-    line_request_button = gpiod_chip_request_lines(chip, req_config, line_config);
-    if (!line_request_button)
+    line_requests = gpiod_chip_request_lines(chip, req_config, line_config);
+    if (!line_requests)
     {
         perror("Failed to request GPIO lines");
         gpiod_request_config_free(req_config);
@@ -307,9 +276,9 @@ int initButtons(void)
  */
 void cleanupButtons(void)
 {
-    if (line_request)
+    if (line_requests)
     {
-        gpiod_line_request_release(line_request);
+        gpiod_line_request_release(line_requests);
     }
     if (chip)
     {
@@ -317,186 +286,111 @@ void cleanupButtons(void)
     }
 }
 
-int charging_status()
-{
-    int values[1];
-    if (!line_request)
-    {
-        fprintf(stderr, "GPIOs not initialized\n");
-        return ERROR_GPIO_NOT_INIT;
-    }
-    if (gpiod_line_request_get_values(line_request, values) < 0)
-    {
-        perror("Failed to read GPIO values");
-        return -1;
-    }
-    return values[0] == 0 ? CHARGING : NOT_CHARGING;
-}
+
+
+/**
+ * Check if either button is pressed (either GPIO low) with timeout and debounce
+ * @return 1 if either pressed, 0 if neither pressed, -1 on error, -2 on timeout
+ */
 /**
  * Check if either button is pressed (either GPIO low) with timeout and debounce
  * @return 1 if either pressed, 0 if neither pressed, -1 on error, -2 on timeout
  */
 int areButtonsPressed(void)
 {
-    const char *device_path = find_event_device(TARGET_DEVICE_NAME);
-    if (!device_path)
-    {
-        fprintf(stderr, "Could not find input device for '%s'\n", TARGET_DEVICE_NAME);
-        return ERROR_DEVICE_NOT_FOUND;
-    }
-    printf("Found device path: %s\n", device_path);
-
-    if (!line_request_button)
+    if (!line_requests)
     {
         fprintf(stderr, "GPIOs not initialized\n");
-        return ERROR_GPIO_NOT_INIT;
+        return BUTTON_ERROR;
     }
 
-    int fd = open(device_path, O_RDONLY | O_NONBLOCK);
-    if (fd < 0)
-    {
-        perror("Failed to open input device");
-        return EXIT_FAILURE;
-    }
+    static int button1_held = 0;
+    static int button2_held = 0;
+    static struct timespec button1_press_time = {0}, button2_press_time = {0};
 
-    int epfd = epoll_create1(0);
-    if (epfd == -1)
-    {
-        perror("Failed to create epoll instance");
-        close(fd);
-        return EXIT_FAILURE;
-    }
-
-    struct epoll_event ev = {.events = EPOLLIN, .data.fd = fd};
-    if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1)
-    {
-        perror("Failed to add fd to epoll");
-        close(fd);
-        close(epfd);
-        return EXIT_FAILURE;
-    }
-
-    struct epoll_event events[MAX_EVENTS];
-    struct input_event ie;
-
-    struct timespec start_time, current_time, press_time;
+    struct timespec start_time, current_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
-
-    int gpio_pressed = 0;
-    int wake_pressed = 0;
-    int pressed_detected = 0;
 
     while (1)
     {
-        clock_gettime(CLOCK_MONOTONIC, &current_time);
-        double elapsed = (current_time.tv_sec - start_time.tv_sec) +
-                         (current_time.tv_nsec - start_time.tv_nsec) / 1e9;
+        int values[2] = {1, 1}; // Default: both not pressed (active-low)
 
-        if (elapsed >= CHECK_TIMEOUT_S)
-        {
-            close(fd);
-            close(epfd);
-            return ERROR_TIMEOUT;
-        }
-
-        int nfds = epoll_wait(epfd, events, MAX_EVENTS, 10);
-        if (nfds == -1)
-        {
-            perror("epoll_wait error");
-            break;
-        }
-
-        for (int i = 0; i < nfds; i++)
-        {
-            if (events[i].data.fd == fd)
-            {
-                while (read(fd, &ie, sizeof(struct input_event)) > 0)
-                {
-                    if (ie.type == EV_KEY && ie.code == KEY_WAKEUP && ie.value == 1)
-                    {
-                        wake_pressed = 1;
-                        if (!pressed_detected)
-                        {
-                            clock_gettime(CLOCK_MONOTONIC, &press_time);
-                            pressed_detected = 1;
-                        }
-                    }
-                }
-                if (errno != EAGAIN && errno != EWOULDBLOCK)
-                {
-                    perror("read error");
-                    close(fd);
-                    close(epfd);
-                    return ERROR_READ_FAIL;
-                }
-            }
-        }
-
-        enum gpiod_line_value gpio_val[1];
-        if (gpiod_line_request_get_values(line_request_button, gpio_val) == 0)
-        {
-            if (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE)
-            {
-                gpio_pressed = 1;
-                if (!pressed_detected)
-                {
-                    clock_gettime(CLOCK_MONOTONIC, &press_time);
-                    pressed_detected = 1;
-                }
-            }
-        }
-        else
+        if (gpiod_line_request_get_values(line_requests, values) < 0)
         {
             perror("Failed to read GPIO values");
-            close(fd);
-            close(epfd);
-            return ERROR_READ_FAIL;
+            return BUTTON_ERROR;
         }
 
-        // After detection of any press, debounce for fixed delay
-        if (pressed_detected)
+        clock_gettime(CLOCK_MONOTONIC, &current_time);
+
+        // Exit if 1 second has elapsed
+        double total_elapsed = (current_time.tv_sec - start_time.tv_sec) +
+                               (current_time.tv_nsec - start_time.tv_nsec) / 1e9;
+        if (total_elapsed >= POLL_TIMEOUT_SECONDS)
+            return BUTTON_NONE_PRESSED;
+
+        //
+        // Handle BUTTON 1 (Long or Short press)
+        //
+        if (values[0] == 0) // Pressed (active-low)
         {
-            clock_gettime(CLOCK_MONOTONIC, &current_time);
-            double debounce_elapsed = (current_time.tv_sec - press_time.tv_sec) +
-                                      (current_time.tv_nsec - press_time.tv_nsec) / 1e9;
-            if (debounce_elapsed >= (DEBOUNCE_DELAY_US / 1e6))
+            if (!button1_held)
             {
-                // Final state check before return
-                if (gpiod_line_request_get_values(line_request_button, gpio_val) == 0)
-                    gpio_pressed = (gpio_val[0] == GPIOD_LINE_VALUE_INACTIVE);
-
-                // Also check if wake event is still pending
-                while (read(fd, &ie, sizeof(struct input_event)) > 0)
+                button1_held = 1;
+                clock_gettime(CLOCK_MONOTONIC, &button1_press_time);
+            }
+            else
+            {
+                double press_duration = (current_time.tv_sec - button1_press_time.tv_sec) +
+                                        (current_time.tv_nsec - button1_press_time.tv_nsec) / 1e9;
+                if (press_duration >= LONG_PRESS_SECONDS)
                 {
-                    if (ie.type == EV_KEY && ie.code == KEY_WAKEUP && ie.value == 1)
-                        wake_pressed = 1;
+                    button1_held = 0; // reset
+                    return BUTTON_SHUTDOWN;
                 }
-
-                printf("Final GPIO: %d, WAKE: %d\n", gpio_pressed, wake_pressed);
-
-                close(fd);
-                close(epfd);
-                time_t now = time(NULL);
-                if (now - last_trigger_time < 1)
-                    return BUTTON_NONE;
-                last_trigger_time = now;
-
-                if (wake_pressed && gpio_pressed)
-                    return BUTTON_BOTH;
-                else if (wake_pressed)
-                    return BUTTON_EVENT_ONLY;
-                else if (gpio_pressed)
-                    return BUTTON_GPIO_ONLY;
-                else
-                    return BUTTON_NONE;
             }
         }
+        else if (button1_held) // Released
+        {
+            button1_held = 0;
+            // Debounce release
+            usleep(DEBOUNCE_DELAY_MS * 1000);
+            return BUTTON1_PRESSED;
+        }
 
-        usleep(2500); // pacing sleep
+        //
+        // Handle BUTTON 2 (Short press only)
+        //
+        if (values[1] == 0)
+        {
+            if (!button2_held)
+            {
+                button2_held = 1;
+                clock_gettime(CLOCK_MONOTONIC, &button2_press_time);
+            }
+        }
+        else if (button2_held)
+        {
+            button2_held = 0;
+            // Debounce release
+            usleep(DEBOUNCE_DELAY_MS * 1000);
+            return BUTTON2_PRESSED;
+        }
+
+        //
+        // Handle both buttons pressed simultaneously
+        //
+        if (values[0] == 0 && values[1] == 0)
+        {
+            usleep(DEBOUNCE_DELAY_MS * 1000); // debounce delay
+            // Confirm after debounce
+            if (gpiod_line_request_get_values(line_requests, values) < 0)
+                return BUTTON_ERROR;
+
+            if (values[0] == 0 && values[1] == 0)
+                return BOTH_BUTTONS_PRESSED;
+        }
+
+        usleep(POLLING_INTERVAL_US); // Polling delay
     }
-
-    // Fallback
-    close(fd);
-    close(epfd);
-    return BUTTON_NONE;
 }
