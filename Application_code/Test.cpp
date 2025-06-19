@@ -253,11 +253,16 @@ public:
     }
     void charger_irq_loop()
     {
-        const struct gpiod_edge_event *events[4] = {0};
+        struct gpiod_edge_event_buffer *buffer = gpiod_edge_event_buffer_new(4);
+        if (!buffer)
+        {
+            std::cerr << "Failed to allocate edge event buffer\n";
+            return;
+        }
 
         while (true)
         {
-            int ret = gpiod_line_request_read_edge_events(line_request, events, 4);
+            int ret = gpiod_line_request_read_edge_events(line_request, buffer, 4);
             if (ret < 0)
             {
                 perror("Failed to read edge events");
@@ -266,15 +271,24 @@ public:
 
             for (int i = 0; i < ret; ++i)
             {
-                const struct gpiod_edge_event *event = events[i];
+                struct gpiod_edge_event *event = gpiod_edge_event_buffer_get_event(buffer, i);
+                if (!event)
+                    continue;
 
-                if (event && gpiod_edge_event_get_event_type((struct gpiod_edge_event *)event) == GPIOD_EDGE_EVENT_FALLING_EDGE)
+                if (gpiod_edge_event_get_event_type(event) == GPIOD_EDGE_EVENT_FALLING_EDGE)
                 {
-                    int chg_status = bq25792_get_charging_status();
+                    int chg_status=0;
+                  //  int chg_status = bq25792_get_charging_status();
+                    charging_state = chg_status;
                     std::cout << "[IRQ] Charging Status: " << chg_status << std::endl;
                 }
             }
+
+            // Optional: add small delay to avoid tight looping
+            usleep(10000); // 10ms
         }
+
+        gpiod_edge_event_buffer_free(buffer);
     }
 
     int getCSQFromModem(const std::string &device)
