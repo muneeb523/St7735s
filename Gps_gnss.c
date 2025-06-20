@@ -241,21 +241,18 @@ int bq25792_get_full_status()
     return 0;
 }
 
-int bq25792_enter_ship_mode()
-{
+int bq25792_enter_ship_mode() {
     int fd = bq25792_open();
-    if (fd < 0)
-        return -1;
+    if (fd < 0) return -1;
 
     uint8_t val = 0;
-    if (bq25792_read_reg(fd, REG_CHARGE_OPTION_0, &val) < 0)
-    {
+    if (bq25792_read_reg(fd, REG_CHARGE_OPTION_0, &val) < 0) {
         close(fd);
         return -1;
     }
 
     val |= (1 << 7); // Set SHIP_MODE bit
-    int ret =  (fd, REG_CHARGE_OPTION_0, val);
+    int ret = bq25792_write_reg(fd, REG_CHARGE_OPTION_0, val);
     close(fd);
 
     if (ret == 0)
