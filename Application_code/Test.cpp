@@ -56,11 +56,10 @@ SystemState currentState = IDLE;
 #define TZ_DELTA 7 * 60 * 60
 
 #define GPIO_DEVICE4 "/dev/gpiochip3"
-#define GPIO_DEVICE5 "/dev/gpiochip4"
-#define GPIO_LINE_BA 4
-#define GPIO_LINE_BB 5
+#define GPIO_LINE_BA 18
+#define GPIO_LINE_BB 3
 #define GPIO_LINE_FLASH 7
-#define GPIO_CHARGE_DISABLE 15
+#define GPIO_LINE_SELF_KILL 20
 #define GPIO_LINE_GPS_PWR_EN 29
 enum class StreamAction
 {
@@ -88,7 +87,6 @@ std::atomic<bool> streamStopSuccess{false};
 std::string sessionId;
 std::mutex sessionMutex;
 std::string lastSeenVersion = "";
-std::atomic<int> charging_state{NOT_CHARGING};
 namespace fs = std::filesystem;
 std::string g_device_name = "TF004"; // Default fallback value
 std::string playTestTone = "";
@@ -154,7 +152,7 @@ typedef struct
     struct gpiod_line_request *ba_req;
     struct gpiod_line_request *bb_req;
     struct gpiod_line_request *flash_req;
-    struct gpiod_line_request *charge_disable;
+    struct gpiod_line_request *self_kill;
     struct gpiod_line_request *gps_pwr_en;
 
 } TestGpioReq;
@@ -230,9 +228,6 @@ public:
         std::thread notifier(&DisplayExample::streamNotifierLoop, this);
         notifier.detach();
 
-        std::thread charger_monitor_thread(&DisplayExample::charger_irq_loop, this);
-        charger_monitor_thread.detach();
-
         std::cout << "NTP" << std::endl;
 
         if (!load_device_name("/etc/aws_iot_device/config.json"))
@@ -247,50 +242,6 @@ public:
             waitForButtonPress();
         }
     }
-    int charging_status()
-    {
-        return charging_state.load();
-    }
-    void charger_irq_loop()
-    {
-        struct gpiod_edge_event_buffer *buffer = gpiod_edge_event_buffer_new(4);
-        if (!buffer)
-        {
-            std::cerr << "Failed to allocate edge event buffer\n";
-            return;
-        }
-
-        while (true)
-        {
-            int ret = gpiod_line_request_read_edge_events(line_request, buffer, 4);
-            if (ret < 0)
-            {
-                perror("Failed to read edge events");
-                continue;
-            }
-
-            for (int i = 0; i < ret; ++i)
-            {
-                struct gpiod_edge_event *event = gpiod_edge_event_buffer_get_event(buffer, i);
-                if (!event)
-                    continue;
-
-                if (gpiod_edge_event_get_event_type(event) == GPIOD_EDGE_EVENT_FALLING_EDGE)
-                {
-                    int chg_status=0;
-                  //  int chg_status = bq25792_get_charging_status();
-                    charging_state = chg_status;
-                    std::cout << "[IRQ] Charging Status: " << chg_status << std::endl;
-                }
-            }
-
-            // Optional: add small delay to avoid tight looping
-            usleep(10000); // 10ms
-        }
-
-        gpiod_edge_event_buffer_free(buffer);
-    }
-
     int getCSQFromModem(const std::string &device)
     {
         int fd = open(device.c_str(), O_RDWR | O_NOCTTY | O_SYNC);
@@ -741,7 +692,7 @@ public:
                 clock_gettime(CLOCK_MONOTONIC, &lastActivityTime); // reset after entering low power
                 setColor(0, 0, 0);                                 // Black background
                 fillScreen();
-                // Enter_Power_Mode();
+                 Enter_Power_Mode();
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -926,7 +877,7 @@ public:
         {
 
             const std::string power_state_file = "/sys/power/state";
-            // Open the file for writing
+            //<<  Open the file for writing
             std::ofstream power_state_stream(power_state_file);
             // Check if the file was opened successfully
             if (!power_state_stream.is_open())
@@ -1098,13 +1049,8 @@ public:
     {
         std::lock_guard<std::mutex> lock(state_mutex); // Lock shared state access
         mark_state_dirty();
-
         switch (btn)
         {
-
-        case 0:
-            bq25792_enter_ship_mode();
-            break;
 
         case 1: // Mode cycle button
 
@@ -1170,6 +1116,7 @@ public:
     void processMode()
     {
         current_state.battery_charging = charging_status();
+
         if (!current_state.in_emergency && !barcode_show)
         {
 
@@ -1252,11 +1199,11 @@ public:
 
     void initPeripherals()
     {
-        testGpioReq.ba_req = requestOutputLine(GPIO_DEVICE5, GPIO_LINE_BA, "BUZZER_A");
-        testGpioReq.bb_req = requestOutputLine(GPIO_DEVICE5, GPIO_LINE_BB, "BUZZER_B");
+        testGpioReq.ba_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BA, "BUZZER_A");
+        testGpioReq.bb_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_BB, "BUZZER_B");
         testGpioReq.flash_req = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_FLASH, "FLASHLIGHT");
+        testGpioReq.self_kill = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_SELF_KILL, "SELF_KILL");
         testGpioReq.gps_pwr_en = requestOutputLine(GPIO_DEVICE4, GPIO_LINE_GPS_PWR_EN, "GPS POWER ENABLE");
-        testGpioReq.charge_disable = requestOutputLine(GPIO_DEVICE4, GPIO_CHARGE_DISABLE, "CHARGE DISABLE");
     }
 
     void emergency_stream_on()
@@ -1314,7 +1261,6 @@ public:
     }
 
     void alarmOff()
-
     {
         printf("alarmOff\r\n");
         current_state.alarm_on = false;
@@ -1401,7 +1347,7 @@ public:
             {
                 printf("Stop Notification send \n");
                 signalStreamAction(StreamAction::Stop);
-                notifyStopSent = true;
+                notifyStopSent = true;           
                 videoStopTime = 0;
             }
         }
