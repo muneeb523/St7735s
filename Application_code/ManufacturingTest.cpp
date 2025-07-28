@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <chrono>
 #include <algorithm>
 #include <thread>
@@ -212,6 +212,7 @@ void gpsGnssTest()
         sleep(30);
         continue;
     }
+
     double lat = 0.0, lon = 0.0;
     if (gps_get_location(fd, &lat, &lon) == 0)
     {
