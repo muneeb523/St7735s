@@ -52,7 +52,7 @@ typedef struct
     struct gpiod_line_request *gps_pwr_en;
 
 } TestGpioReq;
-
+std::thread buzzer_thread;
 TestGpioReq testGpioReq;
 extern "C"
 {
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
     initButtons();
     initPeripherals();
-    buzzer_thread = std::thread(updateBuzzer, this);
+    buzzer_thread = std::thread(updateBuzzer);
     buzzer_thread.detach(); // Detach the buzzer thread
 
     std::string command = argv[1];
@@ -210,7 +210,7 @@ void gpsGnssTest()
     {
         fprintf(stderr, "  ' Failed to initialize GPS Device not present ' / ' detected after turning on the power ' \n");
         sleep(30);
-        continue;
+
     }
     double lat = 0.0, lon = 0.0;
     if (gps_get_location(fd, &lat, &lon) == 0)
